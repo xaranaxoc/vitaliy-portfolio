@@ -15,6 +15,7 @@ export const profile = {
   // Контакты
   telegram: "https://t.me/xarana_xoc",
   email: "matveev.vit03@gmail.com",
+  whatsapp: "https://wa.me/79142937537",
   github: "https://github.com/xaranaxoc",
 };
 

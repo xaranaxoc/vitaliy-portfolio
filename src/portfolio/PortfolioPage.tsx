@@ -6,6 +6,7 @@ import {
   Github,
   Globe,
   Mail,
+  MessageCircle,
   Moon,
   Send,
   Server,
@@ -653,6 +654,15 @@ function Contact() {
               Написать в Telegram
             </a>
             <a
+              href={profile.whatsapp}
+              target="_blank"
+              rel="noreferrer"
+              className="font-body inline-flex items-center gap-2 rounded-lg border border-(--pf-border-mid) px-7 py-4 text-sm font-semibold text-(--pf-text-2) transition-colors hover:border-(--pf-border-strong) hover:bg-(--pf-chip)"
+            >
+              <MessageCircle className="size-4" />
+              Написать в WhatsApp
+            </a>
+            <a
               href={`mailto:${profile.email}`}
               className="font-body inline-flex items-center gap-2 rounded-lg border border-(--pf-border-mid) px-7 py-4 text-sm font-semibold text-(--pf-text-2) transition-colors hover:border-(--pf-border-strong) hover:bg-(--pf-chip)"
             >
@@ -696,6 +706,15 @@ function Footer() {
             className="text-(--pf-text-4) transition-colors hover:text-(--pf-text)"
           >
             <Send className="size-4.5" />
+          </a>
+          <a
+            href={profile.whatsapp}
+            target="_blank"
+            rel="noreferrer"
+            aria-label="WhatsApp"
+            className="text-(--pf-text-4) transition-colors hover:text-(--pf-text)"
+          >
+            <MessageCircle className="size-4.5" />
           </a>
           <a
             href={`mailto:${profile.email}`}
