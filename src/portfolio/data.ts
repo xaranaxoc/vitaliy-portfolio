@@ -76,7 +76,7 @@ export const projects: Project[] = [
     description:
       "Бот-диджей для комьюнити: воспроизведение треков по ссылке или поиску, очередь и плейлисты, пауза, скип и громкость прямо из чата. Стабильно держит голосовой канал и играет без перебоев круглые сутки.",
     tags: ["Python", "discord.py", "FFmpeg", "Voice API"],
-    image: null,
+    image: "/projects/discord-bot.png",
     link: null,
     accent: "amber",
   },
