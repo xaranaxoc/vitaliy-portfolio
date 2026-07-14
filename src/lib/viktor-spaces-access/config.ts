@@ -21,21 +21,13 @@ function getDefaultViktorSpacesEnv(): ViktorSpacesEnv {
   return (runtime.process?.env ?? {}) as ViktorSpacesEnv;
 }
 
-function requireEnvValue(
-  env: ViktorSpacesEnv,
-  name: keyof ViktorSpacesEnv,
-): string {
-  const value = env[name];
-  if (!value) {
-    throw new Error(`Missing required Viktor Spaces env var: ${name}`);
-  }
-  return value;
-}
-
 export function getViktorSpaceAccessMode(
   env: ViktorSpacesEnv = getDefaultViktorSpacesEnv(),
 ): ViktorSpaceAccessMode {
-  const configured = requireEnvValue(env, "VITE_VIKTOR_SPACES_ACCESS_MODE");
+  const configured = env.VITE_VIKTOR_SPACES_ACCESS_MODE;
+  if (!configured) {
+    return "public";
+  }
   if (!VALID_ACCESS_MODES.has(configured)) {
     throw new Error(`Invalid VITE_VIKTOR_SPACES_ACCESS_MODE: ${configured}`);
   }
