@@ -37,17 +37,6 @@ export type Project = {
 // ─── ПРОЕКТЫ ────────────────────────────────────────────────
 export const projects: Project[] = [
   {
-    id: "trading-app",
-    kind: "Десктоп-приложение",
-    title: "Trade Copier — копитрейдер для MT5",
-    description:
-      "Открывает одну сделку сразу на нескольких счетах MetaTrader 5: мастер-аккаунт и до 10 подключённых. Главная фишка — правильный лот для любой пары считается автоматически под баланс и риск каждого счёта. Панель управления терминалами, статистика и закрытие всех сделок в один клик.",
-    tags: ["Python", "MetaTrader 5", "Desktop GUI", "Риск-менеджмент"],
-    image: "/projects/trade-copier.png",
-    link: "https://github.com/xaranaxoc/TradeCopier",
-    accent: "cyan",
-  },
-  {
     id: "landing",
     kind: "Лендинг",
     title: "NovaFlow AI — сайт продукта",
@@ -57,6 +46,17 @@ export const projects: Project[] = [
     image: "/projects/novaflow-landing.png",
     link: "https://novaflow-ai-landing.vercel.app/",
     accent: "lime",
+  },
+  {
+    id: "trading-app",
+    kind: "Десктоп-приложение",
+    title: "Trade Copier — копитрейдер для MT5",
+    description:
+      "Открывает одну сделку сразу на нескольких счетах MetaTrader 5: мастер-аккаунт и до 10 подключённых. Главная фишка — правильный лот для любой пары считается автоматически под баланс и риск каждого счёта. Панель управления терминалами, статистика и закрытие всех сделок в один клик.",
+    tags: ["Python", "MetaTrader 5", "Desktop GUI", "Риск-менеджмент"],
+    image: "/projects/trade-copier.png",
+    link: "https://github.com/xaranaxoc/TradeCopier",
+    accent: "cyan",
   },
   {
     id: "tg-bot",
