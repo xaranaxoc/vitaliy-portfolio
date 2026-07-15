@@ -53,7 +53,7 @@ export const projects: Project[] = [
       "Сайт строительной компании: премиальный стиль, full-bleed фото, scroll-reveal анимации. Акцент на проекты и услуги — каждая секция работает на доверие клиента. Полностью адаптивный.",
     tags: ["HTML/CSS", "JavaScript", "Адаптив", "Анимации"],
     image: "/projects/northpeak.jpg",
-    link: "https://github.com/xaranaxoc/northpeak-construction",
+    link: "https://northpeak-construction.vercel.app/",
     accent: "amber",
   },
   {
@@ -65,7 +65,7 @@ export const projects: Project[] = [
       "Сайт дизайн-студии в editorial-стиле: serif-заголовки, тёплая палитра, плавные анимации. Демонстрирует услуги и портфолио. Адаптивный, с фокусом на конверсию посетителей в клиентов.",
     tags: ["HTML/CSS", "JavaScript", "Editorial", "Адаптив"],
     image: "/projects/lumina.jpg",
-    link: "https://github.com/xaranaxoc/lumina-studio-landing",
+    link: "https://lumina-studio-landing-eight.vercel.app/",
     accent: "cyan",
   },
   {
@@ -151,5 +151,5 @@ export const terminalLines: { text: string; kind: "cmd" | "ok" | "out" }[] = [
   { text: "128 passed in 4.2s", kind: "out" },
   { text: "npm run build", kind: "cmd" },
   { text: "✔ frontend  · Vite       · built in 4.1s", kind: "ok" },
-  { text: 'echo "проект в продакшене 🚀"', kind: "cmd" },
+  { text: 'echo "проект в продакшене"', kind: "cmd" },
 ];
