@@ -43,7 +43,7 @@ export const projects: Project[] = [
     description:
       "Продающий лендинг для платформы AI-автоматизации бизнеса: тёмный футуризм, glassmorphism, неоновые акценты и живые анимации. Структура ведёт посетителя от проблемы к действию — возможности, кейсы, тарифы, FAQ и демо в один клик.",
     tags: ["HTML/CSS", "JavaScript", "Анимации", "Адаптив"],
-    image: "/projects/novaflow-landing.png",
+    image: "/projects/novaflow-landing.jpg",
     link: "https://novaflow-ai-landing.vercel.app/",
     accent: "lime",
   },
@@ -85,8 +85,13 @@ export const projects: Project[] = [
 // ─── СТЕК ───────────────────────────────────────────────────
 export const stack: { group: string; note: string; items: string[] }[] = [
   {
+    group: "Frontend",
+    note: "то, что видит и трогает клиент",
+    items: ["JavaScript / TypeScript", "React", "Tailwind CSS", "HTML / CSS", "Vite"],
+  },
+  {
     group: "Backend",
-    note: "моя главная сила",
+    note: "API, базы данных, фоновые задачи",
     items: [
       "Python",
       "FastAPI",
@@ -97,11 +102,6 @@ export const stack: { group: string; note: string; items: string[] }[] = [
       "REST / WebSocket",
       "Celery",
     ],
-  },
-  {
-    group: "Frontend",
-    note: "интерфейсы, которые приятно открывать",
-    items: ["JavaScript / TypeScript", "React", "Tailwind CSS", "HTML / CSS", "Vite"],
   },
   {
     group: "Боты и автоматизация",

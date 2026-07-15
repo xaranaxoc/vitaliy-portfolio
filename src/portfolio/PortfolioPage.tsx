@@ -13,7 +13,7 @@ import {
   Sun,
   TerminalSquare,
 } from "lucide-react";
-import type { ReactNode } from "react";
+import { useState, type ReactNode } from "react";
 import { profile, type Project, projects, stack } from "./data";
 import { type Theme, useReveal, useTerminal, useTheme } from "./hooks";
 
@@ -108,6 +108,7 @@ function ThemeToggle({ theme, toggle }: { theme: Theme; toggle: () => void }) {
 }
 
 function Nav({ theme, toggle }: { theme: Theme; toggle: () => void }) {
+  const [open, setOpen] = useState(false);
   return (
     <header className="fixed inset-x-0 top-0 z-50 border-b border-(--pf-border-soft) bg-(--pf-nav) backdrop-blur-md">
       <nav className="mx-auto flex h-16 max-w-6xl items-center justify-between px-5">
@@ -131,12 +132,44 @@ function Nav({ theme, toggle }: { theme: Theme; toggle: () => void }) {
           <ThemeToggle theme={theme} toggle={toggle} />
           <a
             href="#contact"
-            className="font-code rounded-md border border-(--pf-lime)/40 bg-(--pf-lime)/10 px-4 py-2 text-xs font-semibold text-(--pf-lime) transition-all hover:bg-(--pf-lime-solid) hover:text-(--pf-on-accent)"
+            className="font-code hidden rounded-md border border-(--pf-lime)/40 bg-(--pf-lime)/10 px-4 py-2 text-xs font-semibold text-(--pf-lime) transition-all hover:bg-(--pf-lime-solid) hover:text-(--pf-on-accent) sm:inline"
           >
             Обсудить проект
           </a>
+          <button
+            type="button"
+            onClick={() => setOpen(o => !o)}
+            aria-label="Меню"
+            aria-expanded={open}
+            className="inline-flex size-9 items-center justify-center rounded-md border border-(--pf-border) bg-(--pf-chip) text-(--pf-text-2) transition-colors hover:border-(--pf-border-strong) md:hidden"
+          >
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round"><path d="M3 6h18" /><path d="M3 12h18" /><path d="M3 18h18" /></svg>
+          </button>
         </div>
       </nav>
+      {open && (
+        <div className="border-t border-(--pf-border-soft) bg-(--pf-nav) px-5 py-3 md:hidden">
+          <div className="mx-auto flex max-w-6xl flex-col gap-1">
+            {NAV_LINKS.map(l => (
+              <a
+                key={l.href}
+                href={l.href}
+                onClick={() => setOpen(false)}
+                className="font-body rounded-md px-2 py-2.5 text-sm font-medium text-(--pf-text-2) transition-colors hover:bg-(--pf-chip) hover:text-(--pf-text)"
+              >
+                {l.label}
+              </a>
+            ))}
+            <a
+              href="#contact"
+              onClick={() => setOpen(false)}
+              className="font-code mt-1 rounded-md border border-(--pf-lime)/40 bg-(--pf-lime)/10 px-2 py-2.5 text-xs font-semibold text-(--pf-lime)"
+            >
+              Обсудить проект
+            </a>
+          </div>
+        </div>
+      )}
     </header>
   );
 }
@@ -440,6 +473,10 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
             <img
               src={project.image}
               alt={project.title}
+              loading="lazy"
+              decoding="async"
+              width={1280}
+              height={720}
               className="size-full object-cover transition-transform duration-500 group-hover:scale-[1.03]"
             />
           ) : (
@@ -554,27 +591,27 @@ function Process() {
         <SectionTitle>Прозрачный процесс без сюрпризов</SectionTitle>
       </Reveal>
 
-      <div className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
-        {STEPS.map((s, i) => (
-          <Reveal key={s.n} delay={i * 90}>
-            <div className="group relative h-full rounded-xl border border-(--pf-border) bg-(--pf-surface) p-6 transition-all duration-300 hover:-translate-y-1 hover:border-(--pf-lime)/30">
-              <span className="font-display text-3xl font-semibold text-(--pf-text)/10 transition-colors group-hover:text-(--pf-lime)/30">
-                {s.n}
-              </span>
-              <h3 className="font-display mt-4 text-base font-semibold text-(--pf-text)">
-                {s.title}
-              </h3>
-              <p className="font-body mt-2.5 text-sm leading-relaxed text-(--pf-text-3)">
-                {s.text}
-              </p>
-              {i < STEPS.length - 1 && (
-                <span className="font-code absolute -right-4 top-1/2 hidden -translate-y-1/2 text-(--pf-text-5) lg:block">
-                  →
-                </span>
-              )}
-            </div>
-          </Reveal>
-        ))}
+      <div className="relative mt-12">
+        <div className="absolute right-0 left-0 top-5 hidden h-px bg-(--pf-border) lg:block" />
+        <div className="grid gap-8 lg:grid-cols-4">
+          {STEPS.map((s, i) => (
+            <Reveal key={s.n} delay={i * 90}>
+              <div className="relative">
+                <div className="flex items-center gap-3 lg:block">
+                  <span className="relative z-10 grid size-10 shrink-0 place-items-center rounded-full border border-(--pf-lime)/40 bg-(--pf-bg) font-code text-sm font-semibold text-(--pf-lime)">
+                    {s.n}
+                  </span>
+                  <h3 className="font-display text-base font-semibold text-(--pf-text) lg:mt-4">
+                    {s.title}
+                  </h3>
+                </div>
+                <p className="font-body mt-2 text-sm leading-relaxed text-(--pf-text-3)">
+                  {s.text}
+                </p>
+              </div>
+            </Reveal>
+          ))}
+        </div>
       </div>
     </section>
   );
@@ -671,7 +708,7 @@ function Contact() {
               {profile.email}
             </a>
           </div>
-          <p className="font-code mt-8 text-xs text-(--pf-text-5)">
+          <p className="font-code mt-8 text-xs text-(--pf-text-4)">
             $ обычно отвечаю в течение пары часов
           </p>
         </Reveal>
@@ -684,7 +721,7 @@ function Footer() {
   return (
     <footer className="border-t border-(--pf-border-soft) py-8">
       <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-4 px-5">
-        <p className="font-code text-xs text-(--pf-text-5)">
+        <p className="font-code text-xs text-(--pf-text-4)">
           © {new Date().getFullYear()} {profile.name} · сделано с любовью к коду
         </p>
         <div className="flex items-center gap-5">
