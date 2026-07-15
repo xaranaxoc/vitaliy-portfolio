@@ -214,7 +214,7 @@ function Hero() {
 
           <Reveal delay={100}>
             <h1 className="font-display mt-7 text-4xl font-semibold leading-[1.12] tracking-tight text-(--pf-text) sm:text-5xl lg:text-[3.4rem]">
-              Сайты, боты и API —{" "}
+              Сайты и веб-приложения —{" "}
               <span className="bg-[linear-gradient(100deg,var(--pf-g1),var(--pf-g2),var(--pf-g3))] bg-clip-text text-transparent">
                 от идеи до продакшена
               </span>
@@ -223,9 +223,10 @@ function Hero() {
 
           <Reveal delay={200}>
             <p className="font-body mt-6 max-w-xl text-base leading-relaxed text-(--pf-text-3) sm:text-lg">
-              Я — {profile.nameRu}, {profile.role.toLowerCase()} с особой любовью к
-              бэкенду. Беру проект целиком: архитектура, код, деплой и поддержка.
-              Вы описываете задачу — я приношу работающий продукт.
+              Я — {profile.nameRu}, {profile.role.toLowerCase()}. Делаю сайты и
+              веб-приложения под ключ: от лендинга до личного кабинета с оплатой.
+              За интерфейсом стоит надёжный backend, API и инфраструктура. Вы
+              описываете задачу — я приношу работающий продукт.
             </p>
           </Reveal>
 
@@ -251,13 +252,13 @@ function Hero() {
           <Reveal delay={400}>
             <div className="font-code mt-10 flex flex-wrap gap-x-6 gap-y-2 text-xs text-(--pf-text-4)">
               <span>
-                <span className="text-(--pf-lime)">▸</span> backend-first
+                <span className="text-(--pf-lime)">▸</span> сайты и веб-приложения под ключ
               </span>
               <span>
-                <span className="text-(--pf-lime)">▸</span> Python · TypeScript
+                <span className="text-(--pf-lime)">▸</span> frontend + backend в одних руках
               </span>
               <span>
-                <span className="text-(--pf-lime)">▸</span> боты, которые работают 24/7
+                <span className="text-(--pf-lime)">▸</span> Python · TypeScript · React
               </span>
             </div>
           </Reveal>
@@ -276,18 +277,18 @@ function Hero() {
 // ─────────────────────────────────────────────────────────────
 
 const MARQUEE_ITEMS = [
+  "Сайты",
+  "Веб-приложения",
+  "React",
+  "TypeScript",
+  "Tailwind CSS",
+  "Лендинги",
+  "SaaS",
   "Python",
   "FastAPI",
-  "Telegram-боты",
-  "React",
   "PostgreSQL",
-  "Discord-боты",
   "Docker",
   "REST API",
-  "Автоматизация",
-  "WebSocket",
-  "Django",
-  "Парсеры",
 ];
 
 function Marquee() {
@@ -324,25 +325,25 @@ type Service = {
 
 const SERVICES: Service[] = [
   {
-    icon: <Server className="size-6" />,
-    title: "Backend и API",
-    text: "Сердце вашего продукта. Проектирую архитектуру, базы данных и API, которые не падают под нагрузкой: сегодня у вас 100 пользователей, завтра — 100 000, а код уже к этому готов.",
-    points: ["REST / WebSocket API", "Базы данных и кэширование", "Интеграции с любыми сервисами", "Нагрузка, безопасность, мониторинг"],
-    wide: true,
-    featured: true,
-  },
-  {
     icon: <Globe className="size-6" />,
     title: "Сайты и веб-приложения",
-    text: "Fullstack под ключ: от лендинга до личного кабинета с оплатой. Интерфейс, логика, база данных и деплой — из одних рук.",
-    points: ["Лендинги и корпоративные сайты", "SaaS и личные кабинеты", "Адаптив и скорость загрузки"],
-    wide: false,
+    text: "Fullstack под ключ: от лендинга до личного кабинета с оплатой. Дизайн, интерфейс, логика, база данных и деплой — из одних рук. Адаптив, скорость и SEO — по умолчанию.",
+    points: ["Лендинги и корпоративные сайты", "SaaS и личные кабинеты", "Адаптив, скорость, SEO"],
+    wide: true,
+    featured: true,
   },
   {
     icon: <Bot className="size-6" />,
     title: "Telegram и Discord-боты",
     text: "Боты, которые продают и обслуживают клиентов, пока вы спите: приём заявок и оплат, рассылки, поддержка, модерация комьюнити. Запуск — за считанные дни, работа — 24/7 без зарплаты и выходных.",
     points: ["Продажи и приём платежей", "Рассылки и воронки", "Админ-панель и статистика", "Модерация и управление сервером"],
+    wide: false,
+  },
+  {
+    icon: <Server className="size-6" />,
+    title: "Backend и API",
+    text: "Сердце вашего продукта. Проектирую архитектуру, базы данных и API, которые не падают под нагрузкой: сегодня у вас 100 пользователей, завтра — 100 000, а код уже к этому готов.",
+    points: ["REST / WebSocket API", "Базы данных и кэширование", "Интеграции с любыми сервисами", "Нагрузка, безопасность, мониторинг"],
     wide: true,
     featured: true,
   },
@@ -684,7 +685,7 @@ function Footer() {
     <footer className="border-t border-(--pf-border-soft) py-8">
       <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-4 px-5">
         <p className="font-code text-xs text-(--pf-text-5)">
-          © {new Date().getFullYear()} {profile.name} · сделано с любовью к бэкенду
+          © {new Date().getFullYear()} {profile.name} · сделано с любовью к коду
         </p>
         <div className="flex items-center gap-5">
           {profile.github && (

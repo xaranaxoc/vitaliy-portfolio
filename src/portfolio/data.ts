@@ -125,5 +125,7 @@ export const terminalLines: { text: string; kind: "cmd" | "ok" | "out" }[] = [
   { text: "✔ tg-bot    · aiogram    · running", kind: "ok" },
   { text: "pytest -q", kind: "cmd" },
   { text: "128 passed in 4.2s", kind: "out" },
+  { text: "npm run build", kind: "cmd" },
+  { text: "✔ frontend  · Vite       · built in 4.1s", kind: "ok" },
   { text: 'echo "проект в продакшене 🚀"', kind: "cmd" },
 ];
