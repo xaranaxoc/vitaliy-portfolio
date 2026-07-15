@@ -247,7 +247,7 @@ function Hero() {
 
           <Reveal delay={100}>
             <h1 className="font-display mt-7 text-4xl font-semibold leading-[1.12] tracking-tight text-(--pf-text) sm:text-5xl lg:text-[3.4rem]">
-              Сайты и веб-приложения —{" "}
+              Сайты, которые продают —{" "}
               <span className="bg-[linear-gradient(100deg,var(--pf-g1),var(--pf-g2),var(--pf-g3))] bg-clip-text text-transparent">
                 от идеи до продакшена
               </span>
@@ -256,10 +256,10 @@ function Hero() {
 
           <Reveal delay={200}>
             <p className="font-body mt-6 max-w-xl text-base leading-relaxed text-(--pf-text-3) sm:text-lg">
-              Я — {profile.nameRu}, {profile.role.toLowerCase()}. Делаю сайты и
-              веб-приложения под ключ: от лендинга до личного кабинета с оплатой.
-              За интерфейсом стоит надёжный backend, API и инфраструктура. Вы
-              описываете задачу — я приношу работающий продукт.
+              Я — {profile.nameRu}, {profile.role.toLowerCase()}. Создаю быстрые,
+              адаптивные сайты и веб-приложения: от лендинга до личного кабинета
+              с оплатой. Вы получаете готовый продукт — дизайн, код, деплой и
+              поддержку из одних рук.
             </p>
           </Reveal>
 
@@ -456,6 +456,8 @@ function Services() {
 const PROJECT_ICONS: Record<string, ReactNode> = {
   "trading-app": <TerminalSquare className="size-8" />,
   landing: <Globe className="size-8" />,
+  northpeak: <Globe className="size-8" />,
+  lumina: <Globe className="size-8" />,
   "tg-bot": <Send className="size-8" />,
   "ds-bot": <Bot className="size-8" />,
 };
@@ -533,21 +535,30 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
 }
 
 function Projects() {
+  const landings = projects.filter((p) => p.category === "landing");
+  const tools = projects.filter((p) => p.category === "tool");
   return (
     <section id="work" className="relative border-t border-(--pf-border-soft) bg-(--pf-surface-tint) py-24">
       <div className="mx-auto max-w-6xl px-5">
         <Reveal>
           <SectionLabel index="02" text="работы" />
-          <div className="flex flex-wrap items-end justify-between gap-6">
-            <SectionTitle>Проекты, которые уже работают</SectionTitle>
-            <p className="font-code pb-1 text-xs text-(--pf-text-4)">
-              select * from projects order by impact desc;
-            </p>
-          </div>
+          <SectionTitle>Проекты, которые уже работают</SectionTitle>
         </Reveal>
 
-        <div className="mt-12 grid gap-6 md:grid-cols-2">
-          {projects.map((p, i) => (
+        <Reveal>
+          <h3 className="font-display mt-12 mb-6 text-lg font-semibold text-(--pf-text-2)">Лендинги и сайты</h3>
+        </Reveal>
+        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+          {landings.map((p, i) => (
+            <ProjectCard key={p.id} project={p} index={i} />
+          ))}
+        </div>
+
+        <Reveal>
+          <h3 className="font-display mt-16 mb-6 text-lg font-semibold text-(--pf-text-2)">Инструменты и автоматизация</h3>
+        </Reveal>
+        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+          {tools.map((p, i) => (
             <ProjectCard key={p.id} project={p} index={i} />
           ))}
         </div>

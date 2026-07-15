@@ -21,35 +21,57 @@ export const profile = {
 
 export type Project = {
   id: string;
-  kind: string; // подпись категории на карточке
+  kind: string;
+  category: "landing" | "tool";
   title: string;
   description: string;
   tags: string[];
-  // Скриншот проекта: положи файл в папку public/projects/
-  // и укажи путь, например "/projects/trade-copier.png".
-  // null — показывается стильная заглушка.
   image: string | null;
-  // Ссылка на живой проект или репозиторий. null — кнопка не показывается.
   link: string | null;
   accent: "lime" | "cyan" | "violet" | "amber";
 };
 
-// ─── ПРОЕКТЫ ────────────────────────────────────────────────
 export const projects: Project[] = [
   {
     id: "landing",
     kind: "Лендинг",
+    category: "landing",
     title: "NovaFlow AI — сайт продукта",
     description:
-      "Продающий лендинг для платформы AI-автоматизации бизнеса: тёмный футуризм, glassmorphism, неоновые акценты и живые анимации. Структура ведёт посетителя от проблемы к действию — возможности, кейсы, тарифы, FAQ и демо в один клик.",
+      "Продающий лендинг для платформы AI-автоматизации: тёмный дизайн, glassmorphism, живые анимации. Структура ведёт от проблемы к заявке — возможности, кейсы, тарифы, демо. Полностью адаптивный, SEO-оптимизированный.",
     tags: ["HTML/CSS", "JavaScript", "Анимации", "Адаптив"],
     image: "/projects/novaflow-landing.jpg",
     link: "https://novaflow-ai-landing.vercel.app/",
     accent: "lime",
   },
   {
+    id: "northpeak",
+    kind: "Лендинг",
+    category: "landing",
+    title: "NorthPeak Construction — сайт компании",
+    description:
+      "Сайт строительной компании: премиальный стиль, full-bleed фото, scroll-reveal анимации. Акцент на проекты и услуги — каждая секция работает на доверие клиента. Полностью адаптивный.",
+    tags: ["HTML/CSS", "JavaScript", "Адаптив", "Анимации"],
+    image: "/projects/northpeak.jpg",
+    link: "https://github.com/xaranaxoc/northpeak-construction",
+    accent: "amber",
+  },
+  {
+    id: "lumina",
+    kind: "Лендинг",
+    category: "landing",
+    title: "Lumina Studio — сайт дизайн-студии",
+    description:
+      "Сайт дизайн-студии в editorial-стиле: serif-заголовки, тёплая палитра, плавные анимации. Демонстрирует услуги и портфолио. Адаптивный, с фокусом на конверсию посетителей в клиентов.",
+    tags: ["HTML/CSS", "JavaScript", "Editorial", "Адаптив"],
+    image: "/projects/lumina.jpg",
+    link: "https://github.com/xaranaxoc/lumina-studio-landing",
+    accent: "cyan",
+  },
+  {
     id: "trading-app",
     kind: "Десктоп-приложение",
+    category: "tool",
     title: "Trade Copier — копитрейдер для MT5",
     description:
       "Открывает одну сделку сразу на нескольких счетах MetaTrader 5: мастер-аккаунт и до 10 подключённых. Главная фишка — правильный лот для любой пары считается автоматически под баланс и риск каждого счёта. Панель управления терминалами, статистика и закрытие всех сделок в один клик.",
@@ -61,6 +83,7 @@ export const projects: Project[] = [
   {
     id: "tg-bot",
     kind: "Telegram-бот",
+    category: "tool",
     title: "Бот продаж и лицензий",
     description:
       "Автоматическая витрина для Trade Copier: триал на 7 дней, покупка бессрочной лицензии за USDT, выдача сборок, привязка до двух устройств с кодами верификации и реферальная программа с 10% от покупок. Продаёт и обслуживает клиентов 24/7 без участия человека.",
@@ -72,6 +95,7 @@ export const projects: Project[] = [
   {
     id: "ds-bot",
     kind: "Discord-бот",
+    category: "tool",
     title: "Музыкальный бот для Discord",
     description:
       "Бот-диджей для комьюнити: воспроизведение треков по ссылке или поиску, очередь и плейлисты, пауза, скип и громкость прямо из чата. Стабильно держит голосовой канал и играет без перебоев круглые сутки.",
