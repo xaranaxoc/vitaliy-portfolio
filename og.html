@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8" />
+<title>OG — Vitaliy</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;600;700&family=Manrope:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { width: 1200px; height: 630px; overflow: hidden; }
+  body {
+    font-family: "Manrope", sans-serif;
+    background: #0b0e14;
+    color: #fafafa;
+    -webkit-font-smoothing: antialiased;
+    position: relative;
+  }
+  /* grid + glow backdrop */
+  .grid-bg {
+    position: absolute; inset: 0;
+    background-image:
+      linear-gradient(to right, rgba(255,255,255,0.05) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(255,255,255,0.05) 1px, transparent 1px);
+    background-size: 56px 56px;
+    -webkit-mask-image: radial-gradient(ellipse 70% 80% at 30% 40%, #000 40%, transparent 100%);
+            mask-image: radial-gradient(ellipse 70% 80% at 30% 40%, #000 40%, transparent 100%);
+  }
+  .glow {
+    position: absolute; border-radius: 50%; pointer-events: none;
+    background: rgba(163,230,53,0.10); filter: blur(120px);
+    width: 520px; height: 520px; left: -120px; top: -160px;
+  }
+  .glow2 {
+    position: absolute; border-radius: 50%; pointer-events: none;
+    background: rgba(34,211,238,0.08); filter: blur(120px);
+    width: 360px; height: 360px; right: -80px; bottom: -120px;
+  }
+  .stage {
+    position: relative; z-index: 1;
+    display: flex; align-items: center; gap: 56px;
+    height: 630px; padding: 0 72px;
+  }
+  .left { flex: 1.1; min-width: 0; }
+  .prompt {
+    font-family: "JetBrains Mono", monospace; font-size: 22px; font-weight: 600;
+    color: #d4d4d8; letter-spacing: 0.01em; margin-bottom: 22px;
+  }
+  .prompt .lime { color: #bef264; }
+  .cursor {
+    display: inline-block; width: 11px; height: 22px; margin-left: 4px;
+    vertical-align: -3px; background: #bef264;
+  }
+  h1 {
+    font-family: "Unbounded", sans-serif; font-weight: 600;
+    font-size: 104px; line-height: 1.02; letter-spacing: -0.035em;
+    color: #fafafa;
+  }
+  .role {
+    margin-top: 22px; font-size: 30px; line-height: 1.35; font-weight: 500;
+    color: #a1a1aa; letter-spacing: -0.01em;
+  }
+  .role b { color: #fafafa; font-weight: 600; }
+  .role .accent {
+    background: linear-gradient(100deg, #a3e635, #4ade80 55%, #22d3ee);
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+    font-weight: 600;
+  }
+  .chip {
+    margin-top: 26px; display: inline-flex; align-items: center; gap: 10px;
+    border-radius: 9999px; border: 1px solid rgba(255,255,255,0.12);
+    background: rgba(255,255,255,0.05); padding: 8px 16px;
+    font-family: "JetBrains Mono", monospace; font-size: 15px; font-weight: 500;
+    color: #d4d4d8;
+  }
+  .dot { width: 9px; height: 9px; border-radius: 50%; background: #bef264; box-shadow: 0 0 0 4px rgba(190,242,100,0.18); }
+  .stack {
+    margin-top: 26px; font-family: "JetBrains Mono", monospace; font-size: 15px;
+    color: #71717a; letter-spacing: 0.01em;
+  }
+  .stack .arrow { color: #bef264; }
+  /* terminal */
+  .term {
+    flex: 0.9; min-width: 0; border-radius: 14px;
+    border: 1px solid rgba(255,255,255,0.10); background: rgba(13,17,23,0.92);
+    box-shadow: 0 24px 70px -24px rgba(163,230,53,0.20);
+    overflow: hidden;
+  }
+  .term-bar { display: flex; align-items: center; gap: 8px; padding: 14px 18px; border-bottom: 1px solid rgba(255,255,255,0.06); }
+  .tl { width: 12px; height: 12px; border-radius: 50%; }
+  .term-bar .title { margin-left: 12px; font-family: "JetBrains Mono", monospace; font-size: 13px; color: #71717a; }
+  .term-body { padding: 22px; font-family: "JetBrains Mono", monospace; font-size: 16px; line-height: 1.85; }
+  .ln { display: flex; gap: 10px; white-space: pre; }
+  .ln .p { color: #bef264; }
+  .ln .c { color: #f4f4f5; }
+  .ln .ok { color: rgba(110,231,183,0.92); }
+  .ln .out { color: #a1a1aa; }
+</style>
+</head>
+<body>
+  <div class="grid-bg"></div>
+  <div class="glow"></div>
+  <div class="glow2"></div>
+  <div class="stage">
+    <div class="left">
+      <div class="prompt"><span class="lime">~/</span>vitaliy<span class="cursor"></span></div>
+      <h1>Виталий</h1>
+      <div class="role"><b>Fullstack-разработчик</b><br /><span class="accent">сайты и веб-приложения</span> под ключ</div>
+      <div class="chip"><span class="dot"></span>Открыт к новым проектам</div>
+      <div class="stack"><span class="arrow">▸</span> Python · TypeScript · React · FastAPI · PostgreSQL</div>
+    </div>
+    <div class="term">
+      <div class="term-bar">
+        <span class="tl" style="background:#ff5f57"></span>
+        <span class="tl" style="background:#febc2e"></span>
+        <span class="tl" style="background:#28c840"></span>
+        <span class="title">vitaliy@dev — zsh</span>
+      </div>
+      <div class="term-body">
+        <div class="ln"><span class="p">$</span><span class="c">npm run build</span></div>
+        <div class="ln"><span class="ok">✔ frontend  · Vite       · built in 4.1s</span></div>
+        <div class="ln"><span class="p">$</span><span class="c">git push origin main</span></div>
+        <div class="ln"><span class="ok">✔ deployed → production</span></div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
