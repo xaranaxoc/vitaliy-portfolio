@@ -273,7 +273,7 @@ function Hero() {
                 Обсудить проект
               </a>
               <a
-                href="#work"
+                href="#case"
                 className="font-body inline-flex items-center gap-2 rounded-lg border border-(--pf-border-mid) px-6 py-3.5 text-sm font-semibold text-(--pf-text-2) transition-colors hover:border-(--pf-border-strong) hover:bg-(--pf-chip)"
               >
                 Смотреть работы
@@ -343,7 +343,7 @@ const SOZIDAY_CRM = [
 
 function CaseStudy() {
   return (
-    <section className="relative border-t border-(--pf-border-soft) py-24">
+    <section id="case" className="relative border-t border-(--pf-border-soft) py-24">
       <div className="mx-auto max-w-6xl px-5">
         <Reveal>
           <div className="flex flex-wrap items-center gap-3">
