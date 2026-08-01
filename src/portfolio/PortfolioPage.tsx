@@ -324,6 +324,98 @@ const MARQUEE_ITEMS = [
   "REST API",
 ];
 
+// ─────────────────────────────────────────────────────────────
+// Case Study: СозидАй
+// ─────────────────────────────────────────────────────────────
+
+const SOZIDAY_PUBLIC = [
+  { src: "/projects/soziday-public-1.jpg", alt: "СозидАй — главная страница", caption: "Главная" },
+  { src: "/projects/soziday-public-2.jpg", alt: "СозидАй — магазин ручной работы", caption: "Магазин" },
+  { src: "/projects/soziday-public-3.jpg", alt: "СозидАй — мастера и работы", caption: "Мастера" },
+  { src: "/projects/soziday-public-4.jpg", alt: "СозидАй — запись на мастер-класс", caption: "Запись" },
+];
+
+const SOZIDAY_CRM = [
+  { src: "/projects/soziday-crm-1.jpg", alt: "CRM — настройки студии", caption: "Настройки" },
+  { src: "/projects/soziday-crm-2.jpg", alt: "CRM — управление товарами", caption: "Товары" },
+  { src: "/projects/soziday-crm-3.jpg", alt: "CRM — редактор страницы мастера", caption: "Страница мастера" },
+];
+
+function CaseStudy() {
+  return (
+    <section className="relative border-t border-(--pf-border-soft) py-24">
+      <div className="mx-auto max-w-6xl px-5">
+        <Reveal>
+          <div className="flex flex-wrap items-center gap-3">
+            <span className="font-code rounded-full border border-(--pf-lime)/30 bg-(--pf-lime)/10 px-3 py-1 text-[10px] font-semibold uppercase tracking-widest text-(--pf-lime)">
+              живой проект
+            </span>
+            <a
+              href="https://sozidaystudio.ru/"
+              target="_blank"
+              rel="noreferrer"
+              className="font-code inline-flex items-center gap-1 text-xs text-(--pf-text-3) transition-colors hover:text-(--pf-text)"
+            >
+              sozidaystudio.ru <ArrowUpRight className="size-3.5" />
+            </a>
+          </div>
+          <h2 className="font-display mt-5 text-3xl font-semibold leading-tight tracking-tight text-(--pf-text) sm:text-4xl">
+            СозидАй — сайт студии рукоделия с нуля
+          </h2>
+          <p className="font-body mt-4 max-w-2xl text-base leading-relaxed text-(--pf-text-3)">
+            Полноценный сайт для творческой студии в Якутске: 13 страниц,
+            магазин с товарами, запись на мастер-классы, CRM-админка с
+            канбан-доской и управлением товарами. CI автодеплой, адаптив,
+            работает 24/7 и приносит клиентов.
+          </p>
+          <div className="font-code mt-6 flex flex-wrap gap-x-6 gap-y-2 text-xs text-(--pf-text-4)">
+            <span><span className="text-(--pf-lime)">▸</span> 13+ страниц</span>
+            <span><span className="text-(--pf-lime)">▸</span> CRM + e-commerce</span>
+            <span><span className="text-(--pf-lime)">▸</span> CI автодеплой</span>
+            <span><span className="text-(--pf-lime)">▸</span> адаптив</span>
+          </div>
+        </Reveal>
+
+        <Reveal delay={100}>
+          <h3 className="font-display mt-12 mb-6 text-lg font-semibold text-(--pf-text-2)">
+            Публичный сайт
+          </h3>
+        </Reveal>
+        <div className="grid gap-5 md:grid-cols-2">
+          {SOZIDAY_PUBLIC.map((s, i) => (
+            <Reveal key={s.src} delay={i * 80}>
+              <div className="group overflow-hidden rounded-xl border border-(--pf-border) bg-(--pf-surface) transition-all duration-300 hover:-translate-y-1 hover:border-(--pf-lime)/40">
+                <div className="aspect-video overflow-hidden border-b border-(--pf-border-soft) bg-(--pf-media)">
+                  <img src={s.src} alt={s.alt} loading="lazy" decoding="async" width={1280} height={720} className="size-full object-cover transition-transform duration-500 group-hover:scale-[1.03]" />
+                </div>
+                <div className="p-3"><span className="font-code text-xs text-(--pf-text-4)">{s.caption}</span></div>
+              </div>
+            </Reveal>
+          ))}
+        </div>
+
+        <Reveal delay={100}>
+          <h3 className="font-display mt-12 mb-6 text-lg font-semibold text-(--pf-text-2)">
+            CRM админ-панель
+          </h3>
+        </Reveal>
+        <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+          {SOZIDAY_CRM.map((s, i) => (
+            <Reveal key={s.src} delay={i * 80}>
+              <div className="group overflow-hidden rounded-xl border border-(--pf-border) bg-(--pf-surface) transition-all duration-300 hover:-translate-y-1 hover:border-(--pf-lime)/40">
+                <div className="aspect-video overflow-hidden border-b border-(--pf-border-soft) bg-(--pf-media)">
+                  <img src={s.src} alt={s.alt} loading="lazy" decoding="async" width={1280} height={720} className="size-full object-cover transition-transform duration-500 group-hover:scale-[1.03]" />
+                </div>
+                <div className="p-3"><span className="font-code text-xs text-(--pf-text-4)">{s.caption}</span></div>
+              </div>
+            </Reveal>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
 function Marquee() {
   const row = [...MARQUEE_ITEMS, ...MARQUEE_ITEMS];
   return (
@@ -789,6 +881,7 @@ export function PortfolioPage() {
       <Nav theme={theme} toggle={toggle} />
       <main>
         <Hero />
+        <CaseStudy />
         <Marquee />
         <Services />
         <Projects />
