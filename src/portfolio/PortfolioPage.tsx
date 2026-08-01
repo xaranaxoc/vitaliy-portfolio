@@ -266,18 +266,22 @@ function Hero() {
           <Reveal delay={300}>
             <div className="mt-8 flex flex-wrap items-center gap-4">
               <a
-                href="#contact"
+                href={profile.telegram}
+                target="_blank"
+                rel="noreferrer"
                 className="font-body inline-flex items-center gap-2 rounded-lg bg-(--pf-lime-solid) px-6 py-3.5 text-sm font-bold text-(--pf-on-accent) transition-transform hover:-translate-y-0.5 hover:bg-(--pf-lime-solid-hover)"
               >
                 <Send className="size-4" />
-                Обсудить проект
+                Написать в Telegram
               </a>
               <a
-                href="#case"
+                href={profile.whatsapp}
+                target="_blank"
+                rel="noreferrer"
                 className="font-body inline-flex items-center gap-2 rounded-lg border border-(--pf-border-mid) px-6 py-3.5 text-sm font-semibold text-(--pf-text-2) transition-colors hover:border-(--pf-border-strong) hover:bg-(--pf-chip)"
               >
-                Смотреть работы
-                <ArrowDown className="size-4" />
+                <MessageCircle className="size-4" />
+                Написать в WhatsApp
               </a>
             </div>
           </Reveal>

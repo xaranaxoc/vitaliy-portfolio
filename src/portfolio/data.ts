@@ -13,7 +13,7 @@ export const profile = {
   // Статус-бейдж в hero
   status: "Открыт к новым проектам",
   // Контакты
-  telegram: "https://t.me/xarana_xoc",
+  telegram: "https://t.me/MatveevVitalii",
   email: "matveev.vit03@gmail.com",
   whatsapp: "https://wa.me/79142937537",
   github: "https://github.com/xaranaxoc",
