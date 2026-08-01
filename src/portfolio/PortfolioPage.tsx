@@ -1,5 +1,4 @@
 import {
-  ArrowDown,
   ArrowUpRight,
   Bot,
   Cpu,
