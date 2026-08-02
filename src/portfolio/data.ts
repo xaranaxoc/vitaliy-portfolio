@@ -1,6 +1,6 @@
 // ============================================================
 //  ДАННЫЕ ПОРТФОЛИО — редактируй только этот файл.
-//  Позиционирование: только веб-разработка (сайты и магазины).
+//  Всё содержимое сайта (имя, контакты, услуги, проекты) живёт здесь.
 // ============================================================
 
 export const profile = {
@@ -17,16 +17,20 @@ export const profile = {
 };
 
 // ─── HERO МЕТРИКИ ───────────────────────────────────────────
-export type Metric = { value: number; suffix: string; label: string };
+export type Metric = {
+  value: number;
+  suffix: string;
+  label: string;
+};
 
 export const metrics: Metric[] = [
-  { value: 4, suffix: "", label: "запущенных сайта" },
+  { value: 6, suffix: "", label: "проектов в портфолио" },
   { value: 24, suffix: "/7", label: "на связи" },
   { value: 1, suffix: "", label: "человек на весь цикл" },
-  { value: 7, suffix: "", label: "дней до запуска" },
+  { value: 5, suffix: "", label: "шагов до запуска" },
 ];
 
-// ─── УСЛУГИ (4 веб-направления) ─────────────────────────────
+// ─── УСЛУГИ (4 направления) ─────────────────────────────────
 export type Service = {
   title: string;
   outcome: string;
@@ -35,9 +39,9 @@ export type Service = {
 
 export const services: Service[] = [
   {
-    title: "Лендинги и сайты",
+    title: "Сайты и лендинги",
     outcome: "Продающие страницы, которые приводят клиентов, а не просто нравятся.",
-    points: ["Лендинги и корпоративные сайты", "Сильный дизайн и анимации", "Адаптив, скорость, SEO"],
+    points: ["Лендинги и корпоративные сайты", "Анимации и сильный дизайн", "Адаптив, скорость, SEO"],
   },
   {
     title: "Интернет-магазины",
@@ -45,70 +49,59 @@ export const services: Service[] = [
     points: ["Каталог и заказ с оплатой", "Своя админка для товаров", "Интеграции со складом и доставкой"],
   },
   {
-    title: "Веб-приложения",
-    outcome: "Личные кабинеты, SaaS и дашборды — интерфейсы, в которые клиент возвращается.",
-    points: ["Личные кабинеты с оплатой", "CRM и админ-панели", "Интеграции с сервисами"],
+    title: "Боты 24/7",
+    outcome: "Telegram и Discord-боты, которые продают и поддерживают, пока вы спите.",
+    points: ["Приём заявок и платежей", "Рассылки и воронки", "Поддержка и ответы клиентам"],
   },
   {
-    title: "Поддержка и рост",
-    outcome: "Сайт не стоит на месте: ускоряю, правлю и развиваю после запуска.",
-    points: ["Скорость и PageSpeed", "Правки и новые разделы", "Аналитика и конверсия"],
+    title: "Автоматизация",
+    outcome: "Связываю сервисы и убираю ручную работу — заявки не теряются, отчёты сами.",
+    points: ["Парсинг и обработка данных", "Интеграции между сервисами", "Дашборды и внутренние инструменты"],
   },
 ];
 
-// ─── РЕЗУЛЬТАТЫ — dashboard (типичные результаты запуска) ───
-// Честная рамка: числа иллюстративные, на основе типичных результатов
-// запуска сайта и кейса СозидАй.
-export const dashboard = {
-  caption: "Типичные результаты после запуска сайта — иллюстративно, на основе кейса СозидАй",
-  caseLink: "https://sozidaystudio.ru/",
-  kpis: [
-    { label: "Конверсия в заявку", target: 4.8, decimals: 1, suffix: "%", delta: "было 1.6%", up: true },
-    { label: "Заявок в месяц", target: 312, decimals: 0, suffix: "", delta: "было 128", up: true },
-    { label: "Скорость сайта", target: 98, decimals: 0, suffix: "/100", delta: "PageSpeed mobile", up: false },
-    { label: "Ответ клиенту", target: 2, decimals: 0, suffix: " сек", delta: "авто-приём 24/7", up: false },
+// ─── РЕЗУЛЬТАТ — кейс СозидАй как proof ─────────────────────
+export type ResultMetric = { value: string; label: string };
+
+export const sozidayResult: {
+  title: string;
+  problem: string;
+  solution: string;
+  metrics: ResultMetric[];
+  link: string;
+} = {
+  title: "СозидАй — от записей в тетради к работающему бизнесу",
+  problem:
+    "Записи в тетради, каталог на бумаге, клиенты только по сарафанному радио.",
+  solution:
+    "Сайт, магазин с CMS, онлайн-запись и CRM-канбан. Студия принимает заявки 24/7 без участия мастера.",
+  metrics: [
+    { value: "13", label: "страниц публичного сайта" },
+    { value: "1", label: "магазин с CMS-админкой" },
+    { value: "24/7", label: "принимает заявки" },
   ],
-  growth: {
-    title: "Заявки по неделям",
-    chip: "+142%",
-    bars: [30, 34, 28, 42, 50, 46, 62, 70, 66, 82, 90, 100],
-  },
-  beforeAfter: {
-    title: "Конверсия сайта",
-    chip: "×3",
-    before: { label: "Было — шаблон", value: "1.6%", width: "33%" },
-    after: { label: "Стало — наш сайт", value: "4.8%", width: "100%" },
-  },
-  funnel: {
-    title: "Путь клиента на сайте",
-    rows: [
-      { name: "Зашли на сайт", target: 8420, width: "100%" },
-      { name: "Посмотрели услуги", target: 4380, width: "52%" },
-      { name: "Оставили заявку", target: 1310, width: "16%" },
-      { name: "Стали клиентом", target: 402, width: "6%", win: true },
-    ],
-  },
+  link: "https://sozidaystudio.ru/",
 };
 
-// ─── ПРОЕКТЫ (только веб) ───────────────────────────────────
+// ─── ПРОЕКТЫ ────────────────────────────────────────────────
 export type Project = {
   id: string;
   kind: string;
   title: string;
   description: string;
   tags: string[];
-  image: string;
-  link: string;
+  image: string | null;
+  link: string | null;
 };
 
 export const projects: Project[] = [
   {
-    id: "soziday",
+    id: "soziday-case",
     kind: "Живой проект",
     title: "СозидАй — сайт студии рукоделия",
     description:
-      "Сайт, магазин и CRM под ключ: 13 страниц, онлайн-запись, своя админка. Студия принимает заявки 24/7 без ручных записей.",
-    tags: ["Сайт", "Магазин", "CRM"],
+      "Сайт + магазин + CRM под ключ. Студия получила инструмент, который работает 24/7 и приводит клиентов.",
+    tags: ["Сайт", "Магазин", "CRM", "Адаптив"],
     image: "/projects/soziday-public-1.jpg",
     link: "https://sozidaystudio.ru/",
   },
@@ -141,6 +134,26 @@ export const projects: Project[] = [
     tags: ["Сайт", "Editorial", "Адаптив"],
     image: "/projects/lumina.jpg",
     link: "https://lumina-studio-landing-eight.vercel.app/",
+  },
+  {
+    id: "trade-copier",
+    kind: "Десктоп-приложение",
+    title: "Trade Copier для MT5",
+    description:
+      "Копитрейдер: одна сделка сразу на 10 счетах MetaTrader 5, лот считается автоматически под баланс и риск каждого счёта.",
+    tags: ["Python", "MetaTrader 5", "Desktop"],
+    image: "/projects/trade-copier.png",
+    link: "https://github.com/xaranaxoc/TradeCopier",
+  },
+  {
+    id: "tg-bot",
+    kind: "Telegram-бот",
+    title: "Бот продаж и лицензий",
+    description:
+      "Автоматическая витрина: триал на 7 дней, продажа лицензий за USDT, выдача сборок, реферальная программа. Продаёт 24/7 без человека.",
+    tags: ["Python", "aiogram", "Крипто-платежи"],
+    image: "/projects/telegram-bot.png",
+    link: null,
   },
 ];
 
