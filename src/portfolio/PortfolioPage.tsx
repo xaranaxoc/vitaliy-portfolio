@@ -1,20 +1,36 @@
 import {
   ArrowUpRight,
   Bot,
+  Check,
+  ChevronDown,
+  Clock,
   Cpu,
   Github,
   Globe,
   Mail,
   MessageCircle,
   Moon,
+  Search,
   Send,
   Server,
+  ShieldCheck,
   Sun,
   TerminalSquare,
+  TrendingUp,
+  Zap,
 } from "lucide-react";
-import { useState, type ReactNode } from "react";
-import { profile, type Project, projects, stack } from "./data";
-import { type Theme, useReveal, useTerminal, useTheme } from "./hooks";
+import { type ReactNode, useEffect, useState } from "react";
+import {
+  benefits,
+  faq,
+  type Project,
+  profile,
+  projects,
+  stack,
+  stats,
+  testimonials,
+} from "./data";
+import { type Theme, useReveal, useTheme } from "./hooks";
 
 // ─────────────────────────────────────────────────────────────
 // Primitives
@@ -41,20 +57,28 @@ function Reveal({
   );
 }
 
-function SectionLabel({ index, text }: { index: string; text: string }) {
+function Eyebrow({ children }: { children: ReactNode }) {
   return (
-    <p className="font-code text-sm tracking-widest text-(--pf-lime)/90">
-      <span className="text-(--pf-text-4)">{"// "}</span>
-      {index} — {text}
-    </p>
+    <span className="inline-flex items-center gap-2.5 font-code text-xs font-semibold uppercase tracking-[0.22em] text-(--pf-lime)">
+      <span className="h-px w-7 bg-(--pf-lime)/40" />
+      {children}
+    </span>
   );
 }
 
 function SectionTitle({ children }: { children: ReactNode }) {
   return (
-    <h2 className="font-display mt-4 text-3xl font-semibold leading-tight tracking-tight text-(--pf-text) sm:text-4xl">
+    <h2 className="font-display mt-5 text-3xl font-semibold leading-[1.1] tracking-tight text-(--pf-text) sm:text-4xl lg:text-[2.7rem]">
       {children}
     </h2>
+  );
+}
+
+function Lead({ children }: { children: ReactNode }) {
+  return (
+    <p className="font-body mt-5 max-w-2xl text-base leading-relaxed text-(--pf-text-3) sm:text-lg">
+      {children}
+    </p>
   );
 }
 
@@ -81,15 +105,23 @@ const ACCENTS = {
   },
 } as const;
 
+const BENEFIT_ICON = {
+  clock: Clock,
+  trust: ShieldCheck,
+  auto: Zap,
+  grow: TrendingUp,
+} as const;
+
 // ─────────────────────────────────────────────────────────────
 // Navigation
 // ─────────────────────────────────────────────────────────────
 
 const NAV_LINKS = [
+  { href: "#benefits", label: "Что вы получите" },
   { href: "#services", label: "Услуги" },
   { href: "#work", label: "Работы" },
   { href: "#process", label: "Процесс" },
-  { href: "#stack", label: "Стек" },
+  { href: "#faq", label: "Вопросы" },
 ];
 
 function ThemeToggle({ theme, toggle }: { theme: Theme; toggle: () => void }) {
@@ -97,26 +129,39 @@ function ThemeToggle({ theme, toggle }: { theme: Theme; toggle: () => void }) {
     <button
       type="button"
       onClick={toggle}
-      aria-label={theme === "dark" ? "Включить светлую тему" : "Включить тёмную тему"}
+      aria-label={
+        theme === "dark" ? "Включить светлую тему" : "Включить тёмную тему"
+      }
       title={theme === "dark" ? "Светлая тема" : "Тёмная тема"}
       className="inline-flex size-9 items-center justify-center rounded-md border border-(--pf-border) bg-(--pf-chip) text-(--pf-text-3) transition-colors hover:border-(--pf-border-strong) hover:text-(--pf-text)"
     >
-      {theme === "dark" ? <Sun className="size-4" /> : <Moon className="size-4" />}
+      {theme === "dark" ? (
+        <Sun className="size-4" />
+      ) : (
+        <Moon className="size-4" />
+      )}
     </button>
   );
 }
 
 function Nav({ theme, toggle }: { theme: Theme; toggle: () => void }) {
   const [open, setOpen] = useState(false);
+  useEffect(() => {
+    const close = () => setOpen(false);
+    window.addEventListener("hashchange", close);
+    return () => window.removeEventListener("hashchange", close);
+  }, []);
   return (
     <header className="fixed inset-x-0 top-0 z-50 border-b border-(--pf-border-soft) bg-(--pf-nav) backdrop-blur-md">
       <nav className="mx-auto flex h-16 max-w-6xl items-center justify-between px-5">
-        <a href="#top" className="font-code text-sm font-semibold text-(--pf-text)">
-          <span className="text-(--pf-lime)">~/</span>
-          {profile.name.toLowerCase()}
-          <span className="pf-cursor text-(--pf-lime)" aria-hidden="true" />
+        <a
+          href="#top"
+          className="font-display text-sm font-semibold tracking-tight text-(--pf-text)"
+        >
+          <span className="text-(--pf-lime)">{profile.name}</span>
+          <span className="text-(--pf-text-4)">.dev</span>
         </a>
-        <div className="hidden items-center gap-7 md:flex">
+        <div className="hidden items-center gap-7 lg:flex">
           {NAV_LINKS.map(l => (
             <a
               key={l.href}
@@ -131,7 +176,7 @@ function Nav({ theme, toggle }: { theme: Theme; toggle: () => void }) {
           <ThemeToggle theme={theme} toggle={toggle} />
           <a
             href="#contact"
-            className="font-code hidden rounded-md border border-(--pf-lime)/40 bg-(--pf-lime)/10 px-4 py-2 text-xs font-semibold text-(--pf-lime) transition-all hover:bg-(--pf-lime-solid) hover:text-(--pf-on-accent) sm:inline"
+            className="font-body hidden rounded-lg bg-(--pf-lime-solid) px-4 py-2 text-sm font-bold text-(--pf-on-accent) transition-transform hover:-translate-y-0.5 hover:bg-(--pf-lime-solid-hover) sm:inline"
           >
             Обсудить проект
           </a>
@@ -140,9 +185,22 @@ function Nav({ theme, toggle }: { theme: Theme; toggle: () => void }) {
             onClick={() => setOpen(o => !o)}
             aria-label="Меню"
             aria-expanded={open}
-            className="inline-flex size-9 items-center justify-center rounded-md border border-(--pf-border) bg-(--pf-chip) text-(--pf-text-2) transition-colors hover:border-(--pf-border-strong) md:hidden"
+            className="inline-flex size-9 items-center justify-center rounded-md border border-(--pf-border) bg-(--pf-chip) text-(--pf-text-2) transition-colors hover:border-(--pf-border-strong) lg:hidden"
           >
-            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round"><path d="M3 6h18" /><path d="M3 12h18" /><path d="M3 18h18" /></svg>
+            <svg
+              viewBox="0 0 24 24"
+              width="18"
+              height="18"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1.75"
+              strokeLinecap="round"
+              aria-hidden="true"
+            >
+              <path d="M3 6h18" />
+              <path d="M3 12h18" />
+              <path d="M3 18h18" />
+            </svg>
           </button>
         </div>
       </nav>
@@ -153,7 +211,6 @@ function Nav({ theme, toggle }: { theme: Theme; toggle: () => void }) {
               <a
                 key={l.href}
                 href={l.href}
-                onClick={() => setOpen(false)}
                 className="font-body rounded-md px-2 py-2.5 text-sm font-medium text-(--pf-text-2) transition-colors hover:bg-(--pf-chip) hover:text-(--pf-text)"
               >
                 {l.label}
@@ -161,8 +218,7 @@ function Nav({ theme, toggle }: { theme: Theme; toggle: () => void }) {
             ))}
             <a
               href="#contact"
-              onClick={() => setOpen(false)}
-              className="font-code mt-1 rounded-md border border-(--pf-lime)/40 bg-(--pf-lime)/10 px-2 py-2.5 text-xs font-semibold text-(--pf-lime)"
+              className="font-body mt-1 rounded-lg border border-(--pf-lime)/40 bg-(--pf-lime)/10 px-2 py-2.5 text-center text-xs font-semibold text-(--pf-lime)"
             >
               Обсудить проект
             </a>
@@ -177,47 +233,66 @@ function Nav({ theme, toggle }: { theme: Theme; toggle: () => void }) {
 // Hero
 // ─────────────────────────────────────────────────────────────
 
-function Terminal() {
-  const { done, current } = useTerminal();
+const HERO_CARD_ROWS = [
+  { icon: TrendingUp, label: "Заявки", value: "круглосуточно", accent: true },
+  { icon: Zap, label: "Скорость", value: "молниеносная", accent: false },
+  { icon: Bot, label: "Ответы", value: "автоматически", accent: false },
+  { icon: Search, label: "Поиск", value: "новые клиенты", accent: false },
+];
 
-  // Терминал всегда тёмный — в обеих темах (это фича, а не баг)
-  const renderLine = (line: { text: string; kind: string }, i: number, typing = false) => (
-    <div key={`${i}-${line.text}`} className="flex gap-2 whitespace-pre-wrap break-all">
-      {line.kind === "cmd" ? (
-        <>
-          <span className="shrink-0 text-[#bef264]">$</span>
-          <span className="text-[#f4f4f5]">
-            {line.text}
-            {typing && <span className="pf-cursor text-[#f4f4f5]" aria-hidden="true" />}
-          </span>
-        </>
-      ) : line.kind === "ok" ? (
-        <span className="text-[#6ee7b7]/90">{line.text}</span>
-      ) : (
-        <span className="text-[#a1a1aa]">{line.text}</span>
-      )}
-    </div>
-  );
-
+function HeroCard() {
   return (
-    <div className="overflow-hidden rounded-xl border border-[#ffffff1a] bg-[#0d1117]/90 shadow-[0_24px_80px_-20px_rgba(163,230,53,0.15)]">
-      <div className="flex items-center gap-2 border-b border-[#ffffff0d] px-4 py-3">
+    <div className="overflow-hidden rounded-2xl border border-(--pf-border-mid) bg-(--pf-surface) shadow-[0_24px_80px_-20px_rgba(163,230,53,0.12)] backdrop-blur-sm">
+      <div className="flex items-center gap-2 border-b border-(--pf-border-soft) px-4 py-3">
         <span className="size-3 rounded-full bg-[#ff5f57]" />
         <span className="size-3 rounded-full bg-[#febc2e]" />
         <span className="size-3 rounded-full bg-[#28c840]" />
-        <span className="font-code ml-3 text-xs text-[#71717a]">
-          {profile.name.toLowerCase()}@dev — zsh
+        <span className="font-code ml-2 truncate text-xs text-(--pf-text-4)">
+          ваш-сайт.ru — работает на вас
         </span>
       </div>
-      <div className="font-code min-h-[290px] space-y-2 p-5 text-[13px] leading-relaxed sm:text-sm">
-        {done.map((l, i) => renderLine(l, i))}
-        {current && renderLine(current, done.length, true)}
-        {!current && done.length === 0 && (
-          <div className="flex gap-2">
-            <span className="text-[#bef264]">$</span>
-            <span className="pf-cursor text-[#f4f4f5]" aria-hidden="true" />
-          </div>
-        )}
+      <div className="space-y-1 p-5">
+        <p className="font-code px-1 pb-1 text-xs font-semibold uppercase tracking-[0.18em] text-(--pf-lime)/90">
+          что даёт сайт вашему бизнесу
+        </p>
+        {HERO_CARD_ROWS.map(r => {
+          const Icon = r.icon;
+          return (
+            <div
+              key={r.label}
+              className={`flex items-center justify-between rounded-lg px-3 py-3 transition-colors ${
+                r.accent ? "bg-(--pf-lime)/10" : "bg-(--pf-chip)"
+              }`}
+            >
+              <span className="flex items-center gap-2.5">
+                <span
+                  className={
+                    r.accent ? "text-(--pf-lime)" : "text-(--pf-text-4)"
+                  }
+                >
+                  <Icon className="size-4" />
+                </span>
+                <span className="font-body text-sm text-(--pf-text-2)">
+                  {r.label}
+                </span>
+              </span>
+              <span
+                className={`font-code text-xs font-semibold ${r.accent ? "text-(--pf-lime)" : "text-(--pf-text-3)"}`}
+              >
+                {r.value}
+              </span>
+            </div>
+          );
+        })}
+      </div>
+      <div className="flex items-center gap-2 border-t border-(--pf-border-soft) px-5 py-3">
+        <span className="relative flex size-2">
+          <span className="absolute inline-flex size-2 rounded-full bg-(--pf-lime-solid) [animation:pf-ping_1.8s_ease-out_infinite]" />
+          <span className="relative inline-flex size-2 rounded-full bg-(--pf-lime-solid)" />
+        </span>
+        <span className="font-code text-xs text-(--pf-text-4)">
+          статус: онлайн · принимает заявки
+        </span>
       </div>
     </div>
   );
@@ -233,7 +308,10 @@ function Hero() {
       <div className="relative mx-auto grid max-w-6xl gap-14 px-5 pb-20 pt-16 sm:pt-24 lg:grid-cols-[1.05fr_0.95fr] lg:items-center">
         <div>
           <Reveal>
-            <span className="inline-flex items-center gap-2.5 rounded-full border border-(--pf-border) bg-(--pf-chip) px-4 py-1.5">
+            <a
+              href="#contact"
+              className="inline-flex items-center gap-2.5 rounded-full border border-(--pf-border) bg-(--pf-chip) px-4 py-1.5 transition-colors hover:border-(--pf-lime)/40"
+            >
               <span className="relative flex size-2">
                 <span className="absolute inline-flex size-2 rounded-full bg-(--pf-lime-solid) [animation:pf-ping_1.8s_ease-out_infinite]" />
                 <span className="relative inline-flex size-2 rounded-full bg-(--pf-lime-solid)" />
@@ -241,67 +319,64 @@ function Hero() {
               <span className="font-code text-xs font-medium text-(--pf-text-2)">
                 {profile.status}
               </span>
-            </span>
+            </a>
           </Reveal>
 
           <Reveal delay={100}>
-            <h1 className="font-display mt-7 text-4xl font-semibold leading-[1.12] tracking-tight text-(--pf-text) sm:text-5xl lg:text-[3.4rem]">
-              Сайты, которые продают —{" "}
+            <h1 className="font-display mt-7 text-4xl font-semibold leading-[1.08] tracking-tight text-(--pf-text) sm:text-5xl lg:text-[3.4rem]">
+              Сайты, которые{" "}
               <span className="bg-[linear-gradient(100deg,var(--pf-g1),var(--pf-g2),var(--pf-g3))] bg-clip-text text-transparent">
-                от идеи до продакшена
+                приносят клиентов
               </span>
+              , а не просто висят в сети
             </h1>
           </Reveal>
 
           <Reveal delay={200}>
             <p className="font-body mt-6 max-w-xl text-base leading-relaxed text-(--pf-text-3) sm:text-lg">
-              Я — {profile.nameRu}, {profile.role.toLowerCase()}. Создаю быстрые,
-              адаптивные сайты и веб-приложения: от лендинга до личного кабинета
-              с оплатой. Вы получаете готовый продукт — дизайн, код, деплой и
-              поддержку из одних рук.
+              Создаю быстрые, адаптивные сайты и ботов под ключ — от лендинга до
+              магазина с админкой. Вы получаете инструмент, который работает на
+              бизнес: заявки, продажи и клиентов 24/7.
             </p>
           </Reveal>
 
           <Reveal delay={300}>
             <div className="mt-8 flex flex-wrap items-center gap-4">
               <a
-                href={profile.telegram}
-                target="_blank"
-                rel="noreferrer"
+                href="#contact"
                 className="font-body inline-flex items-center gap-2 rounded-lg bg-(--pf-lime-solid) px-6 py-3.5 text-sm font-bold text-(--pf-on-accent) transition-transform hover:-translate-y-0.5 hover:bg-(--pf-lime-solid-hover)"
               >
                 <Send className="size-4" />
-                Написать в Telegram
+                Обсудить проект
               </a>
               <a
-                href={profile.whatsapp}
-                target="_blank"
-                rel="noreferrer"
+                href="#work"
                 className="font-body inline-flex items-center gap-2 rounded-lg border border-(--pf-border-mid) px-6 py-3.5 text-sm font-semibold text-(--pf-text-2) transition-colors hover:border-(--pf-border-strong) hover:bg-(--pf-chip)"
               >
-                <MessageCircle className="size-4" />
-                Написать в WhatsApp
+                Смотреть работы
+                <ArrowUpRight className="size-4" />
               </a>
             </div>
           </Reveal>
 
           <Reveal delay={400}>
-            <div className="font-code mt-10 flex flex-wrap gap-x-6 gap-y-2 text-xs text-(--pf-text-4)">
-              <span>
-                <span className="text-(--pf-lime)">▸</span> сайты и веб-приложения под ключ
-              </span>
-              <span>
-                <span className="text-(--pf-lime)">▸</span> frontend + backend в одних руках
-              </span>
-              <span>
-                <span className="text-(--pf-lime)">▸</span> Python · TypeScript · React
-              </span>
-            </div>
+            <dl className="mt-12 grid grid-cols-2 gap-x-6 gap-y-7 sm:grid-cols-4">
+              {stats.map(s => (
+                <div key={s.label}>
+                  <dt className="font-display text-2xl font-semibold text-(--pf-lime)">
+                    {s.value}
+                  </dt>
+                  <dd className="font-body mt-1.5 text-xs leading-snug text-(--pf-text-4)">
+                    {s.label}
+                  </dd>
+                </div>
+              ))}
+            </dl>
           </Reveal>
         </div>
 
         <Reveal delay={250} className="min-w-0">
-          <Terminal />
+          <HeroCard />
         </Reveal>
       </div>
     </section>
@@ -313,111 +388,16 @@ function Hero() {
 // ─────────────────────────────────────────────────────────────
 
 const MARQUEE_ITEMS = [
-  "Сайты",
-  "Веб-приложения",
-  "React",
-  "TypeScript",
-  "Tailwind CSS",
   "Лендинги",
-  "SaaS",
-  "Python",
-  "FastAPI",
-  "PostgreSQL",
-  "Docker",
-  "REST API",
+  "Интернет-магазины",
+  "Онлайн-запись",
+  "Telegram-боты",
+  "CRM-админки",
+  "Адаптив",
+  "SEO",
+  "Автоматизация",
+  "24/7",
 ];
-
-// ─────────────────────────────────────────────────────────────
-// Case Study: СозидАй
-// ─────────────────────────────────────────────────────────────
-
-const SOZIDAY_PUBLIC = [
-  { src: "/projects/soziday-public-1.jpg", alt: "СозидАй — главная страница", caption: "Главная" },
-  { src: "/projects/soziday-public-2.jpg", alt: "СозидАй — магазин ручной работы", caption: "Магазин" },
-  { src: "/projects/soziday-public-3.jpg", alt: "СозидАй — мастера и работы", caption: "Мастера" },
-  { src: "/projects/soziday-public-4.jpg", alt: "СозидАй — запись на мастер-класс", caption: "Запись" },
-];
-
-const SOZIDAY_CRM = [
-  { src: "/projects/soziday-crm-1.jpg", alt: "CRM — настройки студии", caption: "Настройки" },
-  { src: "/projects/soziday-crm-2.jpg", alt: "CRM — управление товарами", caption: "Товары" },
-  { src: "/projects/soziday-crm-3.jpg", alt: "CRM — редактор страницы мастера", caption: "Страница мастера" },
-];
-
-function CaseStudy() {
-  return (
-    <section id="case" className="relative border-t border-(--pf-border-soft) py-24">
-      <div className="mx-auto max-w-6xl px-5">
-        <Reveal>
-          <div className="flex flex-wrap items-center gap-3">
-            <span className="font-code rounded-full border border-(--pf-lime)/30 bg-(--pf-lime)/10 px-3 py-1 text-[10px] font-semibold uppercase tracking-widest text-(--pf-lime)">
-              живой проект
-            </span>
-            <a
-              href="https://sozidaystudio.ru/"
-              target="_blank"
-              rel="noreferrer"
-              className="font-code inline-flex items-center gap-1 text-xs text-(--pf-text-3) transition-colors hover:text-(--pf-text)"
-            >
-              sozidaystudio.ru <ArrowUpRight className="size-3.5" />
-            </a>
-          </div>
-          <h2 className="font-display mt-5 text-3xl font-semibold leading-tight tracking-tight text-(--pf-text) sm:text-4xl">
-            СозидАй — сайт студии рукоделия с нуля
-          </h2>
-          <p className="font-body mt-4 max-w-2xl text-base leading-relaxed text-(--pf-text-3)">
-            Полноценный сайт для творческой студии в Якутске: 13 страниц,
-            магазин с товарами, запись на мастер-классы, CRM-админка с
-            канбан-доской и управлением товарами. CI автодеплой, адаптив,
-            работает 24/7 и приносит клиентов.
-          </p>
-          <div className="font-code mt-6 flex flex-wrap gap-x-6 gap-y-2 text-xs text-(--pf-text-4)">
-            <span><span className="text-(--pf-lime)">▸</span> 13+ страниц</span>
-            <span><span className="text-(--pf-lime)">▸</span> CRM + e-commerce</span>
-            <span><span className="text-(--pf-lime)">▸</span> CI автодеплой</span>
-            <span><span className="text-(--pf-lime)">▸</span> адаптив</span>
-          </div>
-        </Reveal>
-
-        <Reveal delay={100}>
-          <h3 className="font-display mt-12 mb-6 text-lg font-semibold text-(--pf-text-2)">
-            Публичный сайт
-          </h3>
-        </Reveal>
-        <div className="grid gap-5 md:grid-cols-2">
-          {SOZIDAY_PUBLIC.map((s, i) => (
-            <Reveal key={s.src} delay={i * 80}>
-              <div className="group overflow-hidden rounded-xl border border-(--pf-border) bg-(--pf-surface) transition-all duration-300 hover:-translate-y-1 hover:border-(--pf-lime)/40">
-                <div className="aspect-video overflow-hidden border-b border-(--pf-border-soft) bg-(--pf-media)">
-                  <img src={s.src} alt={s.alt} loading="lazy" decoding="async" width={1280} height={720} className="size-full object-cover transition-transform duration-500 group-hover:scale-[1.03]" />
-                </div>
-                <div className="p-3"><span className="font-code text-xs text-(--pf-text-4)">{s.caption}</span></div>
-              </div>
-            </Reveal>
-          ))}
-        </div>
-
-        <Reveal delay={100}>
-          <h3 className="font-display mt-12 mb-6 text-lg font-semibold text-(--pf-text-2)">
-            CRM админ-панель
-          </h3>
-        </Reveal>
-        <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-          {SOZIDAY_CRM.map((s, i) => (
-            <Reveal key={s.src} delay={i * 80}>
-              <div className="group overflow-hidden rounded-xl border border-(--pf-border) bg-(--pf-surface) transition-all duration-300 hover:-translate-y-1 hover:border-(--pf-lime)/40">
-                <div className="aspect-video overflow-hidden border-b border-(--pf-border-soft) bg-(--pf-media)">
-                  <img src={s.src} alt={s.alt} loading="lazy" decoding="async" width={1280} height={720} className="size-full object-cover transition-transform duration-500 group-hover:scale-[1.03]" />
-                </div>
-                <div className="p-3"><span className="font-code text-xs text-(--pf-text-4)">{s.caption}</span></div>
-              </div>
-            </Reveal>
-          ))}
-        </div>
-      </div>
-    </section>
-  );
-}
 
 function Marquee() {
   const row = [...MARQUEE_ITEMS, ...MARQUEE_ITEMS];
@@ -426,7 +406,7 @@ function Marquee() {
       <div className="pf-marquee flex w-max items-center">
         {row.map((item, i) => (
           <span
-            key={`${item}-${i === 0 ? "a" : i}`}
+            key={`${item}-${i}`}
             className="font-code flex items-center text-sm text-(--pf-text-4)"
           >
             <span className="px-5">{item}</span>
@@ -435,6 +415,50 @@ function Marquee() {
         ))}
       </div>
     </div>
+  );
+}
+
+// ─────────────────────────────────────────────────────────────
+// Benefits — что вы получите
+// ─────────────────────────────────────────────────────────────
+
+function Benefits() {
+  return (
+    <section id="benefits" className="mx-auto max-w-6xl px-5 py-24">
+      <Reveal>
+        <Eyebrow>Зачем вам сайт</Eyebrow>
+        <SectionTitle>
+          Сайт — это не картинка.
+          <br />
+          Это сотрудник, который не спит.
+        </SectionTitle>
+        <Lead>
+          Многие думают, что сайт нужен «чтобы был». На самом деле правильный
+          сайт решает конкретные задачи бизнеса — вот что вы получаете.
+        </Lead>
+      </Reveal>
+
+      <div className="mt-12 grid gap-5 sm:grid-cols-2">
+        {benefits.map((b, i) => {
+          const Icon = BENEFIT_ICON[b.icon];
+          return (
+            <Reveal key={b.title} delay={i * 90}>
+              <article className="group h-full rounded-xl border border-(--pf-border) bg-(--pf-surface) p-7 transition-all duration-300 hover:-translate-y-1 hover:border-(--pf-lime)/40 hover:bg-(--pf-surface-hover)">
+                <div className="inline-flex rounded-lg border border-(--pf-border) bg-(--pf-chip) p-3 text-(--pf-lime) transition-colors group-hover:bg-(--pf-lime)/10">
+                  <Icon className="size-6" />
+                </div>
+                <h3 className="font-display mt-5 text-lg font-semibold text-(--pf-text) sm:text-xl">
+                  {b.title}
+                </h3>
+                <p className="font-body mt-3 text-sm leading-relaxed text-(--pf-text-3)">
+                  {b.text}
+                </p>
+              </article>
+            </Reveal>
+          );
+        })}
+      </div>
+    </section>
   );
 }
 
@@ -454,91 +478,120 @@ type Service = {
 const SERVICES: Service[] = [
   {
     icon: <Globe className="size-6" />,
-    title: "Сайты и веб-приложения",
-    text: "Fullstack под ключ: от лендинга до личного кабинета с оплатой. Дизайн, интерфейс, логика, база данных и деплой — из одних рук. Адаптив, скорость и SEO — по умолчанию.",
-    points: ["Лендинги и корпоративные сайты", "SaaS и личные кабинеты", "Адаптив, скорость, SEO"],
+    title: "Сайты и интернет-магазины",
+    text: "Под ключ: от лендинга до магазина с корзиной, оплатой и админкой. Дизайн, который продаёт, адаптив на любом экране и SEO — по умолчанию. Клиент заходит с телефона и сразу понимает, что вы ему предлагаете.",
+    points: [
+      "Лендинги и корпоративные сайты",
+      "Магазины с оплатой и доставкой",
+      "Адаптив, скорость, SEO",
+    ],
     wide: true,
     featured: true,
   },
   {
     icon: <Bot className="size-6" />,
-    title: "Telegram и Discord-боты",
-    text: "Боты, которые продают и обслуживают клиентов, пока вы спите: приём заявок и оплат, рассылки, поддержка, модерация комьюнити. Запуск — за считанные дни, работа — 24/7 без зарплаты и выходных.",
-    points: ["Продажи и приём платежей", "Рассылки и воронки", "Админ-панель и статистика", "Модерация и управление сервером"],
+    title: "Боты, которые продают 24/7",
+    text: "Telegram- и Discord-боты: приём заявок и оплат, рассылки, поддержка клиентов. Работают круглосуточно без зарплаты и выходных — пока вы занимаетесь бизнесом.",
+    points: [
+      "Продажи и приём платежей",
+      "Поддержка и рассылки",
+      "Модерация комьюнити",
+    ],
     wide: false,
   },
   {
     icon: <Server className="size-6" />,
-    title: "Backend и API",
-    text: "Сердце вашего продукта. Проектирую архитектуру, базы данных и API, которые не падают под нагрузкой: сегодня у вас 100 пользователей, завтра — 100 000, а код уже к этому готов.",
-    points: ["REST / WebSocket API", "Базы данных и кэширование", "Интеграции с любыми сервисами", "Нагрузка, безопасность, мониторинг"],
+    title: "Бэкенд и интеграции",
+    text: "Связываю сайт с вашими сервисами: CRM, платёжные системы, складской учёт, мессенджеры. Сегодня 100 клиентов — завтра 100 000, а сайт уже к этому готов.",
+    points: [
+      "API и базы данных",
+      "Интеграции с сервисами",
+      "Надёжность под нагрузкой",
+    ],
     wide: true,
     featured: true,
   },
   {
     icon: <Cpu className="size-6" />,
-    title: "Python-приложения и автоматизация",
-    text: "Автоматизирую всё, что делается руками: парсеры, скрипты, обработка данных, интеграции между сервисами. Часы рутины превращаются в одну кнопку.",
-    points: ["Парсинг и сбор данных", "Скрипты и планировщики", "Интеграции и внутренние инструменты"],
+    title: "Автоматизация рутины",
+    text: "Превращаю повторяющиеся задачи в одну кнопку: парсеры, отчёты, рассылки, внутренние инструменты. Часы ручной работы становятся секундами.",
+    points: [
+      "Парсинг и сбор данных",
+      "Внутренние инструменты",
+      "Интеграции между сервисами",
+    ],
     wide: false,
   },
 ];
 
 function Services() {
   return (
-    <section id="services" className="relative mx-auto max-w-6xl px-5 py-24">
-      <Reveal>
-        <SectionLabel index="01" text="чем я помогаю" />
-        <SectionTitle>
-          Один разработчик.
-          <br />
-          Весь цикл — под ключ.
-        </SectionTitle>
-      </Reveal>
+    <section
+      id="services"
+      className="relative border-t border-(--pf-border-soft) bg-(--pf-surface-tint) py-24"
+    >
+      <div className="mx-auto max-w-6xl px-5">
+        <Reveal>
+          <Eyebrow>Услуги</Eyebrow>
+          <SectionTitle>Что я делаю для вашего бизнеса</SectionTitle>
+          <Lead>
+            Четыре направления — один результат: клиенты приходят сами, а рутина
+            работает без вас.
+          </Lead>
+        </Reveal>
 
-      <div className="mt-12 grid gap-5 md:grid-cols-3">
-        {SERVICES.map((s, i) => (
-          <Reveal
-            key={s.title}
-            delay={i * 90}
-            className={s.wide ? "md:col-span-2" : ""}
-          >
-            <article
-              className={`group relative h-full overflow-hidden rounded-xl border bg-(--pf-surface) p-7 transition-all duration-300 hover:-translate-y-1 hover:bg-(--pf-surface-hover) ${
-                s.featured
-                  ? "border-(--pf-lime)/25 hover:border-(--pf-lime)/50"
-                  : "border-(--pf-border) hover:border-(--pf-border-strong)"
-              }`}
+        <div className="mt-12 grid gap-5 md:grid-cols-3">
+          {SERVICES.map((s, i) => (
+            <Reveal
+              key={s.title}
+              delay={i * 90}
+              className={s.wide ? "md:col-span-2" : ""}
             >
-              {s.featured && (
-                <span className="font-code absolute right-5 top-5 rounded-full border border-(--pf-lime)/30 bg-(--pf-lime)/10 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-widest text-(--pf-lime)">
-                  специализация
-                </span>
-              )}
-              <div
-                className={`inline-flex rounded-lg border border-(--pf-border) bg-(--pf-chip) p-3 transition-colors ${
-                  s.featured ? "text-(--pf-lime) group-hover:bg-(--pf-lime)/10" : "text-(--pf-cyan) group-hover:bg-(--pf-cyan)/10"
+              <article
+                className={`group relative h-full overflow-hidden rounded-xl border bg-(--pf-surface) p-7 transition-all duration-300 hover:-translate-y-1 hover:bg-(--pf-surface-hover) ${
+                  s.featured
+                    ? "border-(--pf-lime)/25 hover:border-(--pf-lime)/50"
+                    : "border-(--pf-border) hover:border-(--pf-border-strong)"
                 }`}
               >
-                {s.icon}
-              </div>
-              <h3 className="font-display mt-5 text-lg font-semibold text-(--pf-text) sm:text-xl">
-                {s.title}
-              </h3>
-              <p className="font-body mt-3 text-sm leading-relaxed text-(--pf-text-3)">
-                {s.text}
-              </p>
-              <ul className="font-code mt-5 space-y-1.5 text-xs text-(--pf-text-4)">
-                {s.points.map(p => (
-                  <li key={p}>
-                    <span className={s.featured ? "text-(--pf-lime)" : "text-(--pf-cyan)"}>+</span>{" "}
-                    {p}
-                  </li>
-                ))}
-              </ul>
-            </article>
-          </Reveal>
-        ))}
+                {s.featured && (
+                  <span className="font-code absolute right-5 top-5 rounded-full border border-(--pf-lime)/30 bg-(--pf-lime)/10 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.18em] text-(--pf-lime)">
+                    чаще всего заказывают
+                  </span>
+                )}
+                <div
+                  className={`inline-flex rounded-lg border border-(--pf-border) bg-(--pf-chip) p-3 transition-colors ${
+                    s.featured
+                      ? "text-(--pf-lime) group-hover:bg-(--pf-lime)/10"
+                      : "text-(--pf-cyan) group-hover:bg-(--pf-cyan)/10"
+                  }`}
+                >
+                  {s.icon}
+                </div>
+                <h3 className="font-display mt-5 text-lg font-semibold text-(--pf-text) sm:text-xl">
+                  {s.title}
+                </h3>
+                <p className="font-body mt-3 text-sm leading-relaxed text-(--pf-text-3)">
+                  {s.text}
+                </p>
+                <ul className="font-body mt-5 space-y-1.5 text-xs text-(--pf-text-4)">
+                  {s.points.map(p => (
+                    <li key={p} className="flex items-center gap-2">
+                      <span
+                        className={
+                          s.featured ? "text-(--pf-lime)" : "text-(--pf-cyan)"
+                        }
+                      >
+                        <Check className="size-3.5" strokeWidth={2.5} />
+                      </span>
+                      {p}
+                    </li>
+                  ))}
+                </ul>
+              </article>
+            </Reveal>
+          ))}
+        </div>
       </div>
     </section>
   );
@@ -550,22 +603,26 @@ function Services() {
 
 const PROJECT_ICONS: Record<string, ReactNode> = {
   "trading-app": <TerminalSquare className="size-8" />,
-  landing: <Globe className="size-8" />,
-  northpeak: <Globe className="size-8" />,
-  lumina: <Globe className="size-8" />,
   "tg-bot": <Send className="size-8" />,
   "ds-bot": <Bot className="size-8" />,
 };
 
 function ProjectCard({ project, index }: { project: Project; index: number }) {
   const accent = ACCENTS[project.accent];
+  const isLive = project.id === "soziday";
   return (
-    <Reveal delay={(index % 2) * 100}>
+    <Reveal
+      delay={(index % 2) * 100}
+      className={isLive ? "md:col-span-2 lg:col-span-3" : ""}
+    >
       <article
-        className={`group h-full overflow-hidden rounded-xl border border-(--pf-border) bg-(--pf-surface) transition-all duration-300 hover:-translate-y-1 ${accent.border}`}
+        className={`group flex h-full flex-col overflow-hidden rounded-xl border border-(--pf-border) bg-(--pf-surface) transition-all duration-300 hover:-translate-y-1 ${accent.border} ${
+          isLive ? "sm:flex-row" : ""
+        }`}
       >
-        {/* Screenshot area — put a real image path into data.ts */}
-        <div className="pf-dots relative flex aspect-video items-center justify-center overflow-hidden border-b border-(--pf-border-soft) bg-(--pf-media)">
+        <div
+          className={`pf-dots relative flex items-center justify-center overflow-hidden border-(--pf-border-soft) bg-(--pf-media) ${isLive ? "sm:w-1/2 aspect-video sm:aspect-auto sm:border-r" : "aspect-video border-b"}`}
+        >
           {project.image ? (
             <img
               src={project.image}
@@ -574,12 +631,14 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
               decoding="async"
               width={1280}
               height={720}
-              className="size-full object-cover transition-transform duration-500 group-hover:scale-[1.03]"
+              className="size-full object-cover object-top transition-transform duration-500 group-hover:scale-[1.03]"
             />
           ) : (
             <div className="flex flex-col items-center gap-3 transition-transform duration-500 group-hover:scale-110">
-              <div className={`rounded-xl border border-(--pf-border) bg-(--pf-chip) p-4 ${accent.text}`}>
-                {PROJECT_ICONS[project.id] ?? <TerminalSquare className="size-8" />}
+              <div
+                className={`rounded-xl border border-(--pf-border) bg-(--pf-chip) p-4 ${accent.text}`}
+              >
+                {PROJECT_ICONS[project.id] ?? <Globe className="size-8" />}
               </div>
               <span className="font-code text-[11px] uppercase tracking-[0.25em] text-(--pf-text-5)">
                 скриншот скоро
@@ -591,9 +650,19 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
           />
         </div>
 
-        <div className="p-6">
+        <div className={`flex flex-1 flex-col p-6 ${isLive ? "sm:p-8" : ""}`}>
+          {isLive && (
+            <div className="mb-3 flex flex-wrap items-center gap-2">
+              <span className="font-code inline-flex items-center gap-1.5 rounded-full border border-(--pf-lime)/30 bg-(--pf-lime)/10 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.16em] text-(--pf-lime)">
+                <span className="size-1.5 rounded-full bg-(--pf-lime-solid)" />
+                живой проект
+              </span>
+            </div>
+          )}
           <div className="flex items-center justify-between gap-3">
-            <span className={`font-code text-[11px] font-semibold uppercase tracking-[0.2em] ${accent.text}`}>
+            <span
+              className={`font-code text-[11px] font-semibold uppercase tracking-[0.16em] ${accent.text}`}
+            >
               {project.kind}
             </span>
             {project.link && (
@@ -601,19 +670,33 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
                 href={project.link}
                 target="_blank"
                 rel="noreferrer"
-                className="font-code inline-flex items-center gap-1 text-xs text-(--pf-text-3) transition-colors hover:text-(--pf-text)"
+                className="font-code inline-flex shrink-0 items-center gap-1 text-xs text-(--pf-text-3) transition-colors hover:text-(--pf-text)"
               >
                 открыть <ArrowUpRight className="size-3.5" />
               </a>
             )}
           </div>
-          <h3 className="font-display mt-3 text-lg font-semibold text-(--pf-text)">
+          <h3
+            className={`font-display mt-3 font-semibold text-(--pf-text) ${isLive ? "text-xl sm:text-2xl" : "text-lg"}`}
+          >
             {project.title}
           </h3>
-          <p className="font-body mt-2.5 text-sm leading-relaxed text-(--pf-text-3)">
+
+          <div className="mt-3 rounded-lg border border-(--pf-border-soft) bg-(--pf-chip) px-4 py-3">
+            <p className="font-code text-[10px] font-semibold uppercase tracking-[0.16em] text-(--pf-text-5)">
+              результат для клиента
+            </p>
+            <p
+              className={`font-body mt-1 font-medium text-(--pf-text-2) ${isLive ? "text-sm sm:text-base" : "text-sm"}`}
+            >
+              {project.result}
+            </p>
+          </div>
+
+          <p className="font-body mt-4 text-sm leading-relaxed text-(--pf-text-3)">
             {project.description}
           </p>
-          <div className="mt-5 flex flex-wrap gap-2">
+          <div className="mt-auto flex flex-wrap gap-2 pt-5">
             {project.tags.map(tag => (
               <span
                 key={tag}
@@ -630,31 +713,82 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
 }
 
 function Projects() {
-  const landings = projects.filter((p) => p.category === "landing");
-  const tools = projects.filter((p) => p.category === "tool");
+  const landings = projects.filter(p => p.category === "landing");
+  const tools = projects.filter(p => p.category === "tool");
   return (
-    <section id="work" className="relative border-t border-(--pf-border-soft) bg-(--pf-surface-tint) py-24">
+    <section id="work" className="relative mx-auto max-w-6xl px-5 py-24">
+      <Reveal>
+        <Eyebrow>Работы</Eyebrow>
+        <SectionTitle>Проекты, которые уже работают</SectionTitle>
+        <Lead>
+          Живые сайты и продукты — можно открыть и посмотреть, как это помогает
+          бизнесу. Для каждого — результат, который получил клиент.
+        </Lead>
+      </Reveal>
+
+      <Reveal>
+        <h3 className="font-display mt-12 mb-6 text-lg font-semibold text-(--pf-text-2)">
+          Сайты и магазины
+        </h3>
+      </Reveal>
+      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+        {landings.map((p, i) => (
+          <ProjectCard key={p.id} project={p} index={i} />
+        ))}
+      </div>
+
+      <Reveal>
+        <h3 className="font-display mt-16 mb-6 text-lg font-semibold text-(--pf-text-2)">
+          Боты и автоматизация
+        </h3>
+      </Reveal>
+      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+        {tools.map((p, i) => (
+          <ProjectCard key={p.id} project={p} index={i} />
+        ))}
+      </div>
+    </section>
+  );
+}
+
+// ─────────────────────────────────────────────────────────────
+// Testimonials
+// ─────────────────────────────────────────────────────────────
+
+function Testimonials() {
+  return (
+    <section
+      id="reviews"
+      className="border-t border-(--pf-border-soft) bg-(--pf-surface-tint) py-24"
+    >
       <div className="mx-auto max-w-6xl px-5">
         <Reveal>
-          <SectionLabel index="02" text="работы" />
-          <SectionTitle>Проекты, которые уже работают</SectionTitle>
+          <Eyebrow>Отзывы</Eyebrow>
+          <SectionTitle>Что говорят заказчики</SectionTitle>
         </Reveal>
-
-        <Reveal>
-          <h3 className="font-display mt-12 mb-6 text-lg font-semibold text-(--pf-text-2)">Лендинги и сайты</h3>
-        </Reveal>
-        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-          {landings.map((p, i) => (
-            <ProjectCard key={p.id} project={p} index={i} />
-          ))}
-        </div>
-
-        <Reveal>
-          <h3 className="font-display mt-16 mb-6 text-lg font-semibold text-(--pf-text-2)">Инструменты и автоматизация</h3>
-        </Reveal>
-        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-          {tools.map((p, i) => (
-            <ProjectCard key={p.id} project={p} index={i} />
+        <div className="mt-12 grid gap-5 md:grid-cols-3">
+          {testimonials.map((t, i) => (
+            <Reveal key={t.name} delay={i * 90}>
+              <figure className="flex h-full flex-col rounded-xl border border-(--pf-border) bg-(--pf-surface) p-7">
+                <span
+                  className="font-display text-4xl leading-none text-(--pf-lime)/50"
+                  aria-hidden="true"
+                >
+                  &ldquo;
+                </span>
+                <blockquote className="font-body mt-2 flex-1 text-sm leading-relaxed text-(--pf-text-2)">
+                  {t.quote}
+                </blockquote>
+                <figcaption className="mt-6 border-t border-(--pf-border-soft) pt-4">
+                  <p className="font-body text-sm font-semibold text-(--pf-text)">
+                    {t.name}
+                  </p>
+                  <p className="font-code mt-0.5 text-xs text-(--pf-text-4)">
+                    {t.role}
+                  </p>
+                </figcaption>
+              </figure>
+            </Reveal>
           ))}
         </div>
       </div>
@@ -669,23 +803,28 @@ function Projects() {
 const STEPS = [
   {
     n: "01",
-    title: "Обсуждение",
-    text: "Разбираем задачу и цель: что должно получиться и зачем. Говорю честно, если что-то можно сделать проще и дешевле.",
+    title: "Заявка",
+    text: "Пишете в Telegram или оставляете заявку. Отвечаю в тот же день, консультация бесплатна.",
   },
   {
     n: "02",
-    title: "План и оценка",
-    text: "Фиксируем объём, сроки и стоимость. Никаких сюрпризов в середине проекта.",
+    title: "Бриф и смета",
+    text: "Разбираем задачу и цель. Фиксируем объём, сроки и стоимость — без сюрпризов в процессе.",
   },
   {
     n: "03",
+    title: "Дизайн-концепт",
+    text: "Показываю, как будет выглядеть сайт, до начала разработки. Вы видите результат заранее.",
+  },
+  {
+    n: "04",
     title: "Разработка",
     text: "Пишу код, показываю прогресс на демо. Вы видите продукт живьём, а не в отчётах.",
   },
   {
-    n: "04",
+    n: "05",
     title: "Запуск и поддержка",
-    text: "Деплой в продакшен, мониторинг, доработки. Не пропадаю после релиза.",
+    text: "Выкатываю в продакшен, подключаю аналитику. Остаюсь на связи — не пропадаю после релиза.",
   },
 ];
 
@@ -693,15 +832,18 @@ function Process() {
   return (
     <section id="process" className="mx-auto max-w-6xl px-5 py-24">
       <Reveal>
-        <SectionLabel index="03" text="как я работаю" />
-        <SectionTitle>Прозрачный процесс без сюрпризов</SectionTitle>
+        <Eyebrow>Процесс</Eyebrow>
+        <SectionTitle>От заявки до запуска — прозрачно</SectionTitle>
+        <Lead>
+          Пять шагов, на каждом из которых вы знаете, что происходит с проектом.
+        </Lead>
       </Reveal>
 
       <div className="relative mt-12">
         <div className="absolute right-0 left-0 top-5 hidden h-px bg-(--pf-border) lg:block" />
-        <div className="grid gap-8 lg:grid-cols-4">
+        <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-5">
           {STEPS.map((s, i) => (
-            <Reveal key={s.n} delay={i * 90}>
+            <Reveal key={s.n} delay={i * 80}>
               <div className="relative">
                 <div className="flex items-center gap-3 lg:block">
                   <span className="relative z-10 grid size-10 shrink-0 place-items-center rounded-full border border-(--pf-lime)/40 bg-(--pf-bg) font-code text-sm font-semibold text-(--pf-lime)">
@@ -724,39 +866,61 @@ function Process() {
 }
 
 // ─────────────────────────────────────────────────────────────
-// Stack
+// FAQ
 // ─────────────────────────────────────────────────────────────
 
-function Stack() {
+function FaqItem({
+  q,
+  a,
+  defaultOpen,
+}: {
+  q: string;
+  a: string;
+  defaultOpen?: boolean;
+}) {
+  const [open, setOpen] = useState(defaultOpen ?? false);
   return (
-    <section id="stack" className="border-t border-(--pf-border-soft) bg-(--pf-surface-tint) py-24">
-      <div className="mx-auto max-w-6xl px-5">
-        <Reveal>
-          <SectionLabel index="04" text="стек" />
-          <SectionTitle>Инструменты, которым я доверяю</SectionTitle>
-        </Reveal>
+    <div className="overflow-hidden rounded-xl border border-(--pf-border) bg-(--pf-surface)">
+      <button
+        type="button"
+        onClick={() => setOpen(o => !o)}
+        aria-expanded={open}
+        className="flex w-full items-center justify-between gap-4 px-5 py-4 text-left transition-colors hover:bg-(--pf-surface-hover)"
+      >
+        <span className="font-body text-sm font-semibold text-(--pf-text) sm:text-base">
+          {q}
+        </span>
+        <ChevronDown
+          className={`size-5 shrink-0 text-(--pf-lime) transition-transform duration-300 ${open ? "rotate-180" : ""}`}
+        />
+      </button>
+      {open && (
+        <p className="font-body border-t border-(--pf-border-soft) px-5 py-4 text-sm leading-relaxed text-(--pf-text-3)">
+          {a}
+        </p>
+      )}
+    </div>
+  );
+}
 
-        <div className="mt-12 grid gap-5 md:grid-cols-2">
-          {stack.map((group, i) => (
-            <Reveal key={group.group} delay={i * 80}>
-              <div className="h-full rounded-xl border border-(--pf-border) bg-(--pf-surface) p-6">
-                <div className="flex flex-wrap items-baseline justify-between gap-2">
-                  <h3 className="font-display text-base font-semibold text-(--pf-text)">
-                    {group.group}
-                  </h3>
-                  <span className="font-code text-[11px] text-(--pf-text-4)"># {group.note}</span>
-                </div>
-                <div className="mt-4 flex flex-wrap gap-2">
-                  {group.items.map(item => (
-                    <span
-                      key={item}
-                      className="font-code rounded-md border border-(--pf-border) bg-(--pf-chip) px-3 py-1.5 text-xs text-(--pf-text-2) transition-colors hover:border-(--pf-lime)/40 hover:text-(--pf-lime)"
-                    >
-                      {item}
-                    </span>
-                  ))}
-                </div>
-              </div>
+function Faq() {
+  return (
+    <section
+      id="faq"
+      className="border-t border-(--pf-border-soft) bg-(--pf-surface-tint) py-24"
+    >
+      <div className="mx-auto max-w-3xl px-5">
+        <Reveal>
+          <Eyebrow>Вопросы</Eyebrow>
+          <SectionTitle>Частые вопросы</SectionTitle>
+          <Lead>
+            Не нашли ответ — напишите в Telegram, отвечу в течение пары часов.
+          </Lead>
+        </Reveal>
+        <div className="mt-10 space-y-3">
+          {faq.map((item, i) => (
+            <Reveal key={item.q} delay={i * 60}>
+              <FaqItem q={item.q} a={item.a} defaultOpen={i === 0} />
             </Reveal>
           ))}
         </div>
@@ -766,57 +930,196 @@ function Stack() {
 }
 
 // ─────────────────────────────────────────────────────────────
-// Contact
+// Stack
+// ─────────────────────────────────────────────────────────────
+
+function Stack() {
+  return (
+    <section id="stack" className="mx-auto max-w-6xl px-5 py-24">
+      <Reveal>
+        <Eyebrow>Технологии</Eyebrow>
+        <SectionTitle>Инструменты, которым доверяю</SectionTitle>
+        <Lead>
+          Технологии важны для надёжности и скорости — но вам не нужно в них
+          разбираться. Это моя забота.
+        </Lead>
+      </Reveal>
+
+      <div className="mt-12 grid gap-5 sm:grid-cols-2">
+        {stack.map((group, i) => (
+          <Reveal key={group.group} delay={i * 80}>
+            <div className="h-full rounded-xl border border-(--pf-border) bg-(--pf-surface) p-6">
+              <div className="flex flex-wrap items-baseline justify-between gap-2">
+                <h3 className="font-display text-base font-semibold text-(--pf-text)">
+                  {group.group}
+                </h3>
+                <span className="font-code text-[11px] text-(--pf-text-4)">
+                  — {group.note}
+                </span>
+              </div>
+              <div className="mt-4 flex flex-wrap gap-2">
+                {group.items.map(item => (
+                  <span
+                    key={item}
+                    className="font-code rounded-md border border-(--pf-border) bg-(--pf-chip) px-3 py-1.5 text-xs text-(--pf-text-2) transition-colors hover:border-(--pf-lime)/40 hover:text-(--pf-lime)"
+                  >
+                    {item}
+                  </span>
+                ))}
+              </div>
+            </div>
+          </Reveal>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+// ─────────────────────────────────────────────────────────────
+// Contact (form)
 // ─────────────────────────────────────────────────────────────
 
 function Contact() {
+  const [name, setName] = useState("");
+  const [contact, setContact] = useState("");
+  const [about, setAbout] = useState("");
+  const [sent, setSent] = useState(false);
+
+  const ready = name.trim().length > 1 && contact.trim().length > 2;
+
+  function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    if (!ready) return;
+    const msg = `Здравствуйте, Виталий! Меня зовут ${name.trim()}.\nСвязь со мной: ${contact.trim()}${
+      about.trim() ? `\nЗадача: ${about.trim()}` : ""
+    }`;
+    setSent(true);
+    window.open(
+      `${profile.telegram}?text=${encodeURIComponent(msg)}`,
+      "_blank",
+      "noopener",
+    );
+  }
+
   return (
     <section id="contact" className="relative overflow-hidden py-28">
       <div className="pf-float absolute left-1/2 top-1/2 -z-0 h-[360px] w-[640px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-(--pf-glow-lime) blur-[130px]" />
-      <div className="relative mx-auto max-w-3xl px-5 text-center">
+      <div className="relative mx-auto max-w-3xl px-5">
         <Reveal>
-          <SectionLabel index="05" text="контакт" />
-          <h2 className="font-display mt-4 text-3xl font-semibold leading-tight tracking-tight text-(--pf-text) sm:text-5xl">
-            Есть задача?
-            <br />
-            <span className="bg-[linear-gradient(100deg,var(--pf-g1),var(--pf-g3))] bg-clip-text text-transparent">
-              Давайте обсудим.
+          <div className="text-center">
+            <span className="inline-flex items-center gap-2.5 font-code text-xs font-semibold uppercase tracking-[0.22em] text-(--pf-lime)">
+              <span className="h-px w-7 bg-(--pf-lime)/40" />
+              Контакты
+              <span className="h-px w-7 bg-(--pf-lime)/40" />
             </span>
-          </h2>
-          <p className="font-body mx-auto mt-6 max-w-md text-base leading-relaxed text-(--pf-text-3)">
-            Опишите идею в паре предложений — предложу решение, сроки и
-            стоимость. Консультация ни к чему не обязывает.
-          </p>
-          <div className="mt-9 flex flex-wrap items-center justify-center gap-4">
+            <h2 className="font-display mt-5 text-3xl font-semibold leading-[1.12] tracking-tight text-(--pf-text) sm:text-5xl">
+              Обсудим ваш проект?
+            </h2>
+            <p className="font-body mx-auto mt-5 max-w-md text-base leading-relaxed text-(--pf-text-3)">
+              Расскажите о задаче — предложу решение, сроки и стоимость.
+              Консультация ни к чему не обязывает.
+            </p>
+          </div>
+        </Reveal>
+
+        <Reveal delay={120}>
+          <form
+            onSubmit={handleSubmit}
+            className="mx-auto mt-10 max-w-xl rounded-2xl border border-(--pf-border-mid) bg-(--pf-surface) p-6 sm:p-8"
+          >
+            <div className="grid gap-4 sm:grid-cols-2">
+              <label className="block">
+                <span className="font-body text-xs font-medium text-(--pf-text-3)">
+                  Как вас зовут
+                </span>
+                <input
+                  type="text"
+                  name="name"
+                  value={name}
+                  onChange={e => setName(e.target.value)}
+                  placeholder="Ваше имя"
+                  autoComplete="name"
+                  maxLength={120}
+                  required
+                  className="font-body mt-1.5 w-full rounded-lg border border-(--pf-border-mid) bg-(--pf-bg) px-4 py-3 text-sm text-(--pf-text) outline-none transition-colors placeholder:text-(--pf-text-5) focus:border-(--pf-lime)/60"
+                />
+              </label>
+              <label className="block">
+                <span className="font-body text-xs font-medium text-(--pf-text-3)">
+                  Телефон, Telegram или e-mail
+                </span>
+                <input
+                  type="text"
+                  name="contact"
+                  value={contact}
+                  onChange={e => setContact(e.target.value)}
+                  placeholder="Как с вами связаться"
+                  autoComplete="tel"
+                  maxLength={200}
+                  required
+                  className="font-body mt-1.5 w-full rounded-lg border border-(--pf-border-mid) bg-(--pf-bg) px-4 py-3 text-sm text-(--pf-text) outline-none transition-colors placeholder:text-(--pf-text-5) focus:border-(--pf-lime)/60"
+                />
+              </label>
+            </div>
+            <label className="mt-4 block">
+              <span className="font-body text-xs font-medium text-(--pf-text-3)">
+                Коротко о задаче — необязательно
+              </span>
+              <textarea
+                name="about"
+                value={about}
+                onChange={e => setAbout(e.target.value)}
+                placeholder="Например: нужен лендинг для салона красоты"
+                rows={3}
+                maxLength={600}
+                className="font-body mt-1.5 w-full resize-none rounded-lg border border-(--pf-border-mid) bg-(--pf-bg) px-4 py-3 text-sm text-(--pf-text) outline-none transition-colors placeholder:text-(--pf-text-5) focus:border-(--pf-lime)/60"
+              />
+            </label>
+            <button
+              type="submit"
+              disabled={!ready}
+              className="font-body mt-5 inline-flex w-full items-center justify-center gap-2 rounded-lg bg-(--pf-lime-solid) px-6 py-3.5 text-sm font-bold text-(--pf-on-accent) transition-transform hover:-translate-y-0.5 hover:bg-(--pf-lime-solid-hover) disabled:translate-y-0 disabled:cursor-not-allowed disabled:opacity-50"
+            >
+              <Send className="size-4" />
+              Отправить заявку
+            </button>
+            {sent && (
+              <p className="font-body mt-3 text-center text-xs text-(--pf-lime)">
+                Открываю Telegram с готовым сообщением — просто нажмите
+                «Отправить» в чате.
+              </p>
+            )}
+            <p className="font-code mt-3 text-center text-[11px] text-(--pf-text-5)">
+              Нажимая кнопку, вы открываете Telegram с заполненным сообщением
+            </p>
+          </form>
+        </Reveal>
+
+        <Reveal delay={200}>
+          <div className="mx-auto mt-8 flex max-w-xl flex-wrap items-center justify-center gap-4">
             <a
               href={profile.telegram}
               target="_blank"
               rel="noreferrer"
-              className="font-body inline-flex items-center gap-2 rounded-lg bg-(--pf-lime-solid) px-7 py-4 text-sm font-bold text-(--pf-on-accent) transition-transform hover:-translate-y-0.5 hover:bg-(--pf-lime-solid-hover)"
+              className="font-body inline-flex items-center gap-2 rounded-lg border border-(--pf-border-mid) px-5 py-3 text-sm font-semibold text-(--pf-text-2) transition-colors hover:border-(--pf-border-strong) hover:bg-(--pf-chip)"
             >
-              <Send className="size-4" />
-              Написать в Telegram
+              <Send className="size-4" /> Telegram
             </a>
             <a
               href={profile.whatsapp}
               target="_blank"
               rel="noreferrer"
-              className="font-body inline-flex items-center gap-2 rounded-lg border border-(--pf-border-mid) px-7 py-4 text-sm font-semibold text-(--pf-text-2) transition-colors hover:border-(--pf-border-strong) hover:bg-(--pf-chip)"
+              className="font-body inline-flex items-center gap-2 rounded-lg border border-(--pf-border-mid) px-5 py-3 text-sm font-semibold text-(--pf-text-2) transition-colors hover:border-(--pf-border-strong) hover:bg-(--pf-chip)"
             >
-              <MessageCircle className="size-4" />
-              Написать в WhatsApp
+              <MessageCircle className="size-4" /> WhatsApp
             </a>
             <a
               href={`mailto:${profile.email}`}
-              className="font-body inline-flex items-center gap-2 rounded-lg border border-(--pf-border-mid) px-7 py-4 text-sm font-semibold text-(--pf-text-2) transition-colors hover:border-(--pf-border-strong) hover:bg-(--pf-chip)"
+              className="font-body inline-flex items-center gap-2 rounded-lg border border-(--pf-border-mid) px-5 py-3 text-sm font-semibold text-(--pf-text-2) transition-colors hover:border-(--pf-border-strong) hover:bg-(--pf-chip)"
             >
-              <Mail className="size-4" />
-              {profile.email}
+              <Mail className="size-4" /> E-mail
             </a>
           </div>
-          <p className="font-code mt-8 text-xs text-(--pf-text-4)">
-            $ обычно отвечаю в течение пары часов
-          </p>
         </Reveal>
       </div>
     </section>
@@ -825,48 +1128,65 @@ function Contact() {
 
 function Footer() {
   return (
-    <footer className="border-t border-(--pf-border-soft) py-8">
-      <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-4 px-5">
-        <p className="font-code text-xs text-(--pf-text-4)">
-          © {new Date().getFullYear()} {profile.name} · сделано с любовью к коду
-        </p>
-        <div className="flex items-center gap-5">
-          {profile.github && (
+    <footer className="border-t border-(--pf-border-soft) py-10">
+      <div className="mx-auto max-w-6xl px-5">
+        <div className="flex flex-wrap items-center justify-between gap-4">
+          <div>
+            <p className="font-display text-sm font-semibold text-(--pf-text)">
+              <span className="text-(--pf-lime)">{profile.name}</span>
+              <span className="text-(--pf-text-4)">.dev</span>
+            </p>
+            <p className="font-body mt-1 text-xs text-(--pf-text-4)">
+              {profile.role} · {profile.offer}
+            </p>
+          </div>
+          <div className="flex items-center gap-4">
+            {profile.github && (
+              <a
+                href={profile.github}
+                target="_blank"
+                rel="noreferrer"
+                aria-label="GitHub"
+                className="text-(--pf-text-4) transition-colors hover:text-(--pf-text)"
+              >
+                <Github className="size-4.5" />
+              </a>
+            )}
             <a
-              href={profile.github}
+              href={profile.telegram}
               target="_blank"
               rel="noreferrer"
-              aria-label="GitHub"
+              aria-label="Telegram"
               className="text-(--pf-text-4) transition-colors hover:text-(--pf-text)"
             >
-              <Github className="size-4.5" />
+              <Send className="size-4.5" />
             </a>
-          )}
-          <a
-            href={profile.telegram}
-            target="_blank"
-            rel="noreferrer"
-            aria-label="Telegram"
-            className="text-(--pf-text-4) transition-colors hover:text-(--pf-text)"
-          >
-            <Send className="size-4.5" />
-          </a>
-          <a
-            href={profile.whatsapp}
-            target="_blank"
-            rel="noreferrer"
-            aria-label="WhatsApp"
-            className="text-(--pf-text-4) transition-colors hover:text-(--pf-text)"
-          >
-            <MessageCircle className="size-4.5" />
-          </a>
-          <a
-            href={`mailto:${profile.email}`}
-            aria-label="Email"
-            className="text-(--pf-text-4) transition-colors hover:text-(--pf-text)"
-          >
-            <Mail className="size-4.5" />
-          </a>
+            <a
+              href={profile.whatsapp}
+              target="_blank"
+              rel="noreferrer"
+              aria-label="WhatsApp"
+              className="text-(--pf-text-4) transition-colors hover:text-(--pf-text)"
+            >
+              <MessageCircle className="size-4.5" />
+            </a>
+            <a
+              href={`mailto:${profile.email}`}
+              aria-label="Email"
+              className="text-(--pf-text-4) transition-colors hover:text-(--pf-text)"
+            >
+              <Mail className="size-4.5" />
+            </a>
+          </div>
+        </div>
+        <div className="mt-6 border-t border-(--pf-border-soft) pt-5">
+          <p className="font-code text-[11px] leading-relaxed text-(--pf-text-5)">
+            © {new Date().getFullYear()} {profile.nameRu} · {profile.role}.
+            Создаю сайты, магазины и ботов под ключ.
+            <br />
+            Виталий Матвеев · matveev.vit03@gmail.com · работаю со всей Россией
+            онлайн.
+          </p>
         </div>
       </div>
     </footer>
@@ -884,11 +1204,13 @@ export function PortfolioPage() {
       <Nav theme={theme} toggle={toggle} />
       <main>
         <Hero />
-        <CaseStudy />
         <Marquee />
+        <Benefits />
         <Services />
         <Projects />
+        <Testimonials />
         <Process />
+        <Faq />
         <Stack />
         <Contact />
       </main>
