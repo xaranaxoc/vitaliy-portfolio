@@ -1,8 +1,8 @@
 import {
+  AppWindow,
   ArrowRight,
   ArrowUpRight,
-  Bot,
-  Check,
+  Gauge,
   Github,
   Globe,
   Mail,
@@ -11,17 +11,16 @@ import {
   Send,
   ShoppingBag,
   Sun,
-  Workflow,
 } from "lucide-react";
 import { useState, type ReactNode } from "react";
 import {
   type Metric,
   type Project,
+  dashboard,
   metrics,
   profile,
   projects,
   services,
-  sozidayResult,
   steps,
 } from "./data";
 import { type Theme, useCountUp, useReveal, useTheme } from "./hooks";
@@ -53,7 +52,7 @@ function Reveal({
 
 function Eyebrow({ children }: { children: ReactNode }) {
   return (
-    <p className="text-xs font-semibold uppercase tracking-[0.2em] text-(--pf-gold)">
+    <p className="text-xs font-semibold uppercase tracking-[0.2em] text-(--pf-accent)">
       {children}
     </p>
   );
@@ -61,18 +60,28 @@ function Eyebrow({ children }: { children: ReactNode }) {
 
 function SectionTitle({ children }: { children: ReactNode }) {
   return (
-    <h2 className="font-display mt-4 text-4xl leading-[1.1] tracking-tight text-(--pf-text) sm:text-5xl">
+    <h2 className="font-display mt-4 text-4xl leading-[1.08] tracking-tight text-(--pf-text) sm:text-5xl">
       {children}
     </h2>
   );
 }
 
 const SERVICE_ICONS: ReactNode[] = [
-  <Globe className="size-5" strokeWidth={1.75} />,
-  <ShoppingBag className="size-5" strokeWidth={1.75} />,
-  <Bot className="size-5" strokeWidth={1.75} />,
-  <Workflow className="size-5" strokeWidth={1.75} />,
+  <Globe className="size-5" strokeWidth={1.6} />,
+  <ShoppingBag className="size-5" strokeWidth={1.6} />,
+  <AppWindow className="size-5" strokeWidth={1.6} />,
+  <Gauge className="size-5" strokeWidth={1.6} />,
 ];
+
+function Orbs() {
+  return (
+    <div className="pointer-events-none absolute inset-0 -z-0 overflow-hidden" aria-hidden="true">
+      <div className="pf-orb absolute -top-32 left-1/4 h-[460px] w-[460px] rounded-full bg-(--pf-orb-2) blur-[130px]" />
+      <div className="pf-orb absolute top-1/3 right-[-100px] h-[360px] w-[360px] rounded-full bg-(--pf-orb-1) blur-[120px]" style={{ animationDelay: "1.5s" }} />
+      <div className="pf-orb absolute bottom-[-120px] left-1/3 h-[320px] w-[320px] rounded-full bg-(--pf-orb-3) blur-[120px]" style={{ animationDelay: "3s" }} />
+    </div>
+  );
+}
 
 // ─────────────────────────────────────────────────────────────
 // Navigation
@@ -101,12 +110,12 @@ function ThemeToggle({ theme, toggle }: { theme: Theme; toggle: () => void }) {
 function BrandMark() {
   return (
     <a href="#top" className="flex items-center gap-2.5">
-      <span className="font-display grid size-8 place-items-center rounded-full border border-(--pf-gold)/40 bg-(--pf-gold)/10 text-base leading-none text-(--pf-gold)">
+      <span className="font-display grid size-8 place-items-center rounded-lg border border-(--pf-accent)/40 bg-(--pf-accent-soft) text-base leading-none text-(--pf-accent)">
         V
       </span>
       <span className="font-display text-lg tracking-tight text-(--pf-text)">
         {profile.name}
-        <span className="text-(--pf-gold)">.</span>
+        <span className="text-(--pf-accent)">.</span>
       </span>
     </a>
   );
@@ -115,7 +124,7 @@ function BrandMark() {
 function Nav({ theme, toggle }: { theme: Theme; toggle: () => void }) {
   const [open, setOpen] = useState(false);
   return (
-    <header className="fixed inset-x-0 top-0 z-50 border-b border-(--pf-border-soft) bg-(--pf-nav) backdrop-blur-md">
+    <header className="fixed inset-x-0 top-0 z-50 border-b border-(--pf-border-soft) bg-(--pf-nav) backdrop-blur-xl">
       <nav className="mx-auto flex h-16 max-w-6xl items-center justify-between px-5">
         <BrandMark />
         <div className="hidden items-center gap-8 md:flex">
@@ -133,7 +142,7 @@ function Nav({ theme, toggle }: { theme: Theme; toggle: () => void }) {
           <ThemeToggle theme={theme} toggle={toggle} />
           <a
             href="#contact"
-            className="hidden rounded-full bg-(--pf-gold-solid) px-5 py-2 text-sm font-semibold text-(--pf-on-accent) transition-colors hover:bg-(--pf-gold-solid-hover) sm:inline"
+            className="hidden rounded-full bg-(--pf-accent-solid) px-5 py-2 text-sm font-semibold text-(--pf-on-accent) transition-colors hover:bg-(--pf-accent-solid-hover) sm:inline"
           >
             Обсудить проект
           </a>
@@ -164,7 +173,7 @@ function Nav({ theme, toggle }: { theme: Theme; toggle: () => void }) {
             <a
               href="#contact"
               onClick={() => setOpen(false)}
-              className="mt-1 rounded-full bg-(--pf-gold-solid) px-2 py-2.5 text-center text-sm font-semibold text-(--pf-on-accent)"
+              className="mt-1 rounded-full bg-(--pf-accent-solid) px-2 py-2.5 text-center text-sm font-semibold text-(--pf-on-accent)"
             >
               Обсудить проект
             </a>
@@ -179,14 +188,14 @@ function Nav({ theme, toggle }: { theme: Theme; toggle: () => void }) {
 // Hero
 // ─────────────────────────────────────────────────────────────
 
-function MetricCell({ m }: { m: Metric }) {
+function StatCell({ m }: { m: Metric }) {
   const { ref, visible } = useReveal<HTMLDivElement>(0.5);
   const v = useCountUp(m.value, visible);
   return (
     <div ref={ref} className="bg-(--pf-surface) px-4 py-6 text-center">
-      <div className="text-3xl font-semibold leading-none tracking-tight text-(--pf-text) sm:text-4xl">
+      <div className="font-display text-3xl font-semibold leading-none tracking-tight text-(--pf-text) sm:text-4xl">
         {v}
-        <span className="text-(--pf-gold)">{m.suffix}</span>
+        <span className="text-(--pf-accent)">{m.suffix}</span>
       </div>
       <div className="mt-2 text-[11px] leading-snug text-(--pf-text-4)">{m.label}</div>
     </div>
@@ -196,23 +205,34 @@ function MetricCell({ m }: { m: Metric }) {
 function Hero() {
   return (
     <section id="top" className="relative overflow-hidden pt-16">
-      <div className="relative mx-auto max-w-3xl px-5 pb-20 pt-24 text-center sm:pt-32">
+      <div className="pf-grid absolute inset-0 -z-0 [mask-image:radial-gradient(ellipse_70%_60%_at_50%_30%,#000_40%,transparent_100%)]" />
+      <Orbs />
+      <div className="relative mx-auto max-w-3xl px-5 pb-24 pt-24 text-center sm:pt-32">
         <Reveal>
-          <span className="inline-flex items-center rounded-full border border-(--pf-border) bg-(--pf-surface) px-4 py-1.5 text-[11px] font-semibold uppercase tracking-[0.2em] text-(--pf-gold)">
-            Сайты · магазины · боты · автоматизация
-          </span>
+          <a
+            href="#results"
+            className="inline-flex items-center gap-2 rounded-full border border-(--pf-border) bg-(--pf-surface) px-4 py-1.5 text-xs font-medium text-(--pf-text-2) transition-colors hover:border-(--pf-accent)/40"
+          >
+            <span className="relative flex size-1.5">
+              <span className="absolute inline-flex size-1.5 rounded-full bg-(--pf-accent) [animation:pf-ping_2s_ease-out_infinite]" />
+              <span className="relative inline-flex size-1.5 rounded-full bg-(--pf-accent)" />
+            </span>
+            Сайт — это заявки, а не просто красиво
+            <ArrowRight className="size-3.5 text-(--pf-accent)" />
+          </a>
         </Reveal>
 
         <Reveal delay={80}>
           <h1 className="mt-8 text-5xl font-semibold leading-[1.05] tracking-tight text-(--pf-text) sm:text-6xl">
-            Сайты, которые приносят клиентов
+            Сайты и магазины, которые{" "}
+            <span className="text-(--pf-accent)">приносят клиентов</span>
           </h1>
         </Reveal>
 
         <Reveal delay={160}>
           <p className="mx-auto mt-6 max-w-md text-base leading-relaxed text-(--pf-text-3)">
-            Под ключ, один человек, до поддержки. Пишете в Telegram — отвечает
-            сам разработчик, а не менеджер.
+            Делаю под ключ, один человек, до поддержки. Пишете в Telegram —
+            отвечает сам разработчик, а не менеджер.
           </p>
         </Reveal>
 
@@ -222,7 +242,7 @@ function Hero() {
               href={profile.telegram}
               target="_blank"
               rel="noreferrer"
-              className="inline-flex items-center gap-2 rounded-full bg-(--pf-gold-solid) px-7 py-3.5 text-sm font-semibold text-(--pf-on-accent) transition-colors hover:bg-(--pf-gold-solid-hover)"
+              className="inline-flex items-center gap-2 rounded-full bg-(--pf-accent-solid) px-7 py-3.5 text-sm font-semibold text-(--pf-on-accent) transition-all hover:-translate-y-0.5 hover:bg-(--pf-accent-solid-hover)"
             >
               <Send className="size-4" />
               Обсудить проект
@@ -240,7 +260,7 @@ function Hero() {
         <Reveal delay={320}>
           <div className="mx-auto mt-16 grid max-w-2xl grid-cols-2 gap-px overflow-hidden rounded-2xl border border-(--pf-border) bg-(--pf-border) sm:grid-cols-4">
             {metrics.map(m => (
-              <MetricCell key={m.label} m={m} />
+              <StatCell key={m.label} m={m} />
             ))}
           </div>
         </Reveal>
@@ -250,23 +270,15 @@ function Hero() {
 }
 
 // ─────────────────────────────────────────────────────────────
-// Tech strip
+// Marquee
 // ─────────────────────────────────────────────────────────────
 
 const TECH = [
-  "Сайты",
-  "Интернет-магазины",
-  "Лендинги",
-  "Telegram-боты",
-  "Discord-боты",
-  "CRM и админки",
-  "Автоворонки",
-  "Парсинг",
-  "Интеграции",
-  "SEO и аналитика",
+  "Сайты", "Интернет-магазины", "Лендинги", "Веб-приложения",
+  "Личные кабинеты", "CMS и админки", "Адаптив", "Скорость", "SEO",
 ];
 
-function TechStrip() {
+function Marquee() {
   const row = [...TECH, ...TECH];
   return (
     <div className="border-y border-(--pf-border-soft) bg-(--pf-surface-faint) py-5">
@@ -274,7 +286,7 @@ function TechStrip() {
         {row.map((t, i) => (
           <span key={`${t}-${i}`} className="flex items-center text-sm text-(--pf-text-4)">
             <span className="px-6">{t}</span>
-            <span className="text-(--pf-gold)/50">·</span>
+            <span className="text-(--pf-accent)/50">·</span>
           </span>
         ))}
       </div>
@@ -289,27 +301,23 @@ function TechStrip() {
 function About() {
   return (
     <section className="mx-auto max-w-6xl px-5 py-24 sm:py-32">
-      <div className="grid gap-10 lg:grid-cols-[1.4fr_1fr] lg:gap-16">
+      <div className="grid gap-10 lg:grid-cols-[1.3fr_1fr] lg:gap-16">
         <Reveal>
           <Eyebrow>Обо мне</Eyebrow>
           <h2 className="font-display mt-4 text-3xl leading-tight tracking-tight text-(--pf-text) sm:text-4xl">
-            Один разработчик на весь цикл — без посредников и менеджеров
+            Один разработчик на весь цикл — без посредников
           </h2>
         </Reveal>
         <Reveal delay={120}>
           <div className="flex h-full flex-col justify-end text-base leading-relaxed text-(--pf-text-3)">
             <p>
-              Я {profile.nameRu}. Веду проект один — от идеи до поддержки. Вы
-              общаетесь напрямую с разработчиком, без менеджеров и потерь смысла.
+              Я {profile.nameRu}, {profile.role}. Веду проект один — от идеи до
+              поддержки. Вы общаетесь напрямую с разработчиком, без менеджеров и
+              потерь смысла.
             </p>
-            <div className="mt-6 flex flex-wrap gap-x-6 gap-y-2 text-sm text-(--pf-text-4)">
-              <span className="flex items-center gap-2">
-                <Check className="size-4 text-(--pf-gold)" strokeWidth={2.5} /> работаю по договору
-              </span>
-              <span className="flex items-center gap-2">
-                <Check className="size-4 text-(--pf-gold)" strokeWidth={2.5} /> отвечаю в течение дня
-              </span>
-            </div>
+            <p className="mt-5 text-sm text-(--pf-text-4)">
+              Работаю по договору · отвечаю в течение дня · поддержка после запуска
+            </p>
           </div>
         </Reveal>
       </div>
@@ -323,22 +331,21 @@ function About() {
 
 function Services() {
   return (
-    <section id="services" className="border-t border-(--pf-border-soft) bg-(--pf-surface-tint)">
+    <section id="services" className="border-t border-(--pf-border-soft)">
       <div className="mx-auto max-w-6xl px-5 py-24 sm:py-32">
         <Reveal>
           <Eyebrow>Услуги</Eyebrow>
           <SectionTitle>Что я делаю</SectionTitle>
           <p className="mt-5 max-w-xl text-base leading-relaxed text-(--pf-text-3)">
-            Четыре направления — один результат: клиенты приходят сами, а рутина
-            работает без вас.
+            Четыре направления — один результат: клиенты приходят сами, а сайт
+            работает на бизнес.
           </p>
         </Reveal>
-
         <div className="mt-14 grid gap-5 sm:grid-cols-2">
           {services.map((s, i) => (
             <Reveal key={s.title} delay={i * 70}>
-              <article className="h-full rounded-2xl border border-(--pf-border) bg-(--pf-surface) p-7 transition-colors duration-300 hover:border-(--pf-border-strong)">
-                <div className="inline-flex rounded-xl border border-(--pf-border) bg-(--pf-gold)/10 p-3 text-(--pf-gold)">
+              <article className="group h-full rounded-2xl border border-(--pf-border) bg-(--pf-surface) p-7 transition-colors duration-300 hover:border-(--pf-accent)/40 hover:bg-(--pf-surface-2)">
+                <div className="inline-flex rounded-xl border border-(--pf-border) bg-(--pf-accent-soft) p-3 text-(--pf-accent) transition-colors group-hover:bg-(--pf-accent)/20">
                   {SERVICE_ICONS[i]}
                 </div>
                 <h3 className="font-display mt-5 text-2xl tracking-tight text-(--pf-text)">
@@ -350,7 +357,7 @@ function Services() {
                 <ul className="mt-5 space-y-2 text-sm text-(--pf-text-2)">
                   {s.points.map(p => (
                     <li key={p} className="flex items-start gap-2.5">
-                      <span className="mt-1.5 size-1 shrink-0 rounded-full bg-(--pf-gold)" />
+                      <span className="mt-1.5 size-1 shrink-0 rounded-full bg-(--pf-accent)" />
                       {p}
                     </li>
                   ))}
@@ -365,77 +372,161 @@ function Services() {
 }
 
 // ─────────────────────────────────────────────────────────────
-// Results — proof на кейсе СозидАй
+// Dashboard — результаты
 // ─────────────────────────────────────────────────────────────
 
-function Results() {
-  const r = sozidayResult;
+function Kpi({ k, index }: { k: (typeof dashboard.kpis)[number]; index: number }) {
+  const { ref, visible } = useReveal<HTMLDivElement>(0.4);
+  const v = useCountUp(k.target, visible, 1500 + index * 80, k.decimals);
   return (
-    <section id="results" className="mx-auto max-w-6xl px-5 py-24 sm:py-32">
-      <Reveal>
-        <Eyebrow>Результаты</Eyebrow>
-        <SectionTitle>Сайт — не про «красиво», а про результат</SectionTitle>
-      </Reveal>
+    <div ref={ref} className="rounded-xl border border-(--pf-border) bg-(--pf-surface) p-4">
+      <span className="text-[11px] text-(--pf-text-4)">{k.label}</span>
+      <div className="mt-1.5 font-mono text-2xl font-semibold text-(--pf-text) sm:text-3xl">
+        {v.toFixed(k.decimals)}
+        <span className="text-(--pf-text-3)">{k.suffix}</span>
+      </div>
+      <span className={`mt-1 inline-block text-[11px] ${k.up ? "text-(--pf-up)" : "text-(--pf-text-4)"}`}>
+        {k.up && "↑ "}{k.delta}
+      </span>
+    </div>
+  );
+}
 
-      <Reveal delay={100}>
-        <div className="mt-14 grid gap-10 lg:grid-cols-2 lg:items-center lg:gap-16">
-          <div>
-            <a
-              href={r.link}
-              target="_blank"
-              rel="noreferrer"
-              className="inline-flex items-center gap-1.5 text-sm font-medium text-(--pf-gold)"
-            >
-              sozidaystudio.ru <ArrowUpRight className="size-4" />
-            </a>
-            <h3 className="font-display mt-3 text-2xl leading-snug tracking-tight text-(--pf-text) sm:text-3xl">
-              {r.title}
-            </h3>
-            <div className="mt-6 space-y-4 text-base leading-relaxed text-(--pf-text-3)">
-              <p>
-                <span className="font-semibold text-(--pf-text-2)">Было: </span>
-                {r.problem}
-              </p>
-              <p>
-                <span className="font-semibold text-(--pf-text-2)">Стало: </span>
-                {r.solution}
-              </p>
+function Dashboard() {
+  const { ref, visible } = useReveal<HTMLDivElement>(0.2);
+  return (
+    <section id="results" className="border-t border-(--pf-border-soft) bg-(--pf-bg-2)">
+      <div className="mx-auto max-w-6xl px-5 py-24 sm:py-32">
+        <Reveal>
+          <Eyebrow>Результаты</Eyebrow>
+          <SectionTitle>
+            Конверсия выше.
+            <br />
+            Заявок больше.
+          </SectionTitle>
+          <p className="mt-5 max-w-xl text-base leading-relaxed text-(--pf-text-3)">
+            Сайт — не про «красиво», а про цифры. Ниже — что получает бизнес
+            после запуска.
+          </p>
+        </Reveal>
+
+        <Reveal delay={100}>
+          <div
+            ref={ref}
+            className="mt-12 overflow-hidden rounded-2xl border border-(--pf-border) bg-(--pf-surface) shadow-[0_30px_80px_-40px_rgba(113,112,255,0.3)]"
+          >
+            {/* window bar */}
+            <div className="flex items-center gap-3 border-b border-(--pf-border) px-5 py-3">
+              <span className="flex gap-1.5">
+                <i className="size-2.5 rounded-full bg-(--pf-text-5)" />
+                <i className="size-2.5 rounded-full bg-(--pf-text-5)" />
+                <i className="size-2.5 rounded-full bg-(--pf-text-5)" />
+              </span>
+              <span className="font-mono text-xs text-(--pf-text-4)">panel — результаты после запуска</span>
             </div>
-            <div className="mt-8 grid grid-cols-3 gap-6 border-t border-(--pf-border-soft) pt-7">
-              {r.metrics.map(m => (
-                <div key={m.label}>
-                  <div className="font-display text-3xl text-(--pf-text) sm:text-4xl">
-                    {m.value}
-                  </div>
-                  <div className="mt-1.5 text-xs leading-snug text-(--pf-text-4)">
-                    {m.label}
-                  </div>
+
+            <div className="grid gap-4 p-5 sm:p-6 lg:grid-cols-12">
+              {/* KPIs */}
+              <div className="grid grid-cols-2 gap-3 lg:col-span-12">
+                {dashboard.kpis.map((k, i) => (
+                  <Kpi key={k.label} k={k} index={i} />
+                ))}
+              </div>
+
+              {/* growth chart */}
+              <div className="rounded-xl border border-(--pf-border) bg-(--pf-surface) p-5 lg:col-span-7">
+                <div className="flex items-center justify-between">
+                  <span className="text-sm font-medium text-(--pf-text-2)">{dashboard.growth.title}</span>
+                  <span className="rounded-full border border-(--pf-up)/30 bg-(--pf-up)/10 px-2 py-0.5 text-[11px] font-semibold text-(--pf-up)">
+                    {dashboard.growth.chip}
+                  </span>
                 </div>
-              ))}
+                <div className="mt-5 flex h-28 items-end gap-1.5">
+                  {dashboard.growth.bars.map((h, i) => (
+                    <i
+                      key={i}
+                      className="flex-1 rounded-t bg-gradient-to-t from-(--pf-accent)/30 to-(--pf-accent) transition-all duration-700 ease-out"
+                      style={{
+                        height: visible ? `${h}%` : "0%",
+                        transitionDelay: `${i * 45}ms`,
+                      }}
+                    />
+                  ))}
+                </div>
+              </div>
+
+              {/* before/after */}
+              <div className="rounded-xl border border-(--pf-border) bg-(--pf-surface) p-5 lg:col-span-5">
+                <div className="flex items-center justify-between">
+                  <span className="text-sm font-medium text-(--pf-text-2)">{dashboard.beforeAfter.title}</span>
+                  <span className="rounded-full border border-(--pf-up)/30 bg-(--pf-up)/10 px-2 py-0.5 text-[11px] font-semibold text-(--pf-up)">
+                    {dashboard.beforeAfter.chip}
+                  </span>
+                </div>
+                <div className="mt-6 space-y-5">
+                  {([["before", dashboard.beforeAfter.before], ["after", dashboard.beforeAfter.after]] as const).map(([key, item]) => (
+                    <div key={key}>
+                      <div className="flex items-center justify-between text-xs">
+                        <span className={key === "after" ? "text-(--pf-text)" : "text-(--pf-text-4)"}>{item.label}</span>
+                        <span className={`font-mono ${key === "after" ? "text-(--pf-accent)" : "text-(--pf-text-4)"}`}>{item.value}</span>
+                      </div>
+                      <i className="mt-2 block h-2 overflow-hidden rounded-full bg-(--pf-chip)">
+                        <b
+                          className={`block h-full rounded-full transition-all duration-1000 ease-out ${key === "after" ? "bg-(--pf-accent)" : "bg-(--pf-text-5)"}`}
+                          style={{ width: visible ? item.width : "0%", transitionDelay: key === "after" ? "200ms" : "0ms" }}
+                        />
+                      </i>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* funnel */}
+              <div className="rounded-xl border border-(--pf-border) bg-(--pf-surface) p-5 lg:col-span-12">
+                <span className="text-sm font-medium text-(--pf-text-2)">{dashboard.funnel.title}</span>
+                <div className="mt-5 space-y-3">
+                  {dashboard.funnel.rows.map((r, i) => (
+                    <FunnelRow key={r.name} r={r} index={i} visible={visible} />
+                  ))}
+                </div>
+              </div>
             </div>
           </div>
-
-          <a
-            href={r.link}
-            target="_blank"
-            rel="noreferrer"
-            className="group overflow-hidden rounded-2xl border border-(--pf-border) bg-(--pf-surface) shadow-[0_24px_60px_-30px_rgba(74,55,27,0.25)]"
-          >
-            <div className="aspect-[4/3] overflow-hidden bg-(--pf-media)">
-              <img
-                src="/projects/soziday-public-1.jpg"
-                alt="СозидАй — главная страница"
-                loading="lazy"
-                decoding="async"
-                width={1280}
-                height={960}
-                className="size-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.02]"
-              />
-            </div>
-          </a>
-        </div>
-      </Reveal>
+        </Reveal>
+        <Reveal delay={150}>
+          <p className="mt-4 text-center text-xs text-(--pf-text-5)">
+            {dashboard.caption} ·{" "}
+            <a href={dashboard.caseLink} target="_blank" rel="noreferrer" className="text-(--pf-accent) hover:underline">
+              sozidaystudio.ru
+            </a>
+          </p>
+        </Reveal>
+      </div>
     </section>
+  );
+}
+
+function FunnelRow({
+  r,
+  index,
+  visible,
+}: {
+  r: (typeof dashboard.funnel.rows)[number];
+  index: number;
+  visible: boolean;
+}) {
+  const num = useCountUp(r.target, visible, 1500 + index * 100);
+  return (
+    <div className="grid grid-cols-[1fr_2fr_auto] items-center gap-3 text-sm">
+      <span className="text-(--pf-text-3)">{r.name}</span>
+      <i className="block h-2.5 overflow-hidden rounded-full bg-(--pf-chip)">
+        <b
+          className={`block h-full rounded-full transition-all duration-1000 ease-out ${r.win ? "bg-(--pf-up)" : "bg-(--pf-accent)"}`}
+          style={{ width: visible ? r.width : "0%", transitionDelay: `${index * 120}ms` }}
+        />
+      </i>
+      <span className="font-mono text-(--pf-text-2)">{num.toLocaleString("ru-RU")}</span>
+    </div>
   );
 }
 
@@ -444,10 +535,15 @@ function Results() {
 // ─────────────────────────────────────────────────────────────
 
 function CaseCard({ project, index }: { project: Project; index: number }) {
-  const inner = (
-    <article className="group h-full overflow-hidden rounded-2xl border border-(--pf-border) bg-(--pf-surface) transition-colors duration-300 hover:border-(--pf-border-strong)">
-      <div className="aspect-video overflow-hidden border-b border-(--pf-border-soft) bg-(--pf-media)">
-        {project.image ? (
+  return (
+    <Reveal delay={(index % 3) * 80}>
+      <a
+        href={project.link}
+        target="_blank"
+        rel="noreferrer"
+        className="group block h-full overflow-hidden rounded-2xl border border-(--pf-border) bg-(--pf-surface) transition-all duration-300 hover:-translate-y-1 hover:border-(--pf-accent)/40"
+      >
+        <div className="aspect-video overflow-hidden border-b border-(--pf-border-soft) bg-(--pf-media)">
           <img
             src={project.image}
             alt={project.title}
@@ -455,65 +551,52 @@ function CaseCard({ project, index }: { project: Project; index: number }) {
             decoding="async"
             width={1280}
             height={720}
-            className="size-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.03]"
+            className="size-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.04]"
           />
-        ) : null}
-      </div>
-      <div className="p-6">
-        <div className="flex items-center justify-between gap-3">
-          <span className="text-[11px] font-semibold uppercase tracking-[0.18em] text-(--pf-text-3)">
-            {project.kind}
-          </span>
-          {project.link && (
-            <span className="inline-flex items-center gap-1 text-xs text-(--pf-text-3)">
+        </div>
+        <div className="p-6">
+          <div className="flex items-center justify-between gap-3">
+            <span className="text-[11px] font-semibold uppercase tracking-[0.18em] text-(--pf-accent)">
+              {project.kind}
+            </span>
+            <span className="inline-flex items-center gap-1 text-xs text-(--pf-text-4)">
               открыть <ArrowUpRight className="size-3.5" />
             </span>
-          )}
+          </div>
+          <h3 className="font-display mt-3 text-xl tracking-tight text-(--pf-text)">
+            {project.title}
+          </h3>
+          <p className="mt-2 text-sm leading-relaxed text-(--pf-text-3)">
+            {project.description}
+          </p>
+          <div className="mt-4 flex flex-wrap gap-2">
+            {project.tags.map(tag => (
+              <span
+                key={tag}
+                className="rounded-full border border-(--pf-border) bg-(--pf-chip) px-2.5 py-1 text-[11px] text-(--pf-text-3)"
+              >
+                {tag}
+              </span>
+            ))}
+          </div>
         </div>
-        <h3 className="font-display mt-3 text-xl tracking-tight text-(--pf-text)">
-          {project.title}
-        </h3>
-        <p className="mt-2 text-sm leading-relaxed text-(--pf-text-3)">
-          {project.description}
-        </p>
-        <div className="mt-4 flex flex-wrap gap-2">
-          {project.tags.map(tag => (
-            <span
-              key={tag}
-              className="rounded-full border border-(--pf-border) bg-(--pf-chip) px-2.5 py-1 text-[11px] text-(--pf-text-3)"
-            >
-              {tag}
-            </span>
-          ))}
-        </div>
-      </div>
-    </article>
-  );
-  return (
-    <Reveal delay={(index % 3) * 80}>
-      {project.link ? (
-        <a href={project.link} target="_blank" rel="noreferrer" className="block h-full">
-          {inner}
-        </a>
-      ) : (
-        inner
-      )}
+      </a>
     </Reveal>
   );
 }
 
 function Cases() {
   return (
-    <section id="work" className="border-t border-(--pf-border-soft) bg-(--pf-surface-tint)">
+    <section id="work" className="border-t border-(--pf-border-soft)">
       <div className="mx-auto max-w-6xl px-5 py-24 sm:py-32">
         <Reveal>
           <Eyebrow>Работы</Eyebrow>
           <SectionTitle>Живые проекты</SectionTitle>
           <p className="mt-5 max-w-xl text-base leading-relaxed text-(--pf-text-3)">
-            Каждый проект можно открыть и посмотреть в деле.
+            Каждый сайт можно открыть и посмотреть в деле.
           </p>
         </Reveal>
-        <div className="mt-14 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+        <div className="mt-14 grid gap-6 md:grid-cols-2">
           {projects.map((p, i) => (
             <CaseCard key={p.id} project={p} index={i} />
           ))}
@@ -529,29 +612,31 @@ function Cases() {
 
 function Process() {
   return (
-    <section id="process" className="mx-auto max-w-6xl px-5 py-24 sm:py-32">
-      <Reveal>
-        <Eyebrow>Процесс</Eyebrow>
-        <SectionTitle>От заявки до запуска</SectionTitle>
-      </Reveal>
-      <div className="relative mt-14">
-        <div className="absolute inset-x-0 top-5 hidden h-px bg-(--pf-border) lg:block" />
-        <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-5 lg:gap-5">
-          {steps.map((s, i) => (
-            <Reveal key={s.n} delay={i * 70}>
-              <div className="relative">
-                <span className="relative z-10 grid size-10 place-items-center rounded-full border border-(--pf-gold)/40 bg-(--pf-bg) text-sm font-semibold text-(--pf-gold)">
-                  {s.n}
-                </span>
-                <h3 className="font-display mt-4 text-lg tracking-tight text-(--pf-text)">
-                  {s.title}
-                </h3>
-                <p className="mt-1.5 text-sm leading-relaxed text-(--pf-text-3)">
-                  {s.text}
-                </p>
-              </div>
-            </Reveal>
-          ))}
+    <section id="process" className="border-t border-(--pf-border-soft) bg-(--pf-bg-2)">
+      <div className="mx-auto max-w-6xl px-5 py-24 sm:py-32">
+        <Reveal>
+          <Eyebrow>Процесс</Eyebrow>
+          <SectionTitle>От заявки до запуска</SectionTitle>
+        </Reveal>
+        <div className="relative mt-14">
+          <div className="absolute inset-x-0 top-5 hidden h-px bg-(--pf-border) lg:block" />
+          <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-5 lg:gap-5">
+            {steps.map((s, i) => (
+              <Reveal key={s.n} delay={i * 70}>
+                <div className="relative">
+                  <span className="relative z-10 grid size-10 place-items-center rounded-full border border-(--pf-accent)/40 bg-(--pf-bg-2) text-sm font-semibold text-(--pf-accent)">
+                    {s.n}
+                  </span>
+                  <h3 className="font-display mt-4 text-lg tracking-tight text-(--pf-text)">
+                    {s.title}
+                  </h3>
+                  <p className="mt-1.5 text-sm leading-relaxed text-(--pf-text-3)">
+                    {s.text}
+                  </p>
+                </div>
+              </Reveal>
+            ))}
+          </div>
         </div>
       </div>
     </section>
@@ -574,22 +659,19 @@ function ContactForm() {
   const href = `${profile.telegram}?text=${encodeURIComponent(parts.join(" "))}`;
 
   return (
-    <form
-      onSubmit={e => e.preventDefault()}
-      className="mt-8 w-full max-w-md space-y-3"
-    >
+    <form onSubmit={e => e.preventDefault()} className="mt-8 w-full max-w-md space-y-3">
       <div className="grid gap-3 sm:grid-cols-2">
         <input
           value={name}
           onChange={e => setName(e.target.value)}
           placeholder="Как вас зовут"
-          className="w-full rounded-xl border border-(--pf-border) bg-(--pf-surface) px-4 py-3 text-sm text-(--pf-text) outline-none transition-colors placeholder:text-(--pf-text-4) focus:border-(--pf-gold)/50"
+          className="w-full rounded-xl border border-(--pf-border) bg-(--pf-surface) px-4 py-3 text-sm text-(--pf-text) outline-none transition-colors placeholder:text-(--pf-text-5) focus:border-(--pf-accent)/50"
         />
         <input
           value={contact}
           onChange={e => setContact(e.target.value)}
           placeholder="Telegram или телефон"
-          className="w-full rounded-xl border border-(--pf-border) bg-(--pf-surface) px-4 py-3 text-sm text-(--pf-text) outline-none transition-colors placeholder:text-(--pf-text-4) focus:border-(--pf-gold)/50"
+          className="w-full rounded-xl border border-(--pf-border) bg-(--pf-surface) px-4 py-3 text-sm text-(--pf-text) outline-none transition-colors placeholder:text-(--pf-text-5) focus:border-(--pf-accent)/50"
         />
       </div>
       <textarea
@@ -597,18 +679,18 @@ function ContactForm() {
         onChange={e => setTask(e.target.value)}
         placeholder="Пара слов о задаче"
         rows={3}
-        className="w-full resize-none rounded-xl border border-(--pf-border) bg-(--pf-surface) px-4 py-3 text-sm text-(--pf-text) outline-none transition-colors placeholder:text-(--pf-text-4) focus:border-(--pf-gold)/50"
+        className="w-full resize-none rounded-xl border border-(--pf-border) bg-(--pf-surface) px-4 py-3 text-sm text-(--pf-text) outline-none transition-colors placeholder:text-(--pf-text-5) focus:border-(--pf-accent)/50"
       />
       <a
         href={href}
         target="_blank"
         rel="noreferrer"
-        className="flex w-full items-center justify-center gap-2 rounded-full bg-(--pf-gold-solid) px-6 py-3.5 text-sm font-semibold text-(--pf-on-accent) transition-colors hover:bg-(--pf-gold-solid-hover)"
+        className="flex w-full items-center justify-center gap-2 rounded-full bg-(--pf-accent-solid) px-6 py-3.5 text-sm font-semibold text-(--pf-on-accent) transition-all hover:-translate-y-0.5 hover:bg-(--pf-accent-solid-hover)"
       >
         <Send className="size-4" />
         Отправить в Telegram
       </a>
-      <p className="text-center text-xs text-(--pf-text-4)">
+      <p className="text-center text-xs text-(--pf-text-5)">
         Откроет Telegram с готовым сообщением
       </p>
     </form>
@@ -617,8 +699,9 @@ function ContactForm() {
 
 function Contact() {
   return (
-    <section id="contact" className="border-t border-(--pf-border-soft) bg-(--pf-surface-tint)">
-      <div className="mx-auto max-w-6xl px-5 py-24 sm:py-32">
+    <section id="contact" className="relative overflow-hidden border-t border-(--pf-border-soft)">
+      <Orbs />
+      <div className="relative mx-auto max-w-6xl px-5 py-24 sm:py-32">
         <div className="grid gap-12 lg:grid-cols-2 lg:gap-16">
           <Reveal>
             <Eyebrow>Контакт</Eyebrow>
@@ -630,14 +713,14 @@ function Contact() {
               чему не обязывает, отвечаю в течение дня.
             </p>
             <div className="mt-8 flex flex-col gap-3 text-sm">
-              <a href={profile.telegram} target="_blank" rel="noreferrer" className="inline-flex items-center gap-3 text-(--pf-text-2) transition-colors hover:text-(--pf-gold)">
-                <Send className="size-4 text-(--pf-gold)" /> Telegram · {profile.telegramUser}
+              <a href={profile.telegram} target="_blank" rel="noreferrer" className="inline-flex items-center gap-3 text-(--pf-text-2) transition-colors hover:text-(--pf-accent)">
+                <Send className="size-4 text-(--pf-accent)" /> Telegram · {profile.telegramUser}
               </a>
-              <a href={profile.whatsapp} target="_blank" rel="noreferrer" className="inline-flex items-center gap-3 text-(--pf-text-2) transition-colors hover:text-(--pf-gold)">
-                <MessageCircle className="size-4 text-(--pf-gold)" /> WhatsApp · {profile.phone}
+              <a href={profile.whatsapp} target="_blank" rel="noreferrer" className="inline-flex items-center gap-3 text-(--pf-text-2) transition-colors hover:text-(--pf-accent)">
+                <MessageCircle className="size-4 text-(--pf-accent)" /> WhatsApp · {profile.phone}
               </a>
-              <a href={`mailto:${profile.email}`} className="inline-flex items-center gap-3 text-(--pf-text-2) transition-colors hover:text-(--pf-gold)">
-                <Mail className="size-4 text-(--pf-gold)" /> {profile.email}
+              <a href={`mailto:${profile.email}`} className="inline-flex items-center gap-3 text-(--pf-text-2) transition-colors hover:text-(--pf-accent)">
+                <Mail className="size-4 text-(--pf-accent)" /> {profile.email}
               </a>
             </div>
           </Reveal>
@@ -661,11 +744,11 @@ function Footer() {
     <footer className="border-t border-(--pf-border-soft) py-10">
       <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-6 px-5 sm:flex-row">
         <div className="flex items-center gap-2.5">
-          <span className="font-display grid size-7 place-items-center rounded-full border border-(--pf-gold)/40 bg-(--pf-gold)/10 text-sm leading-none text-(--pf-gold)">
+          <span className="font-display grid size-7 place-items-center rounded-lg border border-(--pf-accent)/40 bg-(--pf-accent-soft) text-sm leading-none text-(--pf-accent)">
             V
           </span>
           <span className="text-sm text-(--pf-text-4)">
-            © {new Date().getFullYear()} {profile.name} · сайты под ключ
+            © {new Date().getFullYear()} {profile.name} · сайты и магазины под ключ
           </span>
         </div>
         <div className="flex items-center gap-5">
@@ -700,10 +783,10 @@ export function PortfolioPage() {
       <Nav theme={theme} toggle={toggle} />
       <main>
         <Hero />
-        <TechStrip />
+        <Marquee />
         <About />
         <Services />
-        <Results />
+        <Dashboard />
         <Cases />
         <Process />
         <Contact />

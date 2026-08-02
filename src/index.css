@@ -191,20 +191,24 @@
 }
 
 /* ═══════════════════════════════════════════════════════════
-   PORTFOLIO — warm paper-and-gold design system
+   PORTFOLIO — dark studio system (indigo accent, glass, orbs)
    ═══════════════════════════════════════════════════════════ */
 
 .font-display {
-  font-family: "Manrope", system-ui, sans-serif;
+  font-family: "Inter", system-ui, sans-serif;
   font-weight: 600;
   letter-spacing: -0.025em;
 }
 
 .font-body {
-  font-family: "Manrope", system-ui, sans-serif;
+  font-family: "Inter", system-ui, sans-serif;
 }
 
-/* pulsing status dot — soft, slow */
+.font-mono {
+  font-family: "JetBrains Mono", ui-monospace, monospace;
+}
+
+/* pulsing live dot */
 @keyframes pf-ping {
   0% { transform: scale(1); opacity: 0.7; }
   70%, 100% { transform: scale(2.2); opacity: 0; }
@@ -216,16 +220,25 @@
   to { transform: translateX(-50%); }
 }
 .pf-marquee {
-  animation: pf-marquee 40s linear infinite;
+  animation: pf-marquee 42s linear infinite;
 }
 .pf-marquee:hover {
   animation-play-state: paused;
 }
 
+/* slow orb drift */
+@keyframes pf-orb {
+  0%, 100% { transform: translate3d(0, 0, 0); }
+  50% { transform: translate3d(0, -26px, 0); }
+}
+.pf-orb {
+  animation: pf-orb 11s ease-in-out infinite;
+}
+
 /* scroll reveal — gentle */
 .pf-reveal {
   opacity: 0;
-  transform: translateY(14px);
+  transform: translateY(16px);
   transition:
     opacity 0.8s cubic-bezier(0.22, 1, 0.36, 1),
     transform 0.8s cubic-bezier(0.22, 1, 0.36, 1);
@@ -239,70 +252,84 @@
 
 @media (prefers-reduced-motion: reduce) {
   .pf-reveal { transition: none; opacity: 1; transform: none; }
-  .pf-marquee { animation: none; }
+  .pf-marquee, .pf-orb { animation: none; }
 }
 
-/* ─── Темы портфолио ─────────────────────────────────────────
-   Светлая (по умолчанию, тёплая кремовая бумага) задаётся на
-   :root, тёмная — классом `pf-dark` на <html>. */
+/* ─── Тема: тёмная (по умолчанию) на :root, светлая — класс `pf-light` ─── */
 :root {
-  --pf-bg: #f9f7f2;
-  --pf-nav: rgba(249, 247, 242, 0.82);
-  --pf-media: #efeae0;
-  --pf-surface: #fffdf9;
-  --pf-surface-hover: #fffaf2;
-  --pf-surface-tint: rgba(74, 55, 27, 0.022);
-  --pf-surface-faint: rgba(74, 55, 27, 0.015);
-  --pf-chip: rgba(74, 55, 27, 0.05);
-  --pf-border: rgba(74, 55, 27, 0.12);
-  --pf-border-soft: rgba(74, 55, 27, 0.07);
-  --pf-border-mid: rgba(74, 55, 27, 0.18);
-  --pf-border-strong: rgba(74, 55, 27, 0.34);
-  --pf-text: #2e2519;
-  --pf-text-2: #524535;
-  --pf-text-3: #756551;
-  --pf-text-4: #978874;
-  --pf-text-5: #b5a98f;
-  --pf-gold: #9a7325;
-  --pf-gold-solid: #9a7325;
-  --pf-gold-solid-hover: #83601c;
-  --pf-on-accent: #fffdf9;
-  --pf-glow: rgba(154, 115, 37, 0.1);
-  --pf-dot: rgba(74, 55, 27, 0.1);
-  color-scheme: light;
-}
-
-html.pf-dark {
-  --pf-bg: #1c1610;
-  --pf-nav: rgba(28, 22, 16, 0.82);
-  --pf-media: #14100b;
-  --pf-surface: #251d14;
-  --pf-surface-hover: #2a2218;
-  --pf-surface-tint: rgba(255, 251, 242, 0.025);
-  --pf-surface-faint: rgba(255, 251, 242, 0.018);
-  --pf-chip: rgba(255, 251, 242, 0.06);
-  --pf-border: rgba(255, 251, 242, 0.12);
-  --pf-border-soft: rgba(255, 251, 242, 0.07);
-  --pf-border-mid: rgba(255, 251, 242, 0.18);
-  --pf-border-strong: rgba(255, 251, 242, 0.36);
-  --pf-text: #f5f0e6;
-  --pf-text-2: #ddd2bd;
-  --pf-text-3: #b8a98e;
-  --pf-text-4: #9a8870;
-  --pf-text-5: #7a6650;
-  --pf-gold: #d6ae4d;
-  --pf-gold-solid: #d6ae4d;
-  --pf-gold-solid-hover: #e4c270;
-  --pf-on-accent: #1c1610;
-  --pf-glow: rgba(214, 174, 77, 0.1);
-  --pf-dot: rgba(255, 251, 242, 0.1);
+  --pf-bg: #0a0b10;
+  --pf-bg-2: #0d0e15;
+  --pf-nav: rgba(10, 11, 16, 0.7);
+  --pf-media: #121319;
+  --pf-surface: rgba(255, 255, 255, 0.035);
+  --pf-surface-2: rgba(255, 255, 255, 0.055);
+  --pf-surface-hover: rgba(255, 255, 255, 0.07);
+  --pf-surface-tint: rgba(255, 255, 255, 0.02);
+  --pf-surface-faint: rgba(255, 255, 255, 0.015);
+  --pf-chip: rgba(255, 255, 255, 0.06);
+  --pf-border: rgba(255, 255, 255, 0.09);
+  --pf-border-soft: rgba(255, 255, 255, 0.06);
+  --pf-border-mid: rgba(255, 255, 255, 0.14);
+  --pf-border-strong: rgba(255, 255, 255, 0.22);
+  --pf-text: #f3f4f8;
+  --pf-text-2: #cfd1dc;
+  --pf-text-3: #9a9dac;
+  --pf-text-4: #6e7185;
+  --pf-text-5: #4a4d5e;
+  --pf-accent: #7170ff;
+  --pf-accent-2: #4ea7fc;
+  --pf-accent-soft: rgba(113, 112, 255, 0.14);
+  --pf-accent-solid: #7170ff;
+  --pf-accent-solid-hover: #8584ff;
+  --pf-on-accent: #0a0b10;
+  --pf-orb-1: rgba(113, 112, 255, 0.5);
+  --pf-orb-2: rgba(139, 92, 246, 0.42);
+  --pf-orb-3: rgba(34, 211, 238, 0.32);
+  --pf-grid: rgba(255, 255, 255, 0.035);
+  --pf-up: #34d399;
   color-scheme: dark;
 }
 
-/* dotted background for image placeholders */
-.pf-dots {
-  background-image: radial-gradient(var(--pf-dot) 1px, transparent 1px);
-  background-size: 14px 14px;
+html.pf-light {
+  --pf-bg: #f6f7fb;
+  --pf-bg-2: #eef0f6;
+  --pf-nav: rgba(246, 247, 251, 0.78);
+  --pf-media: #e6e8f0;
+  --pf-surface: #ffffff;
+  --pf-surface-2: #ffffff;
+  --pf-surface-hover: #fbfbfe;
+  --pf-surface-tint: rgba(15, 23, 42, 0.025);
+  --pf-surface-faint: rgba(15, 23, 42, 0.018);
+  --pf-chip: rgba(15, 23, 42, 0.05);
+  --pf-border: rgba(15, 23, 42, 0.12);
+  --pf-border-soft: rgba(15, 23, 42, 0.08);
+  --pf-border-mid: rgba(15, 23, 42, 0.18);
+  --pf-border-strong: rgba(15, 23, 42, 0.32);
+  --pf-text: #14161f;
+  --pf-text-2: #353846;
+  --pf-text-3: #5b6072;
+  --pf-text-4: #828898;
+  --pf-text-5: #a8adbb;
+  --pf-accent: #5b5af0;
+  --pf-accent-2: #2f8fe6;
+  --pf-accent-soft: rgba(91, 90, 240, 0.1);
+  --pf-accent-solid: #5b5af0;
+  --pf-accent-solid-hover: #4a49e0;
+  --pf-on-accent: #ffffff;
+  --pf-orb-1: rgba(91, 90, 240, 0.22);
+  --pf-orb-2: rgba(139, 92, 246, 0.18);
+  --pf-orb-3: rgba(47, 143, 230, 0.16);
+  --pf-grid: rgba(15, 23, 42, 0.05);
+  --pf-up: #16a34a;
+  color-scheme: light;
+}
+
+/* faint grid background */
+.pf-grid {
+  background-image:
+    linear-gradient(to right, var(--pf-grid) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--pf-grid) 1px, transparent 1px);
+  background-size: 56px 56px;
 }
 
 html {

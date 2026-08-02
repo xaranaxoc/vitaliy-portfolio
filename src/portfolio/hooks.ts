@@ -35,9 +35,9 @@ export function useReveal<T extends HTMLElement>(threshold = 0.15) {
 
 /**
  * Count-up: animates 0 → target once `start` is true.
- * Respects prefers-reduced-motion (jumps to target).
+ * Supports decimals. Respects prefers-reduced-motion (jumps to target).
  */
-export function useCountUp(target: number, start: boolean, duration = 1400) {
+export function useCountUp(target: number, start: boolean, duration = 1500, decimals = 0) {
   const [value, setValue] = useState(0);
 
   useEffect(() => {
@@ -50,21 +50,22 @@ export function useCountUp(target: number, start: boolean, duration = 1400) {
       return;
     }
     let raf = 0;
+    const factor = 10 ** decimals;
     const t0 = performance.now();
     const tick = (now: number) => {
       const p = Math.min(1, (now - t0) / duration);
       const eased = 1 - Math.pow(1 - p, 3);
-      setValue(Math.round(target * eased));
+      setValue(Math.round(target * eased * factor) / factor);
       if (p < 1) raf = requestAnimationFrame(tick);
     };
     raf = requestAnimationFrame(tick);
     return () => cancelAnimationFrame(raf);
-  }, [target, start, duration]);
+  }, [target, start, duration, decimals]);
 
   return value;
 }
 
-// ─── Тема (светлая / тёмная) ────────────────────────────────
+// ─── Тема (тёмная по умолчанию / светлая опционально) ───────
 export type Theme = "dark" | "light";
 
 function getInitialTheme(): Theme {
@@ -74,18 +75,18 @@ function getInitialTheme(): Theme {
   } catch {
     // localStorage может быть недоступен — игнорируем
   }
-  return "light"; // светлая тема по умолчанию
+  return "dark"; // тёмная тема по умолчанию
 }
 
 /**
  * Переключатель темы: хранит выбор в localStorage,
- * вешает класс `pf-dark` на <html> (светлая — без класса).
+ * вешает класс `pf-light` на <html> (тёмная — без класса).
  */
 export function useTheme() {
   const [theme, setTheme] = useState<Theme>(getInitialTheme);
 
   useEffect(() => {
-    document.documentElement.classList.toggle("pf-dark", theme === "dark");
+    document.documentElement.classList.toggle("pf-light", theme === "light");
     try {
       localStorage.setItem("pf-theme", theme);
     } catch {
