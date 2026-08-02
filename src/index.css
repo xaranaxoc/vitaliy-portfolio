@@ -195,9 +195,9 @@
    ═══════════════════════════════════════════════════════════ */
 
 .font-display {
-  font-family: "Instrument Serif", "Manrope", Georgia, serif;
-  font-weight: 400;
-  letter-spacing: -0.01em;
+  font-family: "Manrope", system-ui, sans-serif;
+  font-weight: 600;
+  letter-spacing: -0.025em;
 }
 
 .font-body {
@@ -246,29 +246,29 @@
    Светлая (по умолчанию, тёплая кремовая бумага) задаётся на
    :root, тёмная — классом `pf-dark` на <html>. */
 :root {
-  --pf-bg: #f5f0e6;
-  --pf-nav: rgba(245, 240, 230, 0.82);
-  --pf-media: #ece4d4;
-  --pf-surface: #fffbf2;
-  --pf-surface-hover: #fff8e8;
-  --pf-surface-tint: rgba(74, 55, 27, 0.025);
-  --pf-surface-faint: rgba(74, 55, 27, 0.018);
-  --pf-chip: rgba(74, 55, 27, 0.06);
-  --pf-border: rgba(74, 55, 27, 0.14);
-  --pf-border-soft: rgba(74, 55, 27, 0.08);
-  --pf-border-mid: rgba(74, 55, 27, 0.2);
-  --pf-border-strong: rgba(74, 55, 27, 0.38);
-  --pf-text: #3a2e20;
-  --pf-text-2: #5c4a35;
-  --pf-text-3: #7a6650;
-  --pf-text-4: #9a8870;
-  --pf-text-5: #b8a98e;
-  --pf-gold: #a27e3b;
-  --pf-gold-solid: #a27e3b;
-  --pf-gold-solid-hover: #8e6b2e;
-  --pf-on-accent: #fffbf2;
-  --pf-glow: rgba(162, 126, 59, 0.1);
-  --pf-dot: rgba(74, 55, 27, 0.12);
+  --pf-bg: #f9f7f2;
+  --pf-nav: rgba(249, 247, 242, 0.82);
+  --pf-media: #efeae0;
+  --pf-surface: #fffdf9;
+  --pf-surface-hover: #fffaf2;
+  --pf-surface-tint: rgba(74, 55, 27, 0.022);
+  --pf-surface-faint: rgba(74, 55, 27, 0.015);
+  --pf-chip: rgba(74, 55, 27, 0.05);
+  --pf-border: rgba(74, 55, 27, 0.12);
+  --pf-border-soft: rgba(74, 55, 27, 0.07);
+  --pf-border-mid: rgba(74, 55, 27, 0.18);
+  --pf-border-strong: rgba(74, 55, 27, 0.34);
+  --pf-text: #2e2519;
+  --pf-text-2: #524535;
+  --pf-text-3: #756551;
+  --pf-text-4: #978874;
+  --pf-text-5: #b5a98f;
+  --pf-gold: #9a7325;
+  --pf-gold-solid: #9a7325;
+  --pf-gold-solid-hover: #83601c;
+  --pf-on-accent: #fffdf9;
+  --pf-glow: rgba(154, 115, 37, 0.1);
+  --pf-dot: rgba(74, 55, 27, 0.1);
   color-scheme: light;
 }
 

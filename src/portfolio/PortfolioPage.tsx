@@ -179,16 +179,16 @@ function Nav({ theme, toggle }: { theme: Theme; toggle: () => void }) {
 // Hero
 // ─────────────────────────────────────────────────────────────
 
-function MetricCard({ m }: { m: Metric }) {
-  const { ref, visible } = useReveal<HTMLDivElement>(0.4);
+function MetricCell({ m }: { m: Metric }) {
+  const { ref, visible } = useReveal<HTMLDivElement>(0.5);
   const v = useCountUp(m.value, visible);
   return (
-    <div ref={ref} className="text-center sm:text-left">
-      <div className="font-display text-4xl leading-none text-(--pf-text) sm:text-5xl">
+    <div ref={ref} className="bg-(--pf-surface) px-4 py-6 text-center">
+      <div className="text-3xl font-semibold leading-none tracking-tight text-(--pf-text) sm:text-4xl">
         {v}
         <span className="text-(--pf-gold)">{m.suffix}</span>
       </div>
-      <div className="mt-2 text-xs text-(--pf-text-4) sm:text-sm">{m.label}</div>
+      <div className="mt-2 text-[11px] leading-snug text-(--pf-text-4)">{m.label}</div>
     </div>
   );
 }
@@ -196,35 +196,28 @@ function MetricCard({ m }: { m: Metric }) {
 function Hero() {
   return (
     <section id="top" className="relative overflow-hidden pt-16">
-      {/* огромный призрачный V как визуальный якорь */}
-      <span
-        aria-hidden="true"
-        className="font-display pointer-events-none absolute -right-6 top-10 select-none text-[34rem] leading-none text-(--pf-gold)/[0.06] sm:text-[42rem]"
-      >
-        V
-      </span>
-
-      <div className="relative mx-auto max-w-6xl px-5 pb-24 pt-20 sm:pt-28">
+      <div className="relative mx-auto max-w-3xl px-5 pb-20 pt-24 text-center sm:pt-32">
         <Reveal>
-          <Eyebrow>Сайты · магазины · боты · автоматизация</Eyebrow>
+          <span className="inline-flex items-center rounded-full border border-(--pf-border) bg-(--pf-surface) px-4 py-1.5 text-[11px] font-semibold uppercase tracking-[0.2em] text-(--pf-gold)">
+            Сайты · магазины · боты · автоматизация
+          </span>
         </Reveal>
 
         <Reveal delay={80}>
-          <h1 className="font-display mt-6 max-w-3xl text-5xl leading-[1.05] tracking-tight text-(--pf-text) sm:text-7xl">
+          <h1 className="mt-8 text-5xl font-semibold leading-[1.05] tracking-tight text-(--pf-text) sm:text-6xl">
             Сайты, которые приносят клиентов
           </h1>
         </Reveal>
 
         <Reveal delay={160}>
-          <p className="mt-7 max-w-xl text-lg leading-relaxed text-(--pf-text-3)">
-            Делаю так, чтобы сайт приносил заявки, а не просто нравился. Веду
-            проект один — от идеи до поддержки. Пишете в Telegram — отвечает сам
-            разработчик, а не менеджер.
+          <p className="mx-auto mt-6 max-w-md text-base leading-relaxed text-(--pf-text-3)">
+            Под ключ, один человек, до поддержки. Пишете в Telegram — отвечает
+            сам разработчик, а не менеджер.
           </p>
         </Reveal>
 
         <Reveal delay={240}>
-          <div className="mt-9 flex flex-wrap items-center gap-3">
+          <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
             <a
               href={profile.telegram}
               target="_blank"
@@ -245,9 +238,9 @@ function Hero() {
         </Reveal>
 
         <Reveal delay={320}>
-          <div className="mt-16 grid grid-cols-2 gap-8 border-t border-(--pf-border-soft) pt-10 sm:mt-20 md:grid-cols-4">
+          <div className="mx-auto mt-16 grid max-w-2xl grid-cols-2 gap-px overflow-hidden rounded-2xl border border-(--pf-border) bg-(--pf-border) sm:grid-cols-4">
             {metrics.map(m => (
-              <MetricCard key={m.label} m={m} />
+              <MetricCell key={m.label} m={m} />
             ))}
           </div>
         </Reveal>
@@ -306,9 +299,8 @@ function About() {
         <Reveal delay={120}>
           <div className="flex h-full flex-col justify-end text-base leading-relaxed text-(--pf-text-3)">
             <p>
-              Я {profile.nameRu}, {profile.role}. Дизайн, код, деплой и поддержку
-              беру на себя. Вы общаетесь напрямую с исполнителем — никаких потерь
-              смысла между клиентом, менеджером и программистом.
+              Я {profile.nameRu}. Веду проект один — от идеи до поддержки. Вы
+              общаетесь напрямую с разработчиком, без менеджеров и потерь смысла.
             </p>
             <div className="mt-6 flex flex-wrap gap-x-6 gap-y-2 text-sm text-(--pf-text-4)">
               <span className="flex items-center gap-2">
