@@ -233,8 +233,10 @@
   to { transform: translateX(-50%); }
 }
 .pf-marquee {
-  animation: pf-marquee 36s linear infinite;
+  animation: pf-marquee 60s linear infinite;
+  will-change: transform;
 }
+.pf-marquee-pause:hover .pf-marquee,
 .pf-marquee:hover {
   animation-play-state: paused;
 }

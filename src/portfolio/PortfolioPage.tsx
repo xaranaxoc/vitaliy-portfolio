@@ -234,13 +234,14 @@ function Nav({ theme, toggle }: { theme: Theme; toggle: () => void }) {
 // ─────────────────────────────────────────────────────────────
 
 const HERO_CARD_ROWS = [
-  { icon: TrendingUp, label: "Заявки", value: "круглосуточно", accent: true },
-  { icon: Zap, label: "Скорость", value: "молниеносная", accent: false },
-  { icon: Bot, label: "Ответы", value: "автоматически", accent: false },
-  { icon: Search, label: "Поиск", value: "новые клиенты", accent: false },
+  { icon: TrendingUp, label: "Заявки", value: "круглосуточно" },
+  { icon: Zap, label: "Скорость", value: "молниеносная" },
+  { icon: Bot, label: "Ответы", value: "автоматически" },
+  { icon: Search, label: "Поиск", value: "новые клиенты" },
 ];
 
 function HeroCard() {
+  const [active, setActive] = useState(0);
   return (
     <div className="overflow-hidden rounded-2xl border border-(--pf-border-mid) bg-(--pf-surface) shadow-[0_24px_80px_-20px_rgba(163,230,53,0.12)] backdrop-blur-sm">
       <div className="flex items-center gap-2 border-b border-(--pf-border-soft) px-4 py-3">
@@ -251,33 +252,38 @@ function HeroCard() {
           ваш-сайт.ru — работает на вас
         </span>
       </div>
-      <div className="space-y-1 p-5">
+      <div className="space-y-1.5 p-5">
         <p className="font-code px-1 pb-1 text-xs font-semibold uppercase tracking-[0.18em] text-(--pf-lime)/90">
           что даёт сайт вашему бизнесу
         </p>
-        {HERO_CARD_ROWS.map(r => {
+        {HERO_CARD_ROWS.map((r, i) => {
           const Icon = r.icon;
+          const on = i === active;
           return (
+            // biome-ignore lint/a11y/noStaticElementInteractions: декоративная подсветка под курсором, не элемент управления
             <div
               key={r.label}
-              className={`flex items-center justify-between rounded-lg px-3 py-3 transition-colors ${
-                r.accent ? "bg-(--pf-lime)/10" : "bg-(--pf-chip)"
+              onMouseEnter={() => setActive(i)}
+              className={`relative flex cursor-default items-center justify-between rounded-lg px-3 py-3 ring-1 transition-all duration-300 ${
+                on
+                  ? "bg-(--pf-lime)/[0.13] ring-(--pf-lime)/40 shadow-[0_0_28px_-6px_rgba(190,242,100,0.4)]"
+                  : "bg-(--pf-chip) ring-transparent"
               }`}
             >
-              <span className="flex items-center gap-2.5">
+              <span className="relative flex items-center gap-2.5">
                 <span
-                  className={
-                    r.accent ? "text-(--pf-lime)" : "text-(--pf-text-4)"
-                  }
+                  className={on ? "text-(--pf-lime)" : "text-(--pf-text-4)"}
                 >
                   <Icon className="size-4" />
                 </span>
-                <span className="font-body text-sm text-(--pf-text-2)">
+                <span
+                  className={`font-body text-sm transition-colors ${on ? "text-(--pf-text)" : "text-(--pf-text-2)"}`}
+                >
                   {r.label}
                 </span>
               </span>
               <span
-                className={`font-code text-xs font-semibold ${r.accent ? "text-(--pf-lime)" : "text-(--pf-text-3)"}`}
+                className={`relative font-code text-xs font-semibold transition-colors ${on ? "text-(--pf-lime)" : "text-(--pf-text-3)"}`}
               >
                 {r.value}
               </span>
@@ -400,14 +406,19 @@ const MARQUEE_ITEMS = [
 ];
 
 function Marquee() {
-  const row = [...MARQUEE_ITEMS, ...MARQUEE_ITEMS];
+  const row = [
+    ...MARQUEE_ITEMS,
+    ...MARQUEE_ITEMS,
+    ...MARQUEE_ITEMS,
+    ...MARQUEE_ITEMS,
+  ];
   return (
-    <div className="relative overflow-hidden border-y border-(--pf-border-soft) bg-(--pf-surface-faint) py-4">
+    <div className="pf-marquee-pause relative overflow-hidden border-y border-(--pf-border-soft) bg-(--pf-surface-faint) py-4">
       <div className="pf-marquee flex w-max items-center">
         {row.map((item, i) => (
           <span
             key={`${item}-${i}`}
-            className="font-code flex items-center text-sm text-(--pf-text-4)"
+            className="font-code flex items-center whitespace-nowrap text-sm text-(--pf-text-4)"
           >
             <span className="px-5">{item}</span>
             <span className="text-(--pf-lime)/60">✦</span>
