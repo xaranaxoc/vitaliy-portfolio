@@ -4,7 +4,7 @@
 // ============================================================
 
 export const profile = {
-  // Ник латиницей — показывается в шапке (~/vitaliy) и в терминале
+  // Ник латиницей — показывается в шапке
   name: "Vitaliy",
   // Имя по-русски — используется в тексте hero
   nameRu: "Виталий",
@@ -28,7 +28,6 @@ export type Project = {
   tags: string[];
   image: string | null;
   link: string | null;
-  accent: "lime" | "cyan" | "violet" | "amber";
 };
 
 export const projects: Project[] = [
@@ -38,35 +37,32 @@ export const projects: Project[] = [
     category: "landing",
     title: "NovaFlow AI — сайт продукта",
     description:
-      "Продающий лендинг для платформы AI-автоматизации: тёмный дизайн, glassmorphism, живые анимации. Структура ведёт от проблемы к заявке — возможности, кейсы, тарифы, демо. Полностью адаптивный, SEO-оптимизированный.",
+      "Лендинг для платформы AI-автоматизации. Тёмная тема и плавные анимации ведут посетителя от проблемы к заявке: возможности, кейсы, тарифы, демо. Полностью адаптивный и быстрый.",
     tags: ["HTML/CSS", "JavaScript", "Анимации", "Адаптив"],
     image: "/projects/novaflow-landing.jpg",
     link: "https://novaflow-ai-landing.vercel.app/",
-    accent: "lime",
   },
   {
     id: "northpeak",
-    kind: "Лендинг",
+    kind: "Сайт компании",
     category: "landing",
-    title: "NorthPeak Construction — сайт компании",
+    title: "NorthPeak Construction",
     description:
-      "Сайт строительной компании: премиальный стиль, full-bleed фото, scroll-reveal анимации. Акцент на проекты и услуги — каждая секция работает на доверие клиента. Полностью адаптивный.",
+      "Сайт строительной компании. Премиальная подача, крупные фотографии объектов, плавное появление секций. Каждая секция работает на доверие клиента и помогает ему сделать выбор.",
     tags: ["HTML/CSS", "JavaScript", "Адаптив", "Анимации"],
     image: "/projects/northpeak.jpg",
     link: "https://northpeak-construction.vercel.app/",
-    accent: "amber",
   },
   {
     id: "lumina",
-    kind: "Лендинг",
+    kind: "Сайт студии",
     category: "landing",
-    title: "Lumina Studio — сайт дизайн-студии",
+    title: "Lumina Studio",
     description:
-      "Сайт дизайн-студии в editorial-стиле: serif-заголовки, тёплая палитра, плавные анимации. Демонстрирует услуги и портфолио. Адаптивный, с фокусом на конверсию посетителей в клиентов.",
+      "Сайт дизайн-студии в editorial-стиле: серифные заголовки, тёплая палитра, спокойные анимации. Помогает превратить посетителей в клиентов через портфолио и услуги.",
     tags: ["HTML/CSS", "JavaScript", "Editorial", "Адаптив"],
     image: "/projects/lumina.jpg",
     link: "https://lumina-studio-landing-eight.vercel.app/",
-    accent: "cyan",
   },
   {
     id: "trading-app",
@@ -74,11 +70,10 @@ export const projects: Project[] = [
     category: "tool",
     title: "Trade Copier — копитрейдер для MT5",
     description:
-      "Открывает одну сделку сразу на нескольких счетах MetaTrader 5: мастер-аккаунт и до 10 подключённых. Главная фишка — правильный лот для любой пары считается автоматически под баланс и риск каждого счёта. Панель управления терминалами, статистика и закрытие всех сделок в один клик.",
+      "Открывает одну сделку сразу на нескольких счетах MetaTrader 5: мастер-аккаунт и до 10 подключённых. Лот для любой пары считается автоматически под баланс и риск каждого счёта. Панель управления терминалами, статистика и закрытие всех сделок в один клик.",
     tags: ["Python", "MetaTrader 5", "Desktop GUI", "Риск-менеджмент"],
     image: "/projects/trade-copier.png",
     link: "https://github.com/xaranaxoc/TradeCopier",
-    accent: "cyan",
   },
   {
     id: "tg-bot",
@@ -86,11 +81,10 @@ export const projects: Project[] = [
     category: "tool",
     title: "Бот продаж и лицензий",
     description:
-      "Автоматическая витрина для Trade Copier: триал на 7 дней, покупка бессрочной лицензии за USDT, выдача сборок, привязка до двух устройств с кодами верификации и реферальная программа с 10% от покупок. Продаёт и обслуживает клиентов 24/7 без участия человека.",
+      "Автоматическая витрина для Trade Copier: триал на 7 дней, покупка бессрочной лицензии за USDT, выдача сборок, привязка до двух устройств с кодами верификации и реферальная программа с 10% от покупок. Продаёт и обслуживает клиентов круглосуточно, без участия человека.",
     tags: ["Python", "aiogram", "Крипто-платежи", "Лицензии"],
     image: "/projects/telegram-bot.png",
     link: null,
-    accent: "violet",
   },
   {
     id: "ds-bot",
@@ -102,7 +96,6 @@ export const projects: Project[] = [
     tags: ["Python", "discord.py", "FFmpeg", "Voice API"],
     image: "/projects/discord-bot.png",
     link: null,
-    accent: "amber",
   },
 ];
 
@@ -137,19 +130,4 @@ export const stack: { group: string; note: string; items: string[] }[] = [
     note: "от кода до продакшена",
     items: ["Linux / VPS", "Nginx", "CI/CD", "Git", "Мониторинг и логи"],
   },
-];
-
-// ─── СТРОКИ ТЕРМИНАЛА В HERO ────────────────────────────────
-export const terminalLines: { text: string; kind: "cmd" | "ok" | "out" }[] = [
-  { text: "ssh vitaliy@production", kind: "cmd" },
-  { text: "cd ~/apps/client-project && git pull", kind: "cmd" },
-  { text: "docker compose up -d --build", kind: "cmd" },
-  { text: "✔ backend   · FastAPI    · running", kind: "ok" },
-  { text: "✔ database  · PostgreSQL · healthy", kind: "ok" },
-  { text: "✔ tg-bot    · aiogram    · running", kind: "ok" },
-  { text: "pytest -q", kind: "cmd" },
-  { text: "128 passed in 4.2s", kind: "out" },
-  { text: "npm run build", kind: "cmd" },
-  { text: "✔ frontend  · Vite       · built in 4.1s", kind: "ok" },
-  { text: 'echo "проект в продакшене"', kind: "cmd" },
 ];

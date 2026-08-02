@@ -1,5 +1,4 @@
 import { useEffect, useRef, useState } from "react";
-import { terminalLines } from "./data";
 
 /**
  * Scroll-reveal: returns a ref + visibility flag.
@@ -34,73 +33,7 @@ export function useReveal<T extends HTMLElement>(threshold = 0.15) {
   return { ref, visible };
 }
 
-export type TerminalState = {
-  /** lines fully typed */
-  done: { text: string; kind: "cmd" | "ok" | "out" }[];
-  /** line currently being typed (only for cmd lines) */
-  current: { text: string; kind: "cmd" | "ok" | "out" } | null;
-};
-
-/**
- * Types terminal lines one by one: commands are typed char-by-char,
- * output lines appear instantly after a short pause. Loops forever.
- */
-export function useTerminal(): TerminalState {
-  const [state, setState] = useState<TerminalState>({ done: [], current: null });
-
-  useEffect(() => {
-    let lineIdx = 0;
-    let charIdx = 0;
-    let timer: ReturnType<typeof setTimeout>;
-    let cancelled = false;
-
-    const tick = () => {
-      if (cancelled) return;
-      const line = terminalLines[lineIdx];
-
-      if (!line) {
-        // loop: hold the finished screen, then restart
-        timer = setTimeout(() => {
-          lineIdx = 0;
-          charIdx = 0;
-          setState({ done: [], current: null });
-          timer = setTimeout(tick, 400);
-        }, 5000);
-        return;
-      }
-
-      if (line.kind === "cmd") {
-        if (charIdx <= line.text.length) {
-          setState(prev => ({
-            done: prev.done,
-            current: { ...line, text: line.text.slice(0, charIdx) },
-          }));
-          charIdx += 1;
-          timer = setTimeout(tick, 28 + Math.random() * 40);
-        } else {
-          setState(prev => ({ done: [...prev.done, line], current: null }));
-          lineIdx += 1;
-          charIdx = 0;
-          timer = setTimeout(tick, 260);
-        }
-      } else {
-        setState(prev => ({ done: [...prev.done, line], current: null }));
-        lineIdx += 1;
-        timer = setTimeout(tick, line.kind === "ok" ? 180 : 420);
-      }
-    };
-
-    timer = setTimeout(tick, 600);
-    return () => {
-      cancelled = true;
-      clearTimeout(timer);
-    };
-  }, []);
-
-  return state;
-}
-
-// ─── Тема (тёмная / светлая) ────────────────────────────────
+// ─── Тема (светлая / тёмная) ────────────────────────────────
 export type Theme = "dark" | "light";
 
 function getInitialTheme(): Theme {
@@ -110,18 +43,18 @@ function getInitialTheme(): Theme {
   } catch {
     // localStorage может быть недоступен — игнорируем
   }
-  return "dark"; // тёмная тема по умолчанию
+  return "light"; // светлая тема по умолчанию
 }
 
 /**
  * Переключатель темы: хранит выбор в localStorage,
- * вешает класс `pf-light` на <html>.
+ * вешает класс `pf-dark` на <html> (светлая — без класса).
  */
 export function useTheme() {
   const [theme, setTheme] = useState<Theme>(getInitialTheme);
 
   useEffect(() => {
-    document.documentElement.classList.toggle("pf-light", theme === "light");
+    document.documentElement.classList.toggle("pf-dark", theme === "dark");
     try {
       localStorage.setItem("pf-theme", theme);
     } catch {
