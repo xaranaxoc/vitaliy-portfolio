@@ -195,17 +195,31 @@
    ═══════════════════════════════════════════════════════════ */
 
 .font-display {
-  font-family: "Unbounded", "Manrope", sans-serif;
+  font-family: "Instrument Serif", "Manrope", Georgia, serif;
+  font-weight: 400;
+  letter-spacing: -0.01em;
 }
 
 .font-body {
-  font-family: "Manrope", sans-serif;
+  font-family: "Manrope", system-ui, sans-serif;
 }
 
 /* pulsing status dot — soft, slow */
 @keyframes pf-ping {
   0% { transform: scale(1); opacity: 0.7; }
   70%, 100% { transform: scale(2.2); opacity: 0; }
+}
+
+/* tech strip marquee */
+@keyframes pf-marquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+.pf-marquee {
+  animation: pf-marquee 40s linear infinite;
+}
+.pf-marquee:hover {
+  animation-play-state: paused;
 }
 
 /* scroll reveal — gentle */
@@ -225,6 +239,7 @@
 
 @media (prefers-reduced-motion: reduce) {
   .pf-reveal { transition: none; opacity: 1; transform: none; }
+  .pf-marquee { animation: none; }
 }
 
 /* ─── Темы портфолио ─────────────────────────────────────────
