@@ -65,6 +65,7 @@ export type Project = {
   link: string | null;
   accent: "lime" | "cyan" | "violet" | "amber";
   featured?: boolean;
+  imageAspect?: "video" | "square" | "portrait";
   metrics?: { value: string; label: string }[];
   highlights?: { icon: "message" | "zap" | "cpu"; title: string; text: string }[];
 };
@@ -83,6 +84,7 @@ export const projects: Project[] = [
     link: "https://northpeak-construction.vercel.app/",
     accent: "cyan",
     featured: true,
+    imageAspect: "video",
     metrics: [
       { value: "24/7", label: "ИИ-менеджер на сайте" },
       { value: "100+", label: "диалогов одновременно" },
@@ -104,10 +106,11 @@ export const projects: Project[] = [
       "Полноценная CRM на 8 разделов: воронка, лиды, объекты, финансы, аналитика. ИИ квалифицирует каждого лида по 6 критериям, а ассистент АРТИ отвечает менеджеру на вопросы по базе.",
     result: "Менеджер сразу видит, кому звонить первым — ИИ уже расставил приоритеты за него.",
     tags: ["Next.js", "PostgreSQL", "Prisma", "Recharts", "GLM-4.6"],
-    image: "/projects/northpeak.jpg",
+    image: "/projects/northpeak-admin.png",
     link: "https://northpeak-construction.vercel.app/admin",
     accent: "violet",
     featured: true,
+    imageAspect: "square",
     metrics: [
       { value: "0–100", label: "автоскоринг лида" },
       { value: "8", label: "разделов CRM" },

@@ -632,6 +632,12 @@ const HIGHLIGHT_ICON = {
   cpu: Cpu,
 } as const;
 
+const IMAGE_ASPECT = {
+  video: "aspect-video",
+  square: "aspect-square",
+  portrait: "aspect-[3/4]",
+} as const;
+
 function ProjectCard({ project, index }: { project: Project; index: number }) {
   const accent = ACCENTS[project.accent];
   const isFeatured = project.featured === true;
@@ -640,6 +646,11 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
   const linkProps = project.link
     ? { href: project.link, target: "_blank", rel: "noreferrer" }
     : {};
+  // featured cards default to square (works for dashboards & landing crops);
+  // regular cards always 16:9. imageAspect overrides per-project.
+  const aspectClass = isFeatured
+    ? IMAGE_ASPECT[project.imageAspect ?? "square"]
+    : IMAGE_ASPECT.video;
   return (
     <Reveal
       delay={(index % 2) * 100}
@@ -652,7 +663,7 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
         } ${project.link ? "cursor-pointer" : ""}`}
       >
         <div
-          className={`relative flex items-center justify-center overflow-hidden border-(--pf-border-soft) bg-(--pf-media) ${isFeatured ? "sm:w-1/2 sm:border-r" : "border-b"} ${isFeatured ? "aspect-[4/3]" : "aspect-video"}`}
+          className={`relative flex items-center justify-center overflow-hidden border-(--pf-border-soft) bg-(--pf-media) ${isFeatured ? "sm:w-1/2 sm:border-r" : "border-b"} ${aspectClass}`}
         >
           {project.image ? (
             <img
@@ -662,7 +673,7 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
               decoding="async"
               width={1280}
               height={720}
-              className={`size-full transition-transform duration-500 group-hover:scale-[1.03] ${isFeatured ? "object-contain object-top p-2" : "object-cover object-top"}`}
+              className="size-full object-cover object-top transition-transform duration-500 group-hover:scale-[1.03]"
             />
           ) : (
             <div className="pf-dots flex flex-col items-center gap-3 transition-transform duration-500 group-hover:scale-110">
