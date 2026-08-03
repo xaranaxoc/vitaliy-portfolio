@@ -64,6 +64,9 @@ export type Project = {
   image: string | null;
   link: string | null;
   accent: "lime" | "cyan" | "violet" | "amber";
+  featured?: boolean;
+  metrics?: { value: string; label: string }[];
+  highlights?: { icon: "message" | "zap" | "cpu"; title: string; text: string }[];
 };
 
 export const projects: Project[] = [
@@ -80,6 +83,7 @@ export const projects: Project[] = [
     image: "/projects/soziday-public-1.jpg",
     link: "https://sozidaystudio.ru/",
     accent: "lime",
+    featured: true,
   },
   {
     id: "landing",
@@ -97,17 +101,41 @@ export const projects: Project[] = [
   },
   {
     id: "northpeak",
-    kind: "Сайт компании",
+    kind: "ИИ-менеджер + CRM",
     category: "landing",
-    title: "NorthPeak Construction — строительная компания",
+    title: "NorthPeak Construction — ИИ пронизывает весь процесс",
     description:
-      "Премиальный сайт строительной компании: full-bleed фото, scroll-reveal анимации. Каждая секция работает на доверие заказчика.",
+      "Сайт строительной компании, где ИИ встроен в каждый этап воронки: от первого вопроса посетителя до управленческого решения. Алекс консультирует на сайте 24/7 и сам создаёт лиды в CRM, ИИ автоматически квалифицирует каждого по 6 критериям, а ассистент АРТИ отвечает менеджеру на вопросы по базе — на естественном языке.",
     result:
-      "Имидж надёжного подрядчика — клиент готов оставить заявку на дорогой проект.",
-    tags: ["HTML/CSS", "JavaScript", "Адаптив", "Анимации"],
+      "Каждый посетитель обработан ИИ 24/7 — менеджер сразу видит, кому звонить первым, а не гадает.",
+    tags: ["Next.js", "GLM-4.6", "Function Calling", "PostgreSQL", "CRM"],
     image: "/projects/northpeak.jpg",
     link: "https://northpeak-construction.vercel.app/",
-    accent: "amber",
+    accent: "cyan",
+    featured: true,
+    metrics: [
+      { value: "24/7", label: "ИИ-менеджер на сайте" },
+      { value: "0–100", label: "автоскоринг лида" },
+      { value: "100+", label: "диалогов одновременно" },
+      { value: "8", label: "страниц CRM в одном месте" },
+    ],
+    highlights: [
+      {
+        icon: "message",
+        title: "Алекс — ИИ-менеджер на сайте",
+        text: "Отвечает 24/7 как эксперт: знает материалы, сроки, этапы. Ведёт клиента по 5 сценариям и сам создаёт лид в CRM через function calling.",
+      },
+      {
+        icon: "zap",
+        title: "Автоквалификация лидов",
+        text: "После каждого диалога ИИ ставит score 0–100 по 6 критериям — контакт, площадь, бюджет, участок, сроки, вопросы. Менеджер видит приоритет сразу.",
+      },
+      {
+        icon: "cpu",
+        title: "АРТИ — ИИ-ассистент в CRM",
+        text: "Отвечает на вопросы по базе на естественном языке: «какие лиды горячие», «кто остыл 3+ дня», — и даёт follow-up подсказки после каждого ответа.",
+      },
+    ],
   },
   {
     id: "lumina",

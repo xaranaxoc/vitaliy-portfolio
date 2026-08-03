@@ -618,21 +618,28 @@ const PROJECT_ICONS: Record<string, ReactNode> = {
   "ds-bot": <Bot className="size-8" />,
 };
 
+const HIGHLIGHT_ICON = {
+  message: MessageCircle,
+  zap: Zap,
+  cpu: Cpu,
+} as const;
+
 function ProjectCard({ project, index }: { project: Project; index: number }) {
   const accent = ACCENTS[project.accent];
+  const isFeatured = project.featured === true;
   const isLive = project.id === "soziday";
   return (
     <Reveal
       delay={(index % 2) * 100}
-      className={isLive ? "md:col-span-2 lg:col-span-3" : ""}
+      className={isFeatured ? "md:col-span-2 lg:col-span-3" : ""}
     >
       <article
         className={`group flex h-full flex-col overflow-hidden rounded-xl border border-(--pf-border) bg-(--pf-surface) transition-all duration-300 hover:-translate-y-1 ${accent.border} ${
-          isLive ? "sm:flex-row" : ""
+          isFeatured ? "sm:flex-row" : ""
         }`}
       >
         <div
-          className={`pf-dots relative flex items-center justify-center overflow-hidden border-(--pf-border-soft) bg-(--pf-media) ${isLive ? "sm:w-1/2 aspect-video sm:aspect-auto sm:border-r" : "aspect-video border-b"}`}
+          className={`pf-dots relative flex items-center justify-center overflow-hidden border-(--pf-border-soft) bg-(--pf-media) ${isFeatured ? "sm:w-1/2 aspect-video sm:aspect-auto sm:border-r" : "aspect-video border-b"}`}
         >
           {project.image ? (
             <img
@@ -661,13 +668,20 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
           />
         </div>
 
-        <div className={`flex flex-1 flex-col p-6 ${isLive ? "sm:p-8" : ""}`}>
-          {isLive && (
+        <div className={`flex flex-1 flex-col p-6 ${isFeatured ? "sm:p-8" : ""}`}>
+          {isFeatured && (
             <div className="mb-3 flex flex-wrap items-center gap-2">
-              <span className="font-code inline-flex items-center gap-1.5 rounded-full border border-(--pf-lime)/30 bg-(--pf-lime)/10 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.16em] text-(--pf-lime)">
-                <span className="size-1.5 rounded-full bg-(--pf-lime-solid)" />
-                живой проект
-              </span>
+              {isLive ? (
+                <span className="font-code inline-flex items-center gap-1.5 rounded-full border border-(--pf-lime)/30 bg-(--pf-lime)/10 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.16em] text-(--pf-lime)">
+                  <span className="size-1.5 rounded-full bg-(--pf-lime-solid)" />
+                  живой проект
+                </span>
+              ) : (
+                <span className="font-code inline-flex items-center gap-1.5 rounded-full border border-(--pf-cyan)/30 bg-(--pf-cyan)/10 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.16em] text-(--pf-cyan)">
+                  <Cpu className="size-3" />
+                  ИИ + автоматизация
+                </span>
+              )}
             </div>
           )}
           <div className="flex items-center justify-between gap-3">
@@ -688,7 +702,7 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
             )}
           </div>
           <h3
-            className={`font-display mt-3 font-semibold text-(--pf-text) ${isLive ? "text-xl sm:text-2xl" : "text-lg"}`}
+            className={`font-display mt-3 font-semibold text-(--pf-text) ${isFeatured ? "text-xl sm:text-2xl" : "text-lg"}`}
           >
             {project.title}
           </h3>
@@ -698,11 +712,57 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
               результат для клиента
             </p>
             <p
-              className={`font-body mt-1 font-medium text-(--pf-text-2) ${isLive ? "text-sm sm:text-base" : "text-sm"}`}
+              className={`font-body mt-1 font-medium text-(--pf-text-2) ${isFeatured ? "text-sm sm:text-base" : "text-sm"}`}
             >
               {project.result}
             </p>
           </div>
+
+          {project.metrics && project.metrics.length > 0 && (
+            <div className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-4">
+              {project.metrics.map(m => (
+                <div
+                  key={m.label}
+                  className="rounded-lg border border-(--pf-border) bg-(--pf-chip) px-3 py-2.5 text-center"
+                >
+                  <div className={`font-display text-xl font-bold sm:text-2xl ${accent.text}`}>
+                    {m.value}
+                  </div>
+                  <div className="font-code mt-0.5 text-[9px] font-medium uppercase tracking-[0.1em] text-(--pf-text-4)">
+                    {m.label}
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+
+          {project.highlights && project.highlights.length > 0 && (
+            <div className="mt-4 flex flex-col gap-2.5">
+              {project.highlights.map(h => {
+                const Icon = HIGHLIGHT_ICON[h.icon];
+                return (
+                  <div
+                    key={h.title}
+                    className="flex gap-3 rounded-lg border border-(--pf-border) bg-(--pf-surface) px-3.5 py-3"
+                  >
+                    <div
+                      className={`flex size-9 shrink-0 items-center justify-center rounded-md border border-(--pf-border) bg-(--pf-chip) ${accent.text}`}
+                    >
+                      <Icon className="size-4" />
+                    </div>
+                    <div className="min-w-0">
+                      <p className="font-body text-sm font-semibold text-(--pf-text)">
+                        {h.title}
+                      </p>
+                      <p className="font-body mt-0.5 text-xs leading-relaxed text-(--pf-text-3)">
+                        {h.text}
+                      </p>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          )}
 
           <p className="font-body mt-4 text-sm leading-relaxed text-(--pf-text-3)">
             {project.description}
