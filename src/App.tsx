@@ -1,3 +1,4 @@
+import { Analytics } from "@vercel/analytics/react";
 import { AuthStrategyRoutes } from "./auth/AuthStrategyRoutes";
 import ErrorBoundary from "./components/ErrorBoundary";
 import { Toaster } from "./components/ui/sonner";
@@ -10,6 +11,7 @@ function App() {
         <Toaster />
         <AuthStrategyRoutes />
       </ThemeProvider>
+      <Analytics />
     </ErrorBoundary>
   );
 }
