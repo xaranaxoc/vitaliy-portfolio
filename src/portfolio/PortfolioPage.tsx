@@ -652,13 +652,10 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
     ? IMAGE_ASPECT[project.imageAspect ?? "square"]
     : IMAGE_ASPECT.video;
   return (
-    <Reveal
-      delay={(index % 2) * 100}
-      className={isFeatured ? "md:col-span-2 lg:col-span-3" : ""}
-    >
+    <Reveal delay={(index % 2) * 100} className={isFeatured ? "w-full" : ""}>
       <Tag
         {...linkProps}
-        className={`group flex h-full flex-col overflow-hidden rounded-xl border border-(--pf-border) bg-(--pf-surface) transition-all duration-300 hover:-translate-y-1 ${accent.border} ${
+        className={`group flex h-full w-full flex-col overflow-hidden rounded-xl border border-(--pf-border) bg-(--pf-surface) transition-all duration-300 hover:-translate-y-1 ${accent.border} ${
           isFeatured ? "sm:flex-row" : ""
         } ${project.link ? "cursor-pointer" : ""}`}
       >
@@ -823,7 +820,7 @@ function Projects() {
           Кейсы под ключ
         </h3>
       </Reveal>
-      <div className="grid gap-6">
+      <div className="flex flex-col gap-6">
         {featured.map((p, i) => (
           <ProjectCard key={p.id} project={p} index={i} />
         ))}
