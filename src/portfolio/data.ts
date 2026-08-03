@@ -71,6 +71,56 @@ export type Project = {
 
 export const projects: Project[] = [
   {
+    id: "northpeak-site",
+    kind: "Сайт + ИИ-менеджер",
+    category: "landing",
+    title: "NorthPeak — сайт строительной компании с ИИ-менеджером",
+    description:
+      "Премиальный лендинг строительной компании. На сайте работает ИИ-менеджер Алекс — отвечает посетителям 24/7, консультирует и сам создаёт лиды в CRM.",
+    result: "Ни один посетитель не уходит без ответа — каждый становится потенциальным лидом.",
+    tags: ["Next.js", "GLM-4.6", "Function Calling", "Анимации"],
+    image: "/projects/northpeak.jpg",
+    link: "https://northpeak-construction.vercel.app/",
+    accent: "cyan",
+    featured: true,
+    metrics: [
+      { value: "24/7", label: "ИИ-менеджер на сайте" },
+      { value: "100+", label: "диалогов одновременно" },
+    ],
+    highlights: [
+      {
+        icon: "message",
+        title: "Алекс — ИИ-менеджер",
+        text: "Отвечает 24/7 как эксперт и сам создаёт лиды в CRM через function calling.",
+      },
+    ],
+  },
+  {
+    id: "northpeak-admin",
+    kind: "CRM + ИИ-аналитика",
+    category: "landing",
+    title: "NorthPeak — CRM с автоквалификацией и ИИ-ассистентом",
+    description:
+      "Полноценная CRM на 8 разделов: воронка, лиды, объекты, финансы, аналитика. ИИ квалифицирует каждого лида по 6 критериям, а ассистент АРТИ отвечает менеджеру на вопросы по базе.",
+    result: "Менеджер сразу видит, кому звонить первым — ИИ уже расставил приоритеты за него.",
+    tags: ["Next.js", "PostgreSQL", "Prisma", "Recharts", "GLM-4.6"],
+    image: "/projects/northpeak.jpg",
+    link: "https://northpeak-construction.vercel.app/admin",
+    accent: "violet",
+    featured: true,
+    metrics: [
+      { value: "0–100", label: "автоскоринг лида" },
+      { value: "8", label: "разделов CRM" },
+    ],
+    highlights: [
+      {
+        icon: "cpu",
+        title: "АРТИ — ИИ-ассистент",
+        text: "Отвечает на вопросы по базе на естественном языке и даёт follow-up подсказки.",
+      },
+    ],
+  },
+  {
     id: "soziday",
     kind: "Живой проект · 13 страниц + магазин + CRM",
     category: "landing",
@@ -98,44 +148,6 @@ export const projects: Project[] = [
     image: "/projects/novaflow-landing.jpg",
     link: "https://novaflow-ai-landing.vercel.app/",
     accent: "lime",
-  },
-  {
-    id: "northpeak",
-    kind: "ИИ-менеджер + CRM",
-    category: "landing",
-    title: "NorthPeak Construction — ИИ пронизывает весь процесс",
-    description:
-      "Сайт строительной компании, где ИИ встроен в каждый этап воронки: от первого вопроса посетителя до управленческого решения. Алекс консультирует на сайте 24/7 и сам создаёт лиды в CRM, ИИ автоматически квалифицирует каждого по 6 критериям, а ассистент АРТИ отвечает менеджеру на вопросы по базе — на естественном языке.",
-    result:
-      "Каждый посетитель обработан ИИ 24/7 — менеджер сразу видит, кому звонить первым, а не гадает.",
-    tags: ["Next.js", "GLM-4.6", "Function Calling", "PostgreSQL", "CRM"],
-    image: "/projects/northpeak.jpg",
-    link: "https://northpeak-construction.vercel.app/",
-    accent: "cyan",
-    featured: true,
-    metrics: [
-      { value: "24/7", label: "ИИ-менеджер на сайте" },
-      { value: "0–100", label: "автоскоринг лида" },
-      { value: "100+", label: "диалогов одновременно" },
-      { value: "8", label: "страниц CRM в одном месте" },
-    ],
-    highlights: [
-      {
-        icon: "message",
-        title: "Алекс — ИИ-менеджер на сайте",
-        text: "Отвечает 24/7 как эксперт: знает материалы, сроки, этапы. Ведёт клиента по 5 сценариям и сам создаёт лид в CRM через function calling.",
-      },
-      {
-        icon: "zap",
-        title: "Автоквалификация лидов",
-        text: "После каждого диалога ИИ ставит score 0–100 по 6 критериям — контакт, площадь, бюджет, участок, сроки, вопросы. Менеджер видит приоритет сразу.",
-      },
-      {
-        icon: "cpu",
-        title: "АРТИ — ИИ-ассистент в CRM",
-        text: "Отвечает на вопросы по базе на естественном языке: «какие лиды горячие», «кто остыл 3+ дня», — и даёт follow-up подсказки после каждого ответа.",
-      },
-    ],
   },
   {
     id: "lumina",

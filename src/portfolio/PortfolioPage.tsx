@@ -87,21 +87,29 @@ const ACCENTS = {
     text: "text-(--pf-lime)",
     border: "hover:border-(--pf-lime)/40",
     glow: "group-hover:bg-(--pf-lime)/10",
+    badgeBorder: "border-(--pf-lime)/30",
+    badgeBg: "bg-(--pf-lime)/10",
   },
   cyan: {
     text: "text-(--pf-cyan)",
     border: "hover:border-(--pf-cyan)/40",
     glow: "group-hover:bg-(--pf-cyan)/10",
+    badgeBorder: "border-(--pf-cyan)/30",
+    badgeBg: "bg-(--pf-cyan)/10",
   },
   violet: {
     text: "text-(--pf-violet)",
     border: "hover:border-(--pf-violet)/40",
     glow: "group-hover:bg-(--pf-violet)/10",
+    badgeBorder: "border-(--pf-violet)/30",
+    badgeBg: "bg-(--pf-violet)/10",
   },
   amber: {
     text: "text-(--pf-amber)",
     border: "hover:border-(--pf-amber)/40",
     glow: "group-hover:bg-(--pf-amber)/10",
+    badgeBorder: "border-(--pf-amber)/30",
+    badgeBg: "bg-(--pf-amber)/10",
   },
 } as const;
 
@@ -628,18 +636,23 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
   const accent = ACCENTS[project.accent];
   const isFeatured = project.featured === true;
   const isLive = project.id === "soziday";
+  const Tag = project.link ? "a" : "div";
+  const linkProps = project.link
+    ? { href: project.link, target: "_blank", rel: "noreferrer" }
+    : {};
   return (
     <Reveal
       delay={(index % 2) * 100}
       className={isFeatured ? "md:col-span-2 lg:col-span-3" : ""}
     >
-      <article
+      <Tag
+        {...linkProps}
         className={`group flex h-full flex-col overflow-hidden rounded-xl border border-(--pf-border) bg-(--pf-surface) transition-all duration-300 hover:-translate-y-1 ${accent.border} ${
           isFeatured ? "sm:flex-row" : ""
-        }`}
+        } ${project.link ? "cursor-pointer" : ""}`}
       >
         <div
-          className={`pf-dots relative flex items-center justify-center overflow-hidden border-(--pf-border-soft) bg-(--pf-media) ${isFeatured ? "sm:w-1/2 aspect-video sm:aspect-auto sm:border-r" : "aspect-video border-b"}`}
+          className={`relative flex items-center justify-center overflow-hidden border-(--pf-border-soft) bg-(--pf-media) ${isFeatured ? "sm:w-1/2 sm:border-r" : "border-b"} ${isFeatured ? "aspect-[4/3]" : "aspect-video"}`}
         >
           {project.image ? (
             <img
@@ -649,10 +662,10 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
               decoding="async"
               width={1280}
               height={720}
-              className="size-full object-cover object-top transition-transform duration-500 group-hover:scale-[1.03]"
+              className={`size-full transition-transform duration-500 group-hover:scale-[1.03] ${isFeatured ? "object-contain object-top p-2" : "object-cover object-top"}`}
             />
           ) : (
-            <div className="flex flex-col items-center gap-3 transition-transform duration-500 group-hover:scale-110">
+            <div className="pf-dots flex flex-col items-center gap-3 transition-transform duration-500 group-hover:scale-110">
               <div
                 className={`rounded-xl border border-(--pf-border) bg-(--pf-chip) p-4 ${accent.text}`}
               >
@@ -677,7 +690,7 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
                   живой проект
                 </span>
               ) : (
-                <span className="font-code inline-flex items-center gap-1.5 rounded-full border border-(--pf-cyan)/30 bg-(--pf-cyan)/10 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.16em] text-(--pf-cyan)">
+                <span className={`font-code inline-flex items-center gap-1.5 rounded-full border ${accent.badgeBorder} ${accent.badgeBg} px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.16em] ${accent.text}`}>
                   <Cpu className="size-3" />
                   ИИ + автоматизация
                 </span>
@@ -691,14 +704,9 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
               {project.kind}
             </span>
             {project.link && (
-              <a
-                href={project.link}
-                target="_blank"
-                rel="noreferrer"
-                className="font-code inline-flex shrink-0 items-center gap-1 text-xs text-(--pf-text-3) transition-colors hover:text-(--pf-text)"
-              >
+              <span className="font-code inline-flex shrink-0 items-center gap-1 text-xs text-(--pf-text-3) transition-colors group-hover:text-(--pf-text)">
                 открыть <ArrowUpRight className="size-3.5" />
-              </a>
+              </span>
             )}
           </div>
           <h3
@@ -719,7 +727,7 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
           </div>
 
           {project.metrics && project.metrics.length > 0 && (
-            <div className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-4">
+            <div className={`mt-4 grid grid-cols-2 gap-3 ${project.metrics.length >= 4 ? "sm:grid-cols-4" : "sm:grid-cols-2"}`}>
               {project.metrics.map(m => (
                 <div
                   key={m.label}
@@ -778,7 +786,7 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
             ))}
           </div>
         </div>
-      </article>
+      </Tag>
     </Reveal>
   );
 }
@@ -786,6 +794,8 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
 function Projects() {
   const landings = projects.filter(p => p.category === "landing");
   const tools = projects.filter(p => p.category === "tool");
+  const featured = landings.filter(p => p.featured);
+  const regular = landings.filter(p => !p.featured);
   return (
     <section id="work" className="relative mx-auto max-w-6xl px-5 py-24">
       <Reveal>
@@ -799,11 +809,22 @@ function Projects() {
 
       <Reveal>
         <h3 className="font-display mt-12 mb-6 text-lg font-semibold text-(--pf-text-2)">
-          Сайты и магазины
+          Кейсы под ключ
+        </h3>
+      </Reveal>
+      <div className="grid gap-6">
+        {featured.map((p, i) => (
+          <ProjectCard key={p.id} project={p} index={i} />
+        ))}
+      </div>
+
+      <Reveal>
+        <h3 className="font-display mt-16 mb-6 text-lg font-semibold text-(--pf-text-2)">
+          Ещё сайты
         </h3>
       </Reveal>
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-        {landings.map((p, i) => (
+        {regular.map((p, i) => (
           <ProjectCard key={p.id} project={p} index={i} />
         ))}
       </div>
