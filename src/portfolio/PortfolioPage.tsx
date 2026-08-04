@@ -973,6 +973,73 @@ function Process() {
 }
 
 // ─────────────────────────────────────────────────────────────
+// Guarantee (официальное сотрудничество)
+// ─────────────────────────────────────────────────────────────
+
+const GUARANTEE_POINTS = [
+  {
+    title: "Договор оказания услуг",
+    text: "Закрепляем объём, сроки и стоимость. Никаких сюрпризов и устных договорённостей — всё на бумаге.",
+  },
+  {
+    title: "Оплата по этапам",
+    text: "Предоплата за старт, оплата по факту сдачи этапа. Вы платите за результат, а не за обещания.",
+  },
+  {
+    title: "Чек самозанятого",
+    text: "После оплаты формирую официальный чек через приложение «Мой налог». Подходит для отчётности.",
+  },
+  {
+    title: "Поддержка после запуска",
+    text: "Не пропадаю после релиза: правки, вопросы, обновления — остаюсь на связи по договору.",
+  },
+];
+
+function Guarantee() {
+  return (
+    <section className="mx-auto max-w-6xl px-5 pb-24">
+      <Reveal>
+        <div className="relative overflow-hidden rounded-2xl border border-(--pf-lime)/30 bg-(--pf-surface) p-6 sm:p-10">
+          <div className="pointer-events-none absolute -right-20 -top-20 size-64 rounded-full bg-(--pf-glow-lime) blur-[120px]" />
+          <div className="relative">
+            <div className="flex items-center gap-3">
+              <span className="grid size-11 shrink-0 place-items-center rounded-xl border border-(--pf-lime)/40 bg-(--pf-lime)/10 text-(--pf-lime)">
+                <ShieldCheck className="size-6" />
+              </span>
+              <div>
+                <h2 className="font-display text-xl font-semibold text-(--pf-text) sm:text-2xl">
+                  Работаю официально по договору
+                </h2>
+                <p className="font-body mt-0.5 text-sm text-(--pf-text-3)">
+                  Самозанятый · ИНН 141003558298 · чек через «Мой налог»
+                </p>
+              </div>
+            </div>
+            <div className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+              {GUARANTEE_POINTS.map((p, i) => (
+                <Reveal key={p.title} delay={i * 80}>
+                  <div className="flex gap-3">
+                    <Check className="mt-0.5 size-5 shrink-0 text-(--pf-lime)" />
+                    <div>
+                      <p className="font-body text-sm font-semibold text-(--pf-text)">
+                        {p.title}
+                      </p>
+                      <p className="font-body mt-1 text-xs leading-relaxed text-(--pf-text-3)">
+                        {p.text}
+                      </p>
+                    </div>
+                  </div>
+                </Reveal>
+              ))}
+            </div>
+          </div>
+        </div>
+      </Reveal>
+    </section>
+  );
+}
+
+// ─────────────────────────────────────────────────────────────
 // FAQ
 // ─────────────────────────────────────────────────────────────
 
@@ -1380,6 +1447,7 @@ export function PortfolioPage() {
         <Projects />
         <Testimonials />
         <Process />
+        <Guarantee />
         <Faq />
         <Stack />
         <Contact />
