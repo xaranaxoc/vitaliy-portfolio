@@ -183,7 +183,9 @@ function Nav({ theme, toggle }: { theme: Theme; toggle: () => void }) {
         <div className="flex items-center gap-3">
           <ThemeToggle theme={theme} toggle={toggle} />
           <a
-            href="#contact"
+            href={profile.telegram}
+            target="_blank"
+            rel="noreferrer"
             className="font-body hidden rounded-lg bg-(--pf-lime-solid) px-4 py-2 text-sm font-bold text-(--pf-on-accent) transition-transform hover:-translate-y-0.5 hover:bg-(--pf-lime-solid-hover) sm:inline"
           >
             Обсудить проект
@@ -225,7 +227,9 @@ function Nav({ theme, toggle }: { theme: Theme; toggle: () => void }) {
               </a>
             ))}
             <a
-              href="#contact"
+              href={profile.telegram}
+              target="_blank"
+              rel="noreferrer"
               className="font-body mt-1 rounded-lg border border-(--pf-lime)/40 bg-(--pf-lime)/10 px-2 py-2.5 text-center text-xs font-semibold text-(--pf-lime)"
             >
               Обсудить проект
@@ -357,7 +361,9 @@ function Hero() {
           <Reveal delay={300}>
             <div className="mt-8 flex flex-wrap items-center gap-4">
               <a
-                href="#contact"
+                href={profile.telegram}
+                target="_blank"
+                rel="noreferrer"
                 className="font-body inline-flex items-center gap-2 rounded-lg bg-(--pf-lime-solid) px-6 py-3.5 text-sm font-bold text-(--pf-on-accent) transition-transform hover:-translate-y-0.5 hover:bg-(--pf-lime-solid-hover)"
               >
                 <Send className="size-4" />
