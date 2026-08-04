@@ -20,6 +20,7 @@ import {
   Zap,
 } from "lucide-react";
 import { type ReactNode, useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import {
   benefits,
   faq,
@@ -1090,9 +1091,10 @@ function Contact() {
   const [contact, setContact] = useState("");
   const [about, setAbout] = useState("");
   const [honeypot, setHoneypot] = useState("");
+  const [consent, setConsent] = useState(false);
   const [status, setStatus] = useState<"idle" | "sending" | "sent" | "error">("idle");
 
-  const ready = name.trim().length > 1 && contact.trim().length > 2;
+  const ready = name.trim().length > 1 && contact.trim().length > 2 && consent;
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -1195,6 +1197,23 @@ function Contact() {
                 maxLength={600}
                 className="font-body mt-1.5 w-full resize-none rounded-lg border border-(--pf-border-mid) bg-(--pf-bg) px-4 py-3 text-sm text-(--pf-text) outline-none transition-colors placeholder:text-(--pf-text-5) focus:border-(--pf-lime)/60"
               />
+            </label>
+            <label className="mt-4 flex cursor-pointer items-start gap-3">
+              <input
+                type="checkbox"
+                checked={consent}
+                onChange={e => setConsent(e.target.checked)}
+                className="mt-0.5 size-4 shrink-0 accent-(--pf-lime-solid)"
+              />
+              <span className="font-body text-xs leading-relaxed text-(--pf-text-3)">
+                Согласен с{" "}
+                <Link
+                  to="/privacy"
+                  className="font-medium text-(--pf-lime) underline underline-offset-2"
+                >
+                  политикой обработки персональных данных
+                </Link>
+              </span>
             </label>
             {/* honeypot: скрыт от людей, боты заполняют → заявка молча отбрасывается */}
             <input
@@ -1332,6 +1351,12 @@ function Footer() {
             Виталий Матвеев · matveev.vit03@gmail.com · работаю со всей Россией
             онлайн.
           </p>
+          <Link
+            to="/privacy"
+            className="font-code mt-2 inline-block text-[11px] text-(--pf-text-4) underline underline-offset-2 transition-colors hover:text-(--pf-text-2)"
+          >
+            Политика обработки персональных данных
+          </Link>
         </div>
       </div>
     </footer>

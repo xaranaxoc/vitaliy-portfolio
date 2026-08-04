@@ -1,6 +1,7 @@
-// SSG prerender: after `vite build`, serve dist/, render "/" in a headless
-// browser, and overwrite dist/index.html with the fully-rendered DOM so
-// crawlers/AI see real content instead of an empty #root shell.
+// SSG prerender: after `vite build`, serve dist/, render pages in a headless
+// browser, and overwrite dist/index.html (and dist/privacy.html) with the
+// fully-rendered DOM so crawlers/AI see real content instead of an empty
+// #root shell.
 import { chromium } from "playwright";
 import { spawn } from "node:child_process";
 import path from "node:path";
@@ -9,9 +10,8 @@ import fs from "node:fs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const root = path.resolve(__dirname, "..");
-const distIndex = path.join(root, "dist", "index.html");
 const PORT = 4173;
-const URL = `http://localhost:${PORT}/`;
+const BASE = `http://localhost:${PORT}`;
 
 async function waitForServer(url, timeoutMs) {
   const start = Date.now();
@@ -27,6 +27,13 @@ async function waitForServer(url, timeoutMs) {
   return false;
 }
 
+// Маршруты для пререндера: путь на сайте → выходной файл в dist/.
+// index.html — главный лендинг, privacy.html — страница политики ПД.
+const ROUTES = [
+  { path: "/", out: "index.html" },
+  { path: "/privacy", out: "privacy.html" },
+];
+
 const preview = spawn(
   process.platform === "win32" ? "npx.cmd" : "npx",
   ["vite", "preview", "--port", String(PORT), "--strictPort"],
@@ -34,7 +41,7 @@ const preview = spawn(
 );
 
 try {
-  const ready = await waitForServer(URL, 40000);
+  const ready = await waitForServer(BASE, 40000);
   if (!ready) {
     console.error("prerender: vite preview did not start in time");
     process.exitCode = 1;
@@ -42,21 +49,21 @@ try {
   }
 
   const browser = await chromium.launch();
-  const page = await browser.newPage();
-  await page.goto(URL, { waitUntil: "domcontentloaded", timeout: 30000 });
-  // Portfolio hero headline proves the app rendered (not a loading shell).
-  await page.waitForSelector("h1", { timeout: 20000 });
-  await page.waitForTimeout(1000); // let fonts/CSS settle
-  const html = await page.content();
-  await browser.close();
-
-  if (!html || html.length < 1000) {
-    console.error("prerender: captured HTML too small, aborting");
-    process.exitCode = 1;
-  } else {
-    fs.writeFileSync(distIndex, html);
-    console.log(`prerender: wrote rendered HTML to dist/index.html (${(html.length / 1024).toFixed(1)} KB)`);
+  for (const route of ROUTES) {
+    const page = await browser.newPage();
+    await page.goto(`${BASE}${route.path}`, { waitUntil: "domcontentloaded", timeout: 30000 });
+    await page.waitForSelector("h1", { timeout: 20000 });
+    await page.waitForTimeout(800); // let fonts/CSS settle
+    const html = await page.content();
+    await page.close();
+    if (!html || html.length < 1000) {
+      console.error(`prerender: ${route.path} captured HTML too small, skipping`);
+      continue;
+    }
+    fs.writeFileSync(path.join(root, "dist", route.out), html);
+    console.log(`prerender: wrote ${route.out} (${(html.length / 1024).toFixed(1)} KB)`);
   }
+  await browser.close();
 } catch (err) {
   console.error("prerender failed:", err?.message || err);
   if (!process.exitCode) process.exitCode = 1;
