@@ -13,14 +13,14 @@ const OPERATOR = {
   email: profile.email,
   telegram: profile.telegram,
   whatsapp: profile.whatsapp,
-  site: "https://www.matveev-devs.ru",
+  site: "https://vitaliy-portfolio-one.vercel.app",
 };
 
 const UPDATED = "4 августа 2026 г.";
 
 export function PrivacyPage() {
   useEffect(() => {
-    document.title = "Политика обработки персональных данных — matveev-devs.ru";
+    document.title = "Политика обработки персональных данных — Vitaliy.dev";
   }, []);
 
   return (
