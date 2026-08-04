@@ -1,6 +1,8 @@
 // Приём заявок с формы сайта → отправка в личный Telegram через Bot API.
-// Вызывается как Vercel serverless function: POST /api/lead
+// Vercel serverless function: POST /api/lead (Node-стиль req/res).
 // Ноль зависимостей — чистый fetch.
+import type { VercelRequest, VercelResponse } from "@vercel/node";
+
 type LeadBody = {
   name?: string;
   contact?: string;
@@ -26,29 +28,22 @@ function rateLimited(ip: string): boolean {
   return arr.length > maxPerWindow;
 }
 
-function json(body: unknown, status = 200) {
-  return new Response(JSON.stringify(body), {
-    status,
-    headers: { "content-type": "application/json; charset=utf-8" },
-  });
-}
-
-export default async function handler(req: Request): Promise<Response> {
+export default async function handler(
+  req: VercelRequest,
+  res: VercelResponse,
+): Promise<void> {
   if (req.method !== "POST") {
-    return json({ ok: false, error: "Метод не поддерживается" }, 405);
+    res.status(405).json({ ok: false, error: "Метод не поддерживается" });
+    return;
   }
 
-  let body: LeadBody;
-  try {
-    body = (await req.json()) as LeadBody;
-  } catch {
-    return json({ ok: false, error: "Неверный формат запроса" }, 400);
-  }
+  const body = (req.body || {}) as LeadBody;
 
   // Honeypot: скрытое поле website. Человек его не видит и не заполняет.
   // Если заполнено — это бот, молча «успешно» отклоняем.
   if (body.website && body.website.trim()) {
-    return json({ ok: true });
+    res.status(200).json({ ok: true });
+    return;
   }
 
   const name = (body.name || "").trim();
@@ -56,22 +51,26 @@ export default async function handler(req: Request): Promise<Response> {
   const about = (body.about || "").trim();
 
   if (name.length < 2 || contact.length < 3) {
-    return json({ ok: false, error: "Заполните имя и контакт" }, 400);
+    res.status(400).json({ ok: false, error: "Заполните имя и контакт" });
+    return;
   }
 
   // Rate limit по IP
   const ip =
-    req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ||
-    req.headers.get("x-real-ip") ||
+    (req.headers["x-forwarded-for"] as string | undefined)?.split(",")[0]?.trim() ||
+    (req.headers["x-real-ip"] as string | undefined) ||
     "unknown";
   if (rateLimited(ip)) {
-    return json({ ok: false, error: "Слишком много заявок. Попробуйте позже." }, 429);
+    res
+      .status(429)
+      .json({ ok: false, error: "Слишком много заявок. Попробуйте позже." });
+    return;
   }
 
   if (!TOKEN || !CHAT_ID) {
-    // Не раскрываем детали ошибки наружу — логируем, возвращаем общее сообщение.
     console.error("lead: BOT_TOKEN или CHAT_ID не заданы в env");
-    return json({ ok: false, error: "Сервис заявок не настроен" }, 503);
+    res.status(503).json({ ok: false, error: "Сервис заявок не настроен" });
+    return;
   }
 
   // Экранируем пользовательский ввод под HTML-режим Telegram,
@@ -86,7 +85,7 @@ export default async function handler(req: Request): Promise<Response> {
     (about ? `\n<b>Задача:</b> ${esc(about)}` : "");
 
   try {
-    const res = await fetch(
+    const tgRes = await fetch(
       `https://api.telegram.org/bot${TOKEN}/sendMessage`,
       {
         method: "POST",
@@ -98,14 +97,15 @@ export default async function handler(req: Request): Promise<Response> {
         }),
       },
     );
-    if (!res.ok) {
-      const detail = await res.text();
-      console.error("lead: telegram sendMessage failed", res.status, detail);
-      return json({ ok: false, error: "Не удалось отправить заявку" }, 502);
+    if (!tgRes.ok) {
+      const detail = await tgRes.text();
+      console.error("lead: telegram sendMessage failed", tgRes.status, detail);
+      res.status(502).json({ ok: false, error: "Не удалось отправить заявку" });
+      return;
     }
-    return json({ ok: true });
+    res.status(200).json({ ok: true });
   } catch (err) {
     console.error("lead: network error", err);
-    return json({ ok: false, error: "Сеть недоступна, попробуйте позже" }, 502);
+    res.status(502).json({ ok: false, error: "Сеть недоступна, попробуйте позже" });
   }
 }
