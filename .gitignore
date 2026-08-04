@@ -30,3 +30,5 @@ test-results/
 playwright-report/.tsbuild/
 
 .vercel
+server/__pycache__/
+server/.env
