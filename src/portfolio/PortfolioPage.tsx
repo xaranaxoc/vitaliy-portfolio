@@ -1083,22 +1083,37 @@ function Contact() {
   const [name, setName] = useState("");
   const [contact, setContact] = useState("");
   const [about, setAbout] = useState("");
-  const [sent, setSent] = useState(false);
+  const [honeypot, setHoneypot] = useState("");
+  const [status, setStatus] = useState<"idle" | "sending" | "sent" | "error">("idle");
 
   const ready = name.trim().length > 1 && contact.trim().length > 2;
 
-  function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    if (!ready) return;
-    const msg = `Здравствуйте, Виталий! Меня зовут ${name.trim()}.\nСвязь со мной: ${contact.trim()}${
-      about.trim() ? `\nЗадача: ${about.trim()}` : ""
-    }`;
-    setSent(true);
-    window.open(
-      `${profile.telegram}?text=${encodeURIComponent(msg)}`,
-      "_blank",
-      "noopener",
-    );
+    if (!ready || status === "sending") return;
+    setStatus("sending");
+    try {
+      const res = await fetch("/api/lead", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({
+          name: name.trim(),
+          contact: contact.trim(),
+          about: about.trim(),
+          website: honeypot,
+        }),
+      });
+      if (res.ok) {
+        setStatus("sent");
+        setName("");
+        setContact("");
+        setAbout("");
+      } else {
+        setStatus("error");
+      }
+    } catch {
+      setStatus("error");
+    }
   }
 
   return (
@@ -1175,22 +1190,46 @@ function Contact() {
                 className="font-body mt-1.5 w-full resize-none rounded-lg border border-(--pf-border-mid) bg-(--pf-bg) px-4 py-3 text-sm text-(--pf-text) outline-none transition-colors placeholder:text-(--pf-text-5) focus:border-(--pf-lime)/60"
               />
             </label>
+            {/* honeypot: скрыт от людей, боты заполняют → заявка молча отбрасывается */}
+            <input
+              type="text"
+              name="website"
+              value={honeypot}
+              onChange={e => setHoneypot(e.target.value)}
+              tabIndex={-1}
+              autoComplete="off"
+              aria-hidden="true"
+              className="absolute -left-[9999px] h-0 w-0 opacity-0"
+            />
             <button
               type="submit"
-              disabled={!ready}
+              disabled={!ready || status === "sending"}
               className="font-body mt-5 inline-flex w-full items-center justify-center gap-2 rounded-lg bg-(--pf-lime-solid) px-6 py-3.5 text-sm font-bold text-(--pf-on-accent) transition-transform hover:-translate-y-0.5 hover:bg-(--pf-lime-solid-hover) disabled:translate-y-0 disabled:cursor-not-allowed disabled:opacity-50"
             >
               <Send className="size-4" />
-              Отправить заявку
+              {status === "sending" ? "Отправляю…" : "Отправить заявку"}
             </button>
-            {sent && (
-              <p className="font-body mt-3 text-center text-xs text-(--pf-lime)">
-                Открываю Telegram с готовым сообщением — просто нажмите
-                «Отправить» в чате.
+            {status === "sent" && (
+              <p className="font-body mt-3 text-center text-sm font-medium text-(--pf-lime)">
+                ✓ Заявка отправлена! Свяжусь с вами в ближайшее время.
               </p>
             )}
+            {status === "error" && (
+              <div className="font-body mt-3 rounded-lg border border-red-500/30 bg-red-500/10 px-4 py-3 text-center text-sm text-red-300">
+                Не удалось отправить заявку. Напишите напрямую в{" "}
+                <a
+                  href={profile.telegram}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="font-semibold underline underline-offset-2 hover:text-red-200"
+                >
+                  Telegram
+                </a>
+                .
+              </div>
+            )}
             <p className="font-code mt-3 text-center text-[11px] text-(--pf-text-5)">
-              Нажимая кнопку, вы открываете Telegram с заполненным сообщением
+              Заявка приходит напрямую — отвечаю в тот же день
             </p>
           </form>
         </Reveal>
