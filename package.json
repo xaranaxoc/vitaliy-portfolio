@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc -b && vite build && (node scripts/prerender.mjs || echo \"prerender skipped\")",
+    "build": "tsc -b && vite build && (node scripts/prerender.mjs || echo \"prerender skipped\") && node scripts/inline-css.mjs",
     "preview": "vite preview",
     "check": "biome check .",
     "format": "biome check --write .",
