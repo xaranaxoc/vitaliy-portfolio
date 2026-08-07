@@ -50,7 +50,7 @@ try {
 
   const browser = await chromium.launch();
   for (const route of ROUTES) {
-    const page = await browser.newPage();
+    const page = await browser.newPage({ viewport: { width: 1280, height: 800 } });
     await page.goto(`${BASE}${route.path}`, { waitUntil: "domcontentloaded", timeout: 30000 });
     await page.waitForSelector("h1", { timeout: 20000 });
     await page.waitForTimeout(1000); // let fonts/CSS settle

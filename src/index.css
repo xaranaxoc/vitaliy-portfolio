@@ -251,11 +251,10 @@
 }
 
 /* scroll reveal
-   .pf-reveal видим по умолчанию — защита от моргания при пререндере:
-   весь контент показывается в первом ответе. После старта JS хук
-   useReveal добавляет класс pf-pending → элемент прячется (готов
-   к анимации), а IntersectionObserver показывает его при попадании
-   в viewport с плавным переходом. */
+   .pf-reveal видим по умолчанию (защита от моргания при пререндере).
+   Ниже-viewport элементы прячутся через инлайн-стиль (см. useReveal)
+   ДО первой отрисовки, поэтому пользователь не видит «видим → невидим».
+   При скролле инлайн-стиль снимается → transition плавно анимирует. */
 .pf-reveal {
   opacity: 1;
   transform: translateY(0);
@@ -264,14 +263,6 @@
     transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
   transition-delay: var(--pf-delay, 0ms);
   will-change: opacity, transform;
-}
-.pf-reveal.pf-pending {
-  opacity: 0;
-  transform: translateY(26px);
-}
-.pf-reveal.pf-visible {
-  opacity: 1;
-  transform: translateY(0);
 }
 
 @media (prefers-reduced-motion: reduce) {

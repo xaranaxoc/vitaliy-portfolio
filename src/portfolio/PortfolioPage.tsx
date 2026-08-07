@@ -44,12 +44,12 @@ function Reveal({
   delay?: number;
   className?: string;
 }) {
-  const { ref, visible } = useReveal<HTMLDivElement>();
+  const { ref } = useReveal<HTMLDivElement>();
   return (
     <div
       ref={ref}
       style={{ "--pf-delay": `${delay}ms` } as React.CSSProperties}
-      className={`pf-reveal ${visible ? "pf-visible" : ""} ${className}`}
+      className={`pf-reveal ${className}`}
     >
       {children}
     </div>
