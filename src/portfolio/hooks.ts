@@ -4,26 +4,35 @@ import { useEffect, useRef, useState } from "react";
  * Scroll-reveal: returns a ref + visibility flag.
  * Element fades/slides in the first time it enters the viewport.
  *
- * Стартуем с visible=true — это безопасно для пререндера (SSG):
- * весь контент виден в первом ответе, нет «моргания» при гидратации.
- * В useEffect проверяем: если элемент НИЖЕ viewport — скрываем,
- * чтобы потом анимировать при скролле. Элементы выше/в viewport
- * остаются видимыми всегда.
+ * Защита от моргания: в CSS .pf-reveal ВИДЕН по умолчанию. Только когда
+ * этот хук монтируется (после гидратации React), он добавляет элементу
+ * класс `pf-pending` — и тот становится невидимым (готовым к анимации).
+ * IntersectionObserver показывает элемент, когда тот попадает в viewport.
+ *
+ * Так при загрузке пререндеренного HTML весь контент виден сразу,
+ * а плавные анимации включаются только после старта JS — без моргания.
  */
 export function useReveal<T extends HTMLElement>(threshold = 0.15) {
   const ref = useRef<T | null>(null);
-  const [visible, setVisible] = useState(true);
+  const [visible, setVisible] = useState(false);
 
   useEffect(() => {
     const el = ref.current;
     if (!el) return;
-    if (typeof IntersectionObserver === "undefined") return;
-
-    // Элемент ниже экрана? Скрыть его, чтобы потом анимировать появление.
+    if (typeof IntersectionObserver === "undefined") {
+      setVisible(true);
+      return;
+    }
+    // Если элемент уже в viewport (с запасом 300px снизу — для граничных
+    // элементов, чья высота может меняться до финального layout) — показать сразу.
+    // Иначе добавить pf-pending (готов к анимации) и ждать попадания в viewport.
     const rect = el.getBoundingClientRect();
-    const isBelowViewport = rect.top > window.innerHeight;
-    if (isBelowViewport) setVisible(false);
-
+    const alreadyInView = rect.top < window.innerHeight + 300 && rect.bottom > 0;
+    if (alreadyInView) {
+      setVisible(true);
+      return;
+    }
+    el.classList.add("pf-pending");
     const io = new IntersectionObserver(
       entries => {
         for (const entry of entries) {
