@@ -4,6 +4,7 @@ import { fonts } from "./fonts";
 import { profile } from "@/lib/data";
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://matveev-devs.ru"),
   title: `${profile.nameRu} — сайты, которые приносят клиентов`,
   description:
     "Сайты, которые приносят клиентов. Создаю лендинги, интернет-магазины и ботов под ключ — от идеи до запуска. Заявки, продажи и автоматизация 24/7.",
@@ -53,12 +54,40 @@ export const metadata: Metadata = {
   },
 };
 
+// Structured data для rich snippets в Google (ProfessionalService schema).
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "ProfessionalService",
+  name: `${profile.nameRu} — разработка сайтов под ключ`,
+  description:
+    "Создаю лендинги, интернет-магазины и ботов под ключ. Сайт, который приносит клиентов: заявки, продажи и автоматизация 24/7.",
+  email: profile.email,
+  areaServed: "RU",
+  knowsAbout: [
+    "Лендинги",
+    "Интернет-магазины",
+    "Telegram-боты",
+    "React",
+    "Next.js",
+    "Python",
+    "FastAPI",
+  ],
+  sameAs: [profile.github, profile.telegram],
+  url: "https://matveev-devs.ru",
+};
+
 export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="ru" className={fonts} suppressHydrationWarning>
-      <body>{children}</body>
+      <body>
+        {children}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        />
+      </body>
     </html>
   );
 }
