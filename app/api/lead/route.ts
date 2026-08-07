@@ -4,9 +4,6 @@
 
 const TOKEN = process.env.BOT_TOKEN;
 const CHAT_ID = process.env.CHAT_ID;
-// В РФ часть IP Telegram API блокируется РКН. Через TG_API_IP форсируем
-// рабочий IP (например 149.154.167.220), иначе запросы таймаутят.
-const TG_API_IP = process.env.TG_API_IP || "";
 
 type LeadBody = {
   name?: string;
@@ -83,17 +80,13 @@ export async function POST(request: Request) {
     (about ? `\n<b>Задача:</b> ${esc(about)}` : "");
 
   try {
-    // Если задан TG_API_IP — обращаемся по нему, Host/SNI оригинальные.
-    const url = TG_API_IP
-      ? `https://${TG_API_IP}/bot${TOKEN}/sendMessage`
-      : `https://api.telegram.org/bot${TOKEN}/sendMessage`;
-    const headers: Record<string, string> = TG_API_IP
-      ? { Host: "api.telegram.org", "content-type": "application/json" }
-      : { "content-type": "application/json" };
-
-    const res = await fetch(url, {
+    // Примечание: на VPS в РФ api.telegram.org режется РКН, поэтому /api/lead
+    // там проксируется Nginx'ом на Python-микросервис (server/app.py),
+    // который обходит блокировку через рабочий IP Telegram. Этот route handler
+    // используется на Vercel и в dev-режиме, где api.telegram.org доступен.
+    const res = await fetch(`https://api.telegram.org/bot${TOKEN}/sendMessage`, {
       method: "POST",
-      headers,
+      headers: { "content-type": "application/json" },
       body: JSON.stringify({
         chat_id: CHAT_ID,
         text,
