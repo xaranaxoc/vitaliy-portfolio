@@ -56,7 +56,7 @@ export const benefits: {
 export type Project = {
   id: string;
   kind: string;
-  category: "landing" | "tool";
+  category: "landing";
   title: string;
   description: string;
   result: string;
@@ -64,120 +64,22 @@ export type Project = {
   image: string | null;
   link: string | null;
   accent: "lime" | "cyan" | "violet" | "amber";
-  featured?: boolean;
-  imageAspect?: "video" | "square" | "portrait";
-  metrics?: { value: string; label: string }[];
-  highlights?: { icon: "message" | "zap" | "cpu"; title: string; text: string }[];
 };
 
 export const projects: Project[] = [
   {
-    id: "northpeak-site",
-    kind: "Сайт + ИИ-менеджер",
+    id: "northpeak",
+    kind: "Сайт компании",
     category: "landing",
-    title: "NorthPeak — сайт строительной компании с ИИ-менеджером",
+    title: "NorthPeak Construction — строительная компания",
     description:
-      "Премиальный лендинг строительной компании. На сайте работает ИИ-менеджер Алекс — отвечает посетителям 24/7, консультирует и сам создаёт лиды в CRM.",
-    result: "Ни один посетитель не уходит без ответа — каждый становится потенциальным лидом.",
-    tags: ["Next.js", "GLM-4.6", "Function Calling", "Анимации"],
+      "Премиальный лендинг строительной компании с ИИ-менеджером Алексом, который консультирует посетителей 24/7 и сам создаёт лиды. full-bleed фото, scroll-reveal анимации.",
+    result:
+      "Каждый посетитель получает квалифицированный ответ 24/7 — никто не уходит без внимания.",
+    tags: ["Next.js", "ИИ-менеджер", "Анимации", "Адаптив"],
     image: "/projects/northpeak.jpg",
     link: "https://northpeak-construction.vercel.app/",
-    accent: "cyan",
-    featured: true,
-    imageAspect: "video",
-    metrics: [
-      { value: "24/7", label: "ИИ-менеджер на сайте" },
-      { value: "100+", label: "диалогов одновременно" },
-    ],
-    highlights: [
-      {
-        icon: "message",
-        title: "Алекс — ИИ-менеджер",
-        text: "Отвечает 24/7 как эксперт и сам создаёт лиды в CRM через function calling.",
-      },
-    ],
-  },
-  {
-    id: "northpeak-admin",
-    kind: "CRM + ИИ-аналитика",
-    category: "landing",
-    title: "NorthPeak — CRM с автоквалификацией и ИИ-ассистентом",
-    description:
-      "Полноценная CRM на 8 разделов: воронка, лиды, объекты, финансы, аналитика. ИИ квалифицирует каждого лида по 6 критериям, а ассистент АРТИ отвечает менеджеру на вопросы по базе.",
-    result: "Менеджер сразу видит, кому звонить первым — ИИ уже расставил приоритеты за него.",
-    tags: ["Next.js", "PostgreSQL", "Prisma", "Recharts", "GLM-4.6"],
-    image: "/projects/northpeak-admin.png",
-    link: "https://northpeak-construction.vercel.app/admin",
-    accent: "violet",
-    featured: true,
-    imageAspect: "square",
-    metrics: [
-      { value: "0–100", label: "автоскоринг лида" },
-      { value: "8", label: "разделов CRM" },
-    ],
-    highlights: [
-      {
-        icon: "cpu",
-        title: "АРТИ — ИИ-ассистент",
-        text: "Отвечает на вопросы по базе на естественном языке и даёт follow-up подсказки.",
-      },
-    ],
-  },
-  {
-    id: "soziday",
-    kind: "Живой проект · 13 страниц + магазин + CRM",
-    category: "landing",
-    title: "СозидАй — студия рукоделия, Якутск",
-    description:
-      "Полноценный сайт творческой студии под ключ: онлайн-запись на мастер-классы, магазин ручной работы, страницы мастеров и CRM-админка. Владелец меняет товары, расписание и тексты сам — без программиста. Обновления уходят в продакшен автоматически.",
-    result:
-      "Студия получает заявки онлайн и продаёт товары через сайт, управляя всем сама",
-    tags: ["Интернет-магазин", "Онлайн-запись", "CRM-админка", "CI автодеплой"],
-    image: "/projects/soziday-public-1.jpg",
-    link: "https://sozidaystudio.ru/",
-    accent: "lime",
-    featured: true,
-  },
-  {
-    id: "landing",
-    kind: "Лендинг",
-    category: "landing",
-    title: "NovaFlow AI — сайт продукта",
-    description:
-      "Продающий лендинг для AI-платформы: тёмный дизайн, живые анимации, структура ведёт посетителя от проблемы к заявке.",
-    result:
-      "Понятная презентация сложного продукта — клиент видит выгоду за один скролл.",
-    tags: ["HTML/CSS", "JavaScript", "Анимации", "Адаптив"],
-    image: "/projects/novaflow-landing.jpg",
-    link: "https://novaflow-ai-landing.vercel.app/",
-    accent: "lime",
-  },
-  {
-    id: "lumina",
-    kind: "Сайт студии",
-    category: "landing",
-    title: "Lumina Studio — дизайн-студия",
-    description:
-      "Сайт в editorial-стиле: serif-заголовки, тёплая палитра, плавные анимации. Демонстрирует услуги и портфолио студии.",
-    result:
-      "Студия выглядит дороже и профессиональнее — выше готовность клиента платить.",
-    tags: ["HTML/CSS", "JavaScript", "Editorial", "Адаптив"],
-    image: "/projects/lumina.jpg",
-    link: "https://lumina-studio-landing-eight.vercel.app/",
-    accent: "cyan",
-  },
-  {
-    id: "sozvon",
-    kind: "Лендинг",
-    category: "landing",
-    title: "СОЗВОН — AI-встречи",
-    description:
-      "Лендинг сервиса AI-встречи: тёмный дизайн, акцент на скорости и автоматизации. Ведёт посетителя к заявке.",
-    result: "Чёткое позиционирование продукта — клиент сразу понимает выгоду.",
-    tags: ["HTML/CSS", "JavaScript", "Адаптив", "Анимации"],
-    image: "/projects/landing-sozvon.jpg",
-    link: "https://sozvon-1bvncr39n-vitaliy-team.vercel.app",
-    accent: "violet",
+    accent: "amber",
   },
   {
     id: "nimbus",
@@ -258,19 +160,6 @@ export const projects: Project[] = [
     accent: "amber",
   },
   {
-    id: "pantela",
-    kind: "Портфолио-хаб",
-    category: "landing",
-    title: "PANTELA — портфолио-хаб",
-    description:
-      "Шаблон портфолио-сайта: тёмная тема, частицы на фоне, акцент на проекты и навыки.",
-    result: "Готовый шаблон для быстрого запуска портфолио — снижает порог входа.",
-    tags: ["HTML/CSS", "JavaScript", "Particles", "Шаблон"],
-    image: "/projects/landing-pantela.jpg",
-    link: "https://pantela-portfolio-hub.vercel.app",
-    accent: "violet",
-  },
-  {
     id: "svetlo",
     kind: "Сайт студии",
     category: "landing",
@@ -309,47 +198,6 @@ export const projects: Project[] = [
     link: "https://domenta.vercel.app",
     accent: "cyan",
   },
-  {
-    id: "trading-app",
-    kind: "Десктоп-приложение",
-    category: "tool",
-    title: "Trade Copier — копитрейдер для MT5",
-    description:
-      "Открывает одну сделку сразу на 10 счетах MetaTrader 5. Лот считается автоматически под баланс и риск каждого счёта.",
-    result:
-      "Трейдер экономит часы ручной работы и исключает ошибку рассчёта лота.",
-    tags: ["Python", "MetaTrader 5", "Desktop GUI", "Риск-менеджмент"],
-    image: "/projects/trade-copier.png",
-    link: "https://github.com/xaranaxoc/TradeCopier",
-    accent: "cyan",
-  },
-  {
-    id: "tg-bot",
-    kind: "Telegram-бот",
-    category: "tool",
-    title: "Бот продаж и лицензий",
-    description:
-      "Автоматическая витрина: триал на 7 дней, продажа лицензии за USDT, выдача сборок, привязка устройств и реферальная программа.",
-    result:
-      "Продукт продаётся и обслуживается 24/7 полностью без участия человека.",
-    tags: ["Python", "aiogram", "Крипто-платежи", "Лицензии"],
-    image: "/projects/telegram-bot.png",
-    link: null,
-    accent: "violet",
-  },
-  {
-    id: "ds-bot",
-    kind: "Discord-бот",
-    category: "tool",
-    title: "Музыкальный бот для Discord",
-    description:
-      "Бот-диджей для комьюнити: очередь и плейлисты, пауза, скип и громкость прямо из чата. Держит голосовой канал круглые сутки.",
-    result: "Живое и удерживающее комьюнити — участники остаются на сервере.",
-    tags: ["Python", "discord.py", "FFmpeg", "Voice API"],
-    image: "/projects/discord-bot.png",
-    link: null,
-    accent: "amber",
-  },
 ];
 
 // ─── ОТЗЫВЫ ──────────────────────────────────────────────────
@@ -358,21 +206,21 @@ export const projects: Project[] = [
 export const testimonials: { quote: string; name: string; role: string }[] = [
   {
     quote:
-      "Заказывали сайт студии — получили полноценную систему: запись на мастер-классы, магазин и удобную админку, где меняем всё сами. Заявки приходят сами.",
-    name: "Студия рукоделия",
-    role: "sozidaystudio.ru",
-  },
-  {
-    quote:
       "Сделал лендинг за неделю, всё объяснил простым языком, без технического жаргона. Результат — клиенты начали писать уже в первые дни после запуска.",
     name: "Заказчик лендинга",
     role: "малый бизнес",
   },
   {
     quote:
-      "Бот продаёт лицензии полностью автоматически: приём оплаты, выдача, поддержка. Освободил мне руки от рутины и приносит пассивный доход.",
-    name: "Владелец продукта",
-    role: "Telegram-бот продаж",
+      "Подход понравился: сначала разобрались в задаче, потом предложил решение, которое было дешевле, чем я ожидал. Сайт работает, заявки приходят.",
+    name: "Предприниматель",
+    role: "сфера услуг",
+  },
+  {
+    quote:
+      "Договор, чек самозанятого, предоплата по этапам — всё прозрачно. После запуска не пропал, помог с правками. Буду заказывать ещё один проект.",
+    name: "Клиент",
+    role: "интернет-магазин",
   },
 ];
 
@@ -401,29 +249,5 @@ export const faq: { q: string; a: string }[] = [
   {
     q: "А если мне нужен не сайт, а бот или автоматизация?",
     a: "Делаю под ключ: Telegram- и Discord-боты, приём платежей, парсеры, интеграции и внутренние инструменты. Опишите задачу — предложу решение.",
-  },
-];
-
-// ─── СТЕК (сжатый, с пользой для клиента) ────────────────────
-export const stack: { group: string; note: string; items: string[] }[] = [
-  {
-    group: "Сайты и интерфейсы",
-    note: "то, что видит клиент",
-    items: ["React", "TypeScript", "Tailwind CSS", "HTML / CSS", "Vite"],
-  },
-  {
-    group: "Сервер и базы данных",
-    note: "быстро и надёжно под нагрузкой",
-    items: ["Python", "FastAPI", "PostgreSQL", "Docker", "REST API"],
-  },
-  {
-    group: "Боты и автоматизация",
-    note: "работают 24/7 без вас",
-    items: ["aiogram", "discord.py", "Платёжные API", "Парсинг", "Интеграции"],
-  },
-  {
-    group: "Запуск и поддержка",
-    note: "от кода до продакшена",
-    items: ["Linux / VPS", "Nginx", "CI/CD", "Git", "Мониторинг"],
   },
 ];

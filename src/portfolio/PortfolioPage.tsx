@@ -15,7 +15,6 @@ import {
   Server,
   ShieldCheck,
   Sun,
-  TerminalSquare,
   TrendingUp,
   Zap,
 } from "lucide-react";
@@ -27,7 +26,6 @@ import {
   type Project,
   profile,
   projects,
-  stack,
   stats,
   testimonials,
 } from "./data";
@@ -627,48 +625,19 @@ function Services() {
 // Projects
 // ─────────────────────────────────────────────────────────────
 
-const PROJECT_ICONS: Record<string, ReactNode> = {
-  "trading-app": <TerminalSquare className="size-8" />,
-  "tg-bot": <Send className="size-8" />,
-  "ds-bot": <Bot className="size-8" />,
-};
-
-const HIGHLIGHT_ICON = {
-  message: MessageCircle,
-  zap: Zap,
-  cpu: Cpu,
-} as const;
-
-const IMAGE_ASPECT = {
-  video: "aspect-video",
-  square: "aspect-square",
-  portrait: "aspect-[3/4]",
-} as const;
-
 function ProjectCard({ project, index }: { project: Project; index: number }) {
   const accent = ACCENTS[project.accent];
-  const isFeatured = project.featured === true;
-  const isLive = project.id === "soziday";
   const Tag = project.link ? "a" : "div";
   const linkProps = project.link
     ? { href: project.link, target: "_blank", rel: "noreferrer" }
     : {};
-  // featured cards default to square (works for dashboards & landing crops);
-  // regular cards always 16:9. imageAspect overrides per-project.
-  const aspectClass = isFeatured
-    ? IMAGE_ASPECT[project.imageAspect ?? "square"]
-    : IMAGE_ASPECT.video;
   return (
-    <Reveal delay={(index % 2) * 100} className={isFeatured ? "w-full" : ""}>
+    <Reveal delay={(index % 3) * 80}>
       <Tag
         {...linkProps}
-        className={`group flex h-full w-full flex-col overflow-hidden rounded-xl border border-(--pf-border) bg-(--pf-surface) transition-all duration-300 hover:-translate-y-1 ${accent.border} ${
-          isFeatured ? "sm:flex-row" : ""
-        } ${project.link ? "cursor-pointer" : ""}`}
+        className={`group flex h-full w-full flex-col overflow-hidden rounded-xl border border-(--pf-border) bg-(--pf-surface) transition-all duration-300 hover:-translate-y-1 ${accent.border} ${project.link ? "cursor-pointer" : ""}`}
       >
-        <div
-          className={`relative flex items-center justify-center overflow-hidden border-(--pf-border-soft) bg-(--pf-media) ${isFeatured ? "sm:w-1/2 sm:border-r" : "border-b"} ${aspectClass}`}
-        >
+        <div className="relative aspect-video overflow-hidden border-b border-(--pf-border-soft) bg-(--pf-media)">
           {project.image ? (
             <img
               src={project.image}
@@ -680,42 +649,21 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
               className="size-full object-cover object-top transition-transform duration-500 group-hover:scale-[1.03]"
             />
           ) : (
-            <div className="pf-dots flex flex-col items-center gap-3 transition-transform duration-500 group-hover:scale-110">
-              <div
-                className={`rounded-xl border border-(--pf-border) bg-(--pf-chip) p-4 ${accent.text}`}
-              >
-                {PROJECT_ICONS[project.id] ?? <Globe className="size-8" />}
+            <div className="pf-dots flex h-full flex-col items-center justify-center gap-3">
+              <div className={`rounded-xl border border-(--pf-border) bg-(--pf-chip) p-4 ${accent.text}`}>
+                <Globe className="size-8" />
               </div>
               <span className="font-code text-[11px] uppercase tracking-[0.25em] text-(--pf-text-5)">
                 скриншот скоро
               </span>
             </div>
           )}
-          <div
-            className={`pointer-events-none absolute inset-0 bg-transparent transition-colors duration-300 ${accent.glow}`}
-          />
+          <div className={`pointer-events-none absolute inset-0 bg-transparent transition-colors duration-300 ${accent.glow}`} />
         </div>
 
-        <div className={`flex flex-1 flex-col p-6 ${isFeatured ? "sm:p-8" : ""}`}>
-          {isFeatured && (
-            <div className="mb-3 flex flex-wrap items-center gap-2">
-              {isLive ? (
-                <span className="font-code inline-flex items-center gap-1.5 rounded-full border border-(--pf-lime)/30 bg-(--pf-lime)/10 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.16em] text-(--pf-lime)">
-                  <span className="size-1.5 rounded-full bg-(--pf-lime-solid)" />
-                  живой проект
-                </span>
-              ) : (
-                <span className={`font-code inline-flex items-center gap-1.5 rounded-full border ${accent.badgeBorder} ${accent.badgeBg} px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.16em] ${accent.text}`}>
-                  <Cpu className="size-3" />
-                  ИИ + автоматизация
-                </span>
-              )}
-            </div>
-          )}
+        <div className="flex flex-1 flex-col p-6">
           <div className="flex items-center justify-between gap-3">
-            <span
-              className={`font-code text-[11px] font-semibold uppercase tracking-[0.16em] ${accent.text}`}
-            >
+            <span className={`font-code text-[11px] font-semibold uppercase tracking-[0.16em] ${accent.text}`}>
               {project.kind}
             </span>
             {project.link && (
@@ -724,9 +672,7 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
               </span>
             )}
           </div>
-          <h3
-            className={`font-display mt-3 font-semibold text-(--pf-text) ${isFeatured ? "text-xl sm:text-2xl" : "text-lg"}`}
-          >
+          <h3 className="font-display mt-3 font-semibold text-lg text-(--pf-text)">
             {project.title}
           </h3>
 
@@ -734,58 +680,10 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
             <p className="font-code text-[10px] font-semibold uppercase tracking-[0.16em] text-(--pf-text-5)">
               результат для клиента
             </p>
-            <p
-              className={`font-body mt-1 font-medium text-(--pf-text-2) ${isFeatured ? "text-sm sm:text-base" : "text-sm"}`}
-            >
+            <p className="font-body mt-1 text-sm font-medium text-(--pf-text-2)">
               {project.result}
             </p>
           </div>
-
-          {project.metrics && project.metrics.length > 0 && (
-            <div className={`mt-4 grid grid-cols-2 gap-3 ${project.metrics.length >= 4 ? "sm:grid-cols-4" : "sm:grid-cols-2"}`}>
-              {project.metrics.map(m => (
-                <div
-                  key={m.label}
-                  className="rounded-lg border border-(--pf-border) bg-(--pf-chip) px-3 py-2.5 text-center"
-                >
-                  <div className={`font-display text-xl font-bold sm:text-2xl ${accent.text}`}>
-                    {m.value}
-                  </div>
-                  <div className="font-code mt-0.5 text-[9px] font-medium uppercase tracking-[0.1em] text-(--pf-text-4)">
-                    {m.label}
-                  </div>
-                </div>
-              ))}
-            </div>
-          )}
-
-          {project.highlights && project.highlights.length > 0 && (
-            <div className="mt-4 flex flex-col gap-2.5">
-              {project.highlights.map(h => {
-                const Icon = HIGHLIGHT_ICON[h.icon];
-                return (
-                  <div
-                    key={h.title}
-                    className="flex gap-3 rounded-lg border border-(--pf-border) bg-(--pf-surface) px-3.5 py-3"
-                  >
-                    <div
-                      className={`flex size-9 shrink-0 items-center justify-center rounded-md border border-(--pf-border) bg-(--pf-chip) ${accent.text}`}
-                    >
-                      <Icon className="size-4" />
-                    </div>
-                    <div className="min-w-0">
-                      <p className="font-body text-sm font-semibold text-(--pf-text)">
-                        {h.title}
-                      </p>
-                      <p className="font-body mt-0.5 text-xs leading-relaxed text-(--pf-text-3)">
-                        {h.text}
-                      </p>
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-          )}
 
           <p className="font-body mt-4 text-sm leading-relaxed text-(--pf-text-3)">
             {project.description}
@@ -807,10 +705,6 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
 }
 
 function Projects() {
-  const landings = projects.filter(p => p.category === "landing");
-  const tools = projects.filter(p => p.category === "tool");
-  const featured = landings.filter(p => p.featured);
-  const regular = landings.filter(p => !p.featured);
   return (
     <section id="work" className="relative mx-auto max-w-6xl px-5 py-24">
       <Reveal>
@@ -822,35 +716,8 @@ function Projects() {
         </Lead>
       </Reveal>
 
-      <Reveal>
-        <h3 className="font-display mt-12 mb-6 text-lg font-semibold text-(--pf-text-2)">
-          Кейсы под ключ
-        </h3>
-      </Reveal>
-      <div className="flex flex-col gap-6">
-        {featured.map((p, i) => (
-          <ProjectCard key={p.id} project={p} index={i} />
-        ))}
-      </div>
-
-      <Reveal>
-        <h3 className="font-display mt-16 mb-6 text-lg font-semibold text-(--pf-text-2)">
-          Ещё сайты
-        </h3>
-      </Reveal>
-      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-        {regular.map((p, i) => (
-          <ProjectCard key={p.id} project={p} index={i} />
-        ))}
-      </div>
-
-      <Reveal>
-        <h3 className="font-display mt-16 mb-6 text-lg font-semibold text-(--pf-text-2)">
-          Боты и автоматизация
-        </h3>
-      </Reveal>
-      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-        {tools.map((p, i) => (
+      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 mt-12">
+        {projects.map((p, i) => (
           <ProjectCard key={p.id} project={p} index={i} />
         ))}
       </div>
@@ -1098,52 +965,6 @@ function Faq() {
             </Reveal>
           ))}
         </div>
-      </div>
-    </section>
-  );
-}
-
-// ─────────────────────────────────────────────────────────────
-// Stack
-// ─────────────────────────────────────────────────────────────
-
-function Stack() {
-  return (
-    <section id="stack" className="mx-auto max-w-6xl px-5 py-24">
-      <Reveal>
-        <Eyebrow>Технологии</Eyebrow>
-        <SectionTitle>Инструменты, которым доверяю</SectionTitle>
-        <Lead>
-          Технологии важны для надёжности и скорости — но вам не нужно в них
-          разбираться. Это моя забота.
-        </Lead>
-      </Reveal>
-
-      <div className="mt-12 grid gap-5 sm:grid-cols-2">
-        {stack.map((group, i) => (
-          <Reveal key={group.group} delay={i * 80}>
-            <div className="h-full rounded-xl border border-(--pf-border) bg-(--pf-surface) p-6">
-              <div className="flex flex-wrap items-baseline justify-between gap-2">
-                <h3 className="font-display text-base font-semibold text-(--pf-text)">
-                  {group.group}
-                </h3>
-                <span className="font-code text-[11px] text-(--pf-text-4)">
-                  — {group.note}
-                </span>
-              </div>
-              <div className="mt-4 flex flex-wrap gap-2">
-                {group.items.map(item => (
-                  <span
-                    key={item}
-                    className="font-code rounded-md border border-(--pf-border) bg-(--pf-chip) px-3 py-1.5 text-xs text-(--pf-text-2) transition-colors hover:border-(--pf-lime)/40 hover:text-(--pf-lime)"
-                  >
-                    {item}
-                  </span>
-                ))}
-              </div>
-            </div>
-          </Reveal>
-        ))}
       </div>
     </section>
   );
@@ -1449,7 +1270,6 @@ export function PortfolioPage() {
         <Process />
         <Guarantee />
         <Faq />
-        <Stack />
         <Contact />
       </main>
       <Footer />
