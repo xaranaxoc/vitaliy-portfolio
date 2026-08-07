@@ -10,7 +10,7 @@ const manrope = localFont({
     { path: "../public/fonts/manrope-700.woff2", weight: "700", style: "normal" },
   ],
   variable: "--font-manrope",
-  display: "swap",
+  display: "block",
 });
 
 const unbounded = localFont({
@@ -20,7 +20,7 @@ const unbounded = localFont({
     { path: "../public/fonts/unbounded-700.woff2", weight: "700", style: "normal" },
   ],
   variable: "--font-unbounded",
-  display: "swap",
+  display: "block",
 });
 
 const jetbrainsMono = localFont({
@@ -29,7 +29,7 @@ const jetbrainsMono = localFont({
     { path: "../public/fonts/jetbrains-mono-500.woff2", weight: "500", style: "normal" },
   ],
   variable: "--font-jetbrains-mono",
-  display: "swap",
+  display: "block",
 });
 
 export const fonts = `${manrope.variable} ${unbounded.variable} ${jetbrainsMono.variable}`;

@@ -1,54 +1,32 @@
-import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 /**
- * Scroll-reveal: returns a ref + visibility flag.
- * Element fades/slides in the first time it enters the viewport.
+ * Scroll-reveal: элемент появляется с анимацией при попадании в viewport.
  *
- * Защита от моргания: в CSS .pf-reveal ВИДЕН по умолчанию. Только когда
- * этот хук монтируется (после гидратации React), он добавляет элементу
- * класс `pf-pending` — и тот становится невидимым (готовым к анимации).
- * IntersectionObserver показывает элемент, когда тот попадает в viewport.
+ * В Next.js гидратация синхронизирована с SSR — поэтому классический паттерн
+ * (visible=false по умолчанию → IntersectionObserver → visible=true) работает
+ * чисто, без моргания. Это отличие от Vite+Playwright-пререндера, где SSR-HTML
+ * и React-state конфликтовали.
  *
- * Так при загрузке пререндеренного HTML весь контент виден сразу,
- * а плавные анимации включаются только после старта JS — без моргания.
+ * AI-боты: текст в HTML присутствует всегда (поисковики индексируют даже
+ * при opacity:0), поэтому SEO не страдает.
  */
 export function useReveal<T extends HTMLElement>(threshold = 0.15) {
   const ref = useRef<T | null>(null);
+  const [visible, setVisible] = useState(false);
 
-  // useLayoutEffect срабатывает ДО первой отрисовки браузера после гидратации.
-  // Все элементы стартуют видимыми (по CSS и пререндеру). Ниже-viewport
-  // прячем через инлайн-стиль БЕЗ анимации, поэтому браузер сразу рисует их
-  // скрытыми — без скачка «видим → невидим». При скролле IntersectionObserver
-  // убирает инлайн-стиль → CSS-переход плавно анимирует появление.
-  const init = typeof window !== "undefined" ? useLayoutEffect : useEffect;
-  init(() => {
+  useEffect(() => {
     const el = ref.current;
     if (!el) return;
-    if (typeof IntersectionObserver === "undefined") return;
-
-    const rect = el.getBoundingClientRect();
-    const isBelow = rect.top > window.innerHeight + 300;
-    if (!isBelow) return;
-
-    // Скрыть ниже-viewport элемент БЕЗ анимации (transition: none),
-    // в следующем кадре включить transition обратно для будущей анимации.
-    const prevTransition = el.style.transition;
-    el.style.transition = "none";
-    el.style.opacity = "0";
-    el.style.transform = "translateY(26px)";
-    requestAnimationFrame(() => {
-      requestAnimationFrame(() => {
-        el.style.transition = prevTransition;
-      });
-    });
-
+    if (typeof IntersectionObserver === "undefined") {
+      setVisible(true);
+      return;
+    }
     const io = new IntersectionObserver(
       entries => {
         for (const entry of entries) {
           if (entry.isIntersecting) {
-            // Убрать инлайн-стиль → CSS применит видимое состояние.
-            el.style.opacity = "";
-            el.style.transform = "";
+            setVisible(true);
             io.disconnect();
           }
         }
@@ -59,7 +37,7 @@ export function useReveal<T extends HTMLElement>(threshold = 0.15) {
     return () => io.disconnect();
   }, [threshold]);
 
-  return { ref };
+  return { ref, visible };
 }
 
 // ─── Тема (тёмная / светлая) ────────────────────────────────

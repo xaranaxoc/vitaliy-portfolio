@@ -10,7 +10,7 @@ export const profile = {
   status: "Открыт к новым проектам",
   // Короткий оффер для бейджа/превью
   offer: "Сайты, которые приносят клиентов",
-  telegram: "https://t.me/MatveevVitalii",
+  telegram: "https://t.me/Matveev_Devs",
   email: "matveev.vit03@gmail.com",
   whatsapp: "https://wa.me/79142937537",
   github: "https://github.com/xaranaxoc",

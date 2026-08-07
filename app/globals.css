@@ -57,16 +57,20 @@
   animation: pf-float 9s ease-in-out infinite;
 }
 
-/* scroll reveal — стартует видимым (SSR-safe), ниже-viewport элементы
-   прячутся через инлайн-стиль в useLayoutEffect до первой отрисовки. */
+/* scroll reveal — элемент скрыт по умолчанию, появляется с анимацией
+   при попадании в viewport (через IntersectionObserver в useReveal). */
 .pf-reveal {
-  opacity: 1;
-  transform: translateY(0);
+  opacity: 0;
+  transform: translateY(26px);
   transition:
     opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1),
     transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
   transition-delay: var(--pf-delay, 0ms);
   will-change: opacity, transform;
+}
+.pf-reveal.pf-visible {
+  opacity: 1;
+  transform: translateY(0);
 }
 
 @media (prefers-reduced-motion: reduce) {
