@@ -53,7 +53,17 @@ try {
     const page = await browser.newPage();
     await page.goto(`${BASE}${route.path}`, { waitUntil: "domcontentloaded", timeout: 30000 });
     await page.waitForSelector("h1", { timeout: 20000 });
-    await page.waitForTimeout(800); // let fonts/CSS settle
+    await page.waitForTimeout(1500); // let fonts/CSS/JS settle
+    // Пререндер: показать все reveal-элементы сразу, чтобы при загрузке
+    // не было «моргания» (часть контента невидима, потом появляется с анимацией).
+    // Без этого 49 из 55 pf-reveal остаются opacity:0 и вызывают flash.
+    await page.evaluate(() => {
+      document.querySelectorAll(".pf-reveal").forEach(el => {
+        el.classList.add("pf-visible");
+        el.style.opacity = "1";
+        el.style.transform = "none";
+      });
+    });
     const html = await page.content();
     await page.close();
     if (!html || html.length < 1000) {
