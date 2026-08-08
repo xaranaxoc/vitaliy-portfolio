@@ -154,13 +154,27 @@ function ThemeToggle({ theme, toggle }: { theme: Theme; toggle: () => void }) {
 
 function Nav({ theme, toggle }: { theme: Theme; toggle: () => void }) {
   const [open, setOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
   useEffect(() => {
     const close = () => setOpen(false);
     window.addEventListener("hashchange", close);
     return () => window.removeEventListener("hashchange", close);
   }, []);
+  // Прозрачный хедер вверху страницы, фон + блюр при скролле.
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 8);
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
   return (
-    <header className="fixed inset-x-0 top-0 z-50 border-b border-(--pf-border-soft) bg-(--pf-nav) backdrop-blur-md">
+    <header
+      className={`fixed inset-x-0 top-0 z-50 transition-colors duration-300 ${
+        scrolled
+          ? "border-b border-(--pf-border-soft) bg-(--pf-nav) backdrop-blur-md"
+          : "border-b border-transparent bg-transparent"
+      }`}
+    >
       <nav className="mx-auto flex h-16 max-w-6xl items-center justify-between px-5">
         <a
           href="#top"
@@ -215,7 +229,7 @@ function Nav({ theme, toggle }: { theme: Theme; toggle: () => void }) {
         </div>
       </nav>
       {open && (
-        <div className="border-t border-(--pf-border-soft) bg-(--pf-nav) px-5 py-3 lg:hidden">
+        <div className="border-t border-(--pf-border-soft) bg-(--pf-nav) px-5 py-3 backdrop-blur-md lg:hidden">
           <div className="mx-auto flex max-w-6xl flex-col gap-1">
             {NAV_LINKS.map(l => (
               <a
@@ -245,94 +259,6 @@ function Nav({ theme, toggle }: { theme: Theme; toggle: () => void }) {
 // Hero
 // ─────────────────────────────────────────────────────────────
 
-const HERO_CARD_ROWS = [
-  { icon: TrendingUp, label: "Заявки", value: "больше в 2-3 раза" },
-  { icon: Zap, label: "Конверсия", value: "выше чем у конкурентов" },
-  { icon: TrendingUp, label: "Прибыль", value: "растёт с первого месяца" },
-  { icon: Clock, label: "Время", value: "вы — на бизнесе, не на рутине" },
-];
-
-function HeroCard() {
-  const [active, setActive] = useState(0);
-  const [hovered, setHovered] = useState(false);
-
-  // Авто-ротация подсветки, пока пользователь не навёл курсор.
-  // Уважает prefers-reduced-motion — там авто-режим отключается.
-  useEffect(() => {
-    if (hovered) return;
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-    const id = setInterval(() => {
-      setActive(i => (i + 1) % HERO_CARD_ROWS.length);
-    }, 3500);
-    return () => clearInterval(id);
-  }, [hovered]);
-
-  return (
-    <div
-      className="overflow-hidden rounded-2xl border border-(--pf-border-mid) bg-(--pf-surface) shadow-[0_24px_80px_-20px_rgba(163,230,53,0.12)] backdrop-blur-sm"
-      onMouseEnter={() => setHovered(true)}
-      onMouseLeave={() => setHovered(false)}
-    >
-      <div className="flex items-center gap-2 border-b border-(--pf-border-soft) px-4 py-3">
-        <span className="size-3 rounded-full bg-[#ff5f57]" />
-        <span className="size-3 rounded-full bg-[#febc2e]" />
-        <span className="size-3 rounded-full bg-[#28c840]" />
-        <span className="font-code ml-2 truncate text-xs text-(--pf-text-4)">
-          ваш-сайт.ru — работает на вас
-        </span>
-      </div>
-      <div className="space-y-1.5 p-5">
-        <p className="font-code px-1 pb-1 text-xs font-semibold uppercase tracking-[0.18em] text-(--pf-lime)/90">
-          что даёт сайт вашему бизнесу
-        </p>
-        {HERO_CARD_ROWS.map((r, i) => {
-          const Icon = r.icon;
-          const on = i === active;
-          return (
-            // biome-ignore lint/a11y/noStaticElementInteractions: декоративная подсветка под курсором, не элемент управления
-            <div
-              key={r.label}
-              onMouseEnter={() => setActive(i)}
-              className={`relative flex cursor-default items-center justify-between rounded-lg px-3 py-3 ring-1 transition-all duration-300 ${
-                on
-                  ? "bg-(--pf-lime)/[0.13] ring-(--pf-lime)/40 shadow-[0_0_28px_-6px_rgba(190,242,100,0.4)]"
-                  : "bg-(--pf-chip) ring-transparent"
-              }`}
-            >
-              <span className="relative flex items-center gap-2.5">
-                <span
-                  className={on ? "text-(--pf-lime)" : "text-(--pf-text-4)"}
-                >
-                  <Icon className="size-4" />
-                </span>
-                <span
-                  className={`font-body text-sm transition-colors ${on ? "text-(--pf-text)" : "text-(--pf-text-2)"}`}
-                >
-                  {r.label}
-                </span>
-              </span>
-              <span
-                className={`relative font-code text-xs font-semibold transition-colors ${on ? "text-(--pf-lime)" : "text-(--pf-text-3)"}`}
-              >
-                {r.value}
-              </span>
-            </div>
-          );
-        })}
-      </div>
-      <div className="flex items-center gap-2 border-t border-(--pf-border-soft) px-5 py-3">
-        <span className="relative flex size-2">
-          <span className="absolute inline-flex size-2 rounded-full bg-(--pf-lime-solid) [animation:pf-ping_1.8s_ease-out_infinite]" />
-          <span className="relative inline-flex size-2 rounded-full bg-(--pf-lime-solid)" />
-        </span>
-        <span className="font-code text-xs text-(--pf-text-4)">
-          статус: онлайн · принимает заявки
-        </span>
-      </div>
-    </div>
-  );
-}
-
 function Hero() {
   return (
     <section id="top" className="relative overflow-hidden pt-16">
@@ -340,8 +266,8 @@ function Hero() {
       <div className="absolute -top-32 left-1/2 -z-0 h-[420px] w-[720px] -translate-x-1/2 rounded-full bg-(--pf-glow-lime) blur-[140px]" />
       <div className="absolute right-[-120px] top-1/3 h-[300px] w-[300px] rounded-full bg-(--pf-glow-cyan) blur-[120px]" />
 
-      <div className="relative mx-auto grid max-w-6xl gap-14 px-5 pb-20 pt-16 sm:pt-24 lg:grid-cols-[1.05fr_0.95fr] lg:items-center">
-        <div>
+      <div className="relative mx-auto flex max-w-3xl flex-col items-center px-5 pb-20 pt-16 text-center sm:pt-24">
+        <div className="w-full">
           <Reveal>
             <a
               href="#contact"
@@ -368,15 +294,15 @@ function Hero() {
           </Reveal>
 
           <Reveal delay={200}>
-            <p className="font-body mt-6 max-w-xl text-base leading-relaxed text-(--pf-text-3) sm:text-lg">
-              Сайт, который окупается с первого месяца: больше заявок, выше
-              конверсия и новые клиенты из поиска — вы занимаетесь бизнесом,
-              а сайт приносит клиентов.
+            <p className="font-body mx-auto mt-6 max-w-xl text-base leading-relaxed text-(--pf-text-3) sm:text-lg">
+              Сайт окупается с первого месяца: больше заявок, выше конверсия
+              и новые клиенты из поиска — вы занимаетесь бизнесом, а сайт
+              приносит клиентов.
             </p>
           </Reveal>
 
           <Reveal delay={300}>
-            <div className="mt-8 flex flex-wrap items-center gap-4">
+            <div className="mt-8 flex flex-wrap items-center justify-center gap-4">
               <a
                 href={profile.telegram}
                 target="_blank"
@@ -399,7 +325,7 @@ function Hero() {
           <Reveal delay={400}>
             <dl className="mt-12 grid grid-cols-2 gap-x-6 gap-y-7 sm:grid-cols-4">
               {stats.map(s => (
-                <div key={s.label}>
+                <div key={s.label} className="text-center">
                   <dt className="font-display text-2xl font-semibold text-(--pf-lime)">
                     {s.value}
                   </dt>
@@ -412,9 +338,6 @@ function Hero() {
           </Reveal>
         </div>
 
-        <Reveal delay={250} className="min-w-0">
-          <HeroCard />
-        </Reveal>
       </div>
     </section>
   );

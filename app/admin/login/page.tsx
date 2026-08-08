@@ -1,11 +1,9 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 import { Lock, Loader2, ArrowRight } from "lucide-react";
 
 export default function AdminLoginPage() {
-  const router = useRouter();
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -22,8 +20,9 @@ export default function AdminLoginPage() {
       });
       const data = (await res.json()) as { ok?: boolean; error?: string };
       if (!res.ok || !data.ok) throw new Error(data.error || "Ошибка входа");
-      router.push("/admin");
-      router.refresh();
+      // Полная перезагрузка на /admin — middleware точно увидит cookie
+      // (client-side router.push может не подхватить свежеустановленный cookie).
+      window.location.href = "/admin";
     } catch (err) {
       setError(err instanceof Error ? err.message : "Ошибка входа");
       setLoading(false);
