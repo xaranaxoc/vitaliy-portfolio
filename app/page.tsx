@@ -125,10 +125,10 @@ const BENEFIT_ICON = {
 // ─────────────────────────────────────────────────────────────
 
 const NAV_LINKS = [
-  { href: "#benefits", label: "Что вы получите" },
-  { href: "#services", label: "Услуги" },
+  { href: "#services", label: "Услуги и цены" },
   { href: "#work", label: "Работы" },
   { href: "#process", label: "Процесс" },
+  { href: "#benefits", label: "Что вы получите" },
   { href: "#faq", label: "Вопросы" },
 ];
 
@@ -215,7 +215,7 @@ function Nav({ theme, toggle }: { theme: Theme; toggle: () => void }) {
         </div>
       </nav>
       {open && (
-        <div className="border-t border-(--pf-border-soft) bg-(--pf-nav) px-5 py-3 md:hidden">
+        <div className="border-t border-(--pf-border-soft) bg-(--pf-nav) px-5 py-3 lg:hidden">
           <div className="mx-auto flex max-w-6xl flex-col gap-1">
             {NAV_LINKS.map(l => (
               <a
@@ -246,16 +246,33 @@ function Nav({ theme, toggle }: { theme: Theme; toggle: () => void }) {
 // ─────────────────────────────────────────────────────────────
 
 const HERO_CARD_ROWS = [
-  { icon: TrendingUp, label: "Заявки", value: "круглосуточно" },
-  { icon: Zap, label: "Скорость", value: "молниеносная" },
-  { icon: Bot, label: "Ответы", value: "автоматически" },
-  { icon: Search, label: "Поиск", value: "новые клиенты" },
+  { icon: TrendingUp, label: "Заявки", value: "даже ночью" },
+  { icon: Zap, label: "Загрузка", value: "за 1 секунду" },
+  { icon: Bot, label: "Ответы", value: "без вас" },
+  { icon: Search, label: "Поиск", value: "видят в Google" },
 ];
 
 function HeroCard() {
   const [active, setActive] = useState(0);
+  const [hovered, setHovered] = useState(false);
+
+  // Авто-ротация подсветки, пока пользователь не навёл курсор.
+  // Уважает prefers-reduced-motion — там авто-режим отключается.
+  useEffect(() => {
+    if (hovered) return;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    const id = setInterval(() => {
+      setActive(i => (i + 1) % HERO_CARD_ROWS.length);
+    }, 3500);
+    return () => clearInterval(id);
+  }, [hovered]);
+
   return (
-    <div className="overflow-hidden rounded-2xl border border-(--pf-border-mid) bg-(--pf-surface) shadow-[0_24px_80px_-20px_rgba(163,230,53,0.12)] backdrop-blur-sm">
+    <div
+      className="overflow-hidden rounded-2xl border border-(--pf-border-mid) bg-(--pf-surface) shadow-[0_24px_80px_-20px_rgba(163,230,53,0.12)] backdrop-blur-sm"
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+    >
       <div className="flex items-center gap-2 border-b border-(--pf-border-soft) px-4 py-3">
         <span className="size-3 rounded-full bg-[#ff5f57]" />
         <span className="size-3 rounded-full bg-[#febc2e]" />
@@ -320,7 +337,7 @@ function Hero() {
   return (
     <section id="top" className="relative overflow-hidden pt-16">
       <div className="pf-grid absolute inset-0 [mask-image:radial-gradient(ellipse_75%_60%_at_50%_0%,#000_55%,transparent_100%)]" />
-      <div className="pf-float absolute -top-32 left-1/2 -z-0 h-[420px] w-[720px] -translate-x-1/2 rounded-full bg-(--pf-glow-lime) blur-[140px]" />
+      <div className="absolute -top-32 left-1/2 -z-0 h-[420px] w-[720px] -translate-x-1/2 rounded-full bg-(--pf-glow-lime) blur-[140px]" />
       <div className="absolute right-[-120px] top-1/3 h-[300px] w-[300px] rounded-full bg-(--pf-glow-cyan) blur-[120px]" />
 
       <div className="relative mx-auto grid max-w-6xl gap-14 px-5 pb-20 pt-16 sm:pt-24 lg:grid-cols-[1.05fr_0.95fr] lg:items-center">
@@ -352,9 +369,9 @@ function Hero() {
 
           <Reveal delay={200}>
             <p className="font-body mt-6 max-w-xl text-base leading-relaxed text-(--pf-text-3) sm:text-lg">
-              Создаю быстрые, адаптивные сайты и ботов под ключ — от лендинга до
-              магазина с админкой. Вы получаете инструмент, который работает на
-              бизнес: заявки, продажи и клиентов 24/7.
+              Пока у вас нет сайта — клиенты уходят к конкурентам, которые
+              находятся в поиске. Я делаю сайты, которые перехватывают этих
+              клиентов: заявки, оплаты и запись — 24/7, без вашего участия.
             </p>
           </Reveal>
 
@@ -494,58 +511,68 @@ function Benefits() {
 type Service = {
   icon: ReactNode;
   title: string;
+  price: string;
+  priceNote?: string;
   text: string;
   points: string[];
-  wide: boolean;
   featured?: boolean;
 };
 
 const SERVICES: Service[] = [
   {
     icon: <Globe className="size-6" />,
-    title: "Сайты и интернет-магазины",
-    text: "Под ключ: от лендинга до магазина с корзиной, оплатой и админкой. Дизайн, который продаёт, адаптив на любом экране и SEO — по умолчанию. Клиент заходит с телефона и сразу понимает, что вы ему предлагаете.",
+    title: "Лендинг",
+    price: "5 000 ₽",
+    text: "Одностраничный сайт, который продаёт. Главная страница, форма заявок и админка, где вы сами меняете тексты и фото — без программиста.",
     points: [
-      "Лендинги и корпоративные сайты",
-      "Магазины с оплатой и доставкой",
-      "Адаптив, скорость, SEO",
+      "Главная страница под вашу нишу",
+      "Форма приёма заявок в Telegram",
+      "Адаптив под телефон и десктоп",
+      "Админка: правите контент сами",
+      "Запуск за 5 дней",
     ],
-    wide: true,
+    featured: true,
+  },
+  {
+    icon: <Server className="size-6" />,
+    title: "Интернет-магазин",
+    price: "15 000 ₽",
+    text: "Полноценный магазин: каталог, корзина, оплата онлайн и админка для товаров. Клиент выбирает, платит и получает заказ — без вашего участия.",
+    points: [
+      "Каталог и карточки товаров",
+      "Корзина и оформление заказа",
+      "Приём оплаты онлайн (карта, СБП)",
+      "Админка: товары, цены, заказы",
+      "Интеграция с доставкой",
+    ],
     featured: true,
   },
   {
     icon: <Bot className="size-6" />,
-    title: "Боты, которые продают 24/7",
-    text: "Telegram- и Discord-боты: приём заявок и оплат, рассылки, поддержка клиентов. Работают круглосуточно без зарплаты и выходных — пока вы занимаетесь бизнесом.",
+    title: "ИИ-ассистент в Telegram",
+    price: "15 000 ₽",
+    text: "Бот, который общается как живой сотрудник: отвечает клиентам, распознаёт голос, запоминает каждого и напоминает о задачах. Работается 24/7 без зарплаты.",
     points: [
-      "Продажи и приём платежей",
-      "Поддержка и рассылки",
-      "Модерация комьюнити",
+      "Ведёт диалог голосом и текстом",
+      "Запоминает клиентов и их историю",
+      "Напоминает о задачах и встречах",
+      "Принимает и обрабатывает заявки",
+      "Делает то, что вы ему поручите",
     ],
-    wide: false,
-  },
-  {
-    icon: <Server className="size-6" />,
-    title: "Бэкенд и интеграции",
-    text: "Связываю сайт с вашими сервисами: CRM, платёжные системы, складской учёт, мессенджеры. Сегодня 100 клиентов — завтра 100 000, а сайт уже к этому готов.",
-    points: [
-      "API и базы данных",
-      "Интеграции с сервисами",
-      "Надёжность под нагрузкой",
-    ],
-    wide: true,
-    featured: true,
   },
   {
     icon: <Cpu className="size-6" />,
-    title: "Автоматизация рутины",
-    text: "Превращаю повторяющиеся задачи в одну кнопку: парсеры, отчёты, рассылки, внутренние инструменты. Часы ручной работы становятся секундами.",
+    title: "Кастомный проект",
+    price: "договорная",
+    priceNote: "Зависит от задачи",
+    text: "Любая идея — от личного кабинета до парсера или внутренней системы. Опишите задачу, я предложу решение и назову точную цену. Консультация бесплатна.",
     points: [
-      "Парсинг и сбор данных",
-      "Внутренние инструменты",
-      "Интеграции между сервисами",
+      "Любые страницы и интеграции",
+      "CRM, личные кабинеты, порталы",
+      "Парсеры, отчёты, автоматизация",
+      "Решение под вашу конкретную боль",
+      "Смета и сроки — до старта",
     ],
-    wide: false,
   },
 ];
 
@@ -557,41 +584,39 @@ function Services() {
     >
       <div className="mx-auto max-w-6xl px-5">
         <Reveal>
-          <Eyebrow>Услуги</Eyebrow>
-          <SectionTitle>Что я делаю для вашего бизнеса</SectionTitle>
+          <Eyebrow>Услуги и цены</Eyebrow>
+          <SectionTitle>Сколько стоит и что входит</SectionTitle>
           <Lead>
-            Четыре направления — один результат: клиенты приходят сами, а рутина
-            работает без вас.
+            Четыре варианта под разные задачи. Цена фиксированная — без сюрпризов
+            и доплат в процессе.
           </Lead>
         </Reveal>
 
-        <div className="mt-12 grid gap-5 md:grid-cols-3">
+        <div className="mt-12 grid gap-5 md:grid-cols-2">
           {SERVICES.map((s, i) => (
-            <Reveal
-              key={s.title}
-              delay={i * 90}
-              className={s.wide ? "md:col-span-2" : ""}
-            >
+            <Reveal key={s.title} delay={i * 90}>
               <article
-                className={`group relative h-full overflow-hidden rounded-xl border bg-(--pf-surface) p-7 transition-all duration-300 hover:-translate-y-1 hover:bg-(--pf-surface-hover) ${
+                className={`group relative flex h-full flex-col overflow-hidden rounded-xl border bg-(--pf-surface) p-7 transition-all duration-300 hover:-translate-y-1 hover:bg-(--pf-surface-hover) ${
                   s.featured
                     ? "border-(--pf-lime)/25 hover:border-(--pf-lime)/50"
                     : "border-(--pf-border) hover:border-(--pf-border-strong)"
                 }`}
               >
-                {s.featured && (
-                  <span className="font-code absolute right-5 top-5 rounded-full border border-(--pf-lime)/30 bg-(--pf-lime)/10 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.18em] text-(--pf-lime)">
-                    чаще всего заказывают
-                  </span>
-                )}
-                <div
-                  className={`inline-flex rounded-lg border border-(--pf-border) bg-(--pf-chip) p-3 transition-colors ${
-                    s.featured
-                      ? "text-(--pf-lime) group-hover:bg-(--pf-lime)/10"
-                      : "text-(--pf-cyan) group-hover:bg-(--pf-cyan)/10"
-                  }`}
-                >
-                  {s.icon}
+                <div className="flex items-center justify-between gap-3">
+                  <div
+                    className={`inline-flex rounded-lg border border-(--pf-border) bg-(--pf-chip) p-3 transition-colors ${
+                      s.featured
+                        ? "text-(--pf-lime) group-hover:bg-(--pf-lime)/10"
+                        : "text-(--pf-cyan) group-hover:bg-(--pf-cyan)/10"
+                    }`}
+                  >
+                    {s.icon}
+                  </div>
+                  {s.featured && (
+                    <span className="font-code rounded-full border border-(--pf-lime)/30 bg-(--pf-lime)/10 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.18em] text-(--pf-lime)">
+                      чаще всего заказывают
+                    </span>
+                  )}
                 </div>
                 <h3 className="font-display mt-5 text-lg font-semibold text-(--pf-text) sm:text-xl">
                   {s.title}
@@ -613,6 +638,34 @@ function Services() {
                     </li>
                   ))}
                 </ul>
+                {/* Цена + CTA — внизу карточки */}
+                <div className="mt-auto pt-6">
+                  <div className="flex items-baseline gap-2">
+                    <span
+                      className={`font-display text-2xl font-bold ${s.featured ? "text-(--pf-lime)" : "text-(--pf-text)"}`}
+                    >
+                      {s.price}
+                    </span>
+                    {s.priceNote && (
+                      <span className="font-body text-xs text-(--pf-text-5)">
+                        {s.priceNote}
+                      </span>
+                    )}
+                  </div>
+                  <a
+                    href={profile.telegram}
+                    target="_blank"
+                    rel="noreferrer"
+                    className={`font-body mt-4 inline-flex items-center gap-2 rounded-lg px-5 py-3 text-sm font-bold transition-transform hover:-translate-y-0.5 ${
+                      s.featured
+                        ? "bg-(--pf-lime-solid) text-(--pf-on-accent) hover:bg-(--pf-lime-solid-hover)"
+                        : "border border-(--pf-border-mid) text-(--pf-text-2) hover:border-(--pf-border-strong) hover:bg-(--pf-chip)"
+                    }`}
+                  >
+                    <Send className="size-4" />
+                    Обсудить проект
+                  </a>
+                </div>
               </article>
             </Reveal>
           ))}
@@ -1015,7 +1068,7 @@ function Contact() {
 
   return (
     <section id="contact" className="relative overflow-hidden py-28">
-      <div className="pf-float absolute left-1/2 top-1/2 -z-0 h-[360px] w-[640px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-(--pf-glow-lime) blur-[130px]" />
+      <div className="absolute left-1/2 top-1/2 -z-0 h-[360px] w-[640px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-(--pf-glow-lime) blur-[130px]" />
       <div className="relative mx-auto max-w-3xl px-5">
         <Reveal>
           <div className="text-center">
@@ -1264,11 +1317,11 @@ export default function PortfolioPage() {
       <main>
         <Hero />
         <Marquee />
-        <Benefits />
         <Services />
         <Projects />
         <Testimonials />
         <Process />
+        <Benefits />
         <Guarantee />
         <Faq />
         <Contact />
