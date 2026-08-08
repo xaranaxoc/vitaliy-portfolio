@@ -171,3 +171,130 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
+
+/* ─── Страница договора: всегда белый фон, чёрный текст ─────── */
+.contract-doc {
+  font-family: "Manrope", "Times New Roman", serif;
+  color: #0a0a0a;
+  background: #ffffff;
+  border-radius: 12px;
+  padding: 48px;
+  box-shadow: 0 4px 40px rgba(0, 0, 0, 0.15);
+}
+
+.contract-title {
+  font-family: "Manrope", sans-serif;
+  font-size: 22px;
+  font-weight: 700;
+  text-align: center;
+  margin-bottom: 4px;
+  color: #0a0a0a;
+}
+
+.contract-subtitle {
+  font-size: 14px;
+  text-align: center;
+  color: #525252;
+  margin-bottom: 24px;
+}
+
+.contract-meta {
+  font-size: 13px;
+  color: #525252;
+  text-align: center;
+  margin-bottom: 32px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid #e5e5e5;
+}
+
+.contract-parties {
+  font-size: 13.5px;
+  line-height: 1.7;
+  margin-bottom: 24px;
+  color: #171717;
+}
+
+.contract-label {
+  font-weight: 600;
+  color: #0a0a0a;
+}
+
+.contract-intro {
+  font-size: 13.5px;
+  line-height: 1.7;
+  margin-bottom: 28px;
+  color: #404040;
+}
+
+.contract-section {
+  margin-bottom: 20px;
+}
+
+.contract-section-title {
+  font-size: 14px;
+  font-weight: 700;
+  margin-bottom: 8px;
+  color: #0a0a0a;
+}
+
+.contract-section-body {
+  font-size: 13.5px;
+  line-height: 1.75;
+  color: #262626;
+}
+
+.contract-section-body p {
+  margin-bottom: 6px;
+}
+
+.contract-signatures {
+  display: flex;
+  justify-content: space-between;
+  gap: 48px;
+  margin-top: 56px;
+  padding-top: 24px;
+}
+
+.contract-sig-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: #0a0a0a;
+  margin-bottom: 48px;
+}
+
+.contract-sig-line {
+  border-bottom: 1px solid #0a0a0a;
+  height: 1px;
+  margin-bottom: 8px;
+}
+
+.contract-sig-name {
+  font-size: 12.5px;
+  color: #525252;
+}
+
+/* ─── Печать: убираем всё лишнее, чистый документ на A4 ─────── */
+@media print {
+  body {
+    background: #ffffff !important;
+  }
+
+  .print\:hidden {
+    display: none !important;
+  }
+
+  .contract-doc {
+    box-shadow: none;
+    border-radius: 0;
+    padding: 0;
+    max-width: 100%;
+  }
+
+  .contract-signatures {
+    page-break-inside: avoid;
+  }
+
+  @page {
+    margin: 1.5cm;
+  }
+}
