@@ -39,3 +39,8 @@ out/
 next-env.d.ts
 .zcode/
 tsconfig.tsbuildinfo
+
+# SQLite invoices database (не в git — данные счетов)
+data/*.db
+data/*.db-shm
+data/*.db-wal

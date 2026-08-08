@@ -1293,12 +1293,26 @@ function Footer() {
             Виталий Матвеев · matveev.vit03@gmail.com · работаю со всей Россией
             онлайн.
           </p>
-          <Link
-            href="/privacy"
-            className="font-code mt-2 inline-block text-[11px] text-(--pf-text-4) underline underline-offset-2 transition-colors hover:text-(--pf-text-2)"
-          >
-            Политика обработки персональных данных
-          </Link>
+          <div className="font-code mt-2 flex flex-wrap gap-x-4 gap-y-1 text-[11px]">
+            <Link
+              href="/oferta"
+              className="text-(--pf-text-4) underline underline-offset-2 transition-colors hover:text-(--pf-text-2)"
+            >
+              Публичная оферта
+            </Link>
+            <Link
+              href="/privacy"
+              className="text-(--pf-text-4) underline underline-offset-2 transition-colors hover:text-(--pf-text-2)"
+            >
+              Политика обработки ПД
+            </Link>
+            <Link
+              href="/consent"
+              className="text-(--pf-text-4) underline underline-offset-2 transition-colors hover:text-(--pf-text-2)"
+            >
+              Согласие на обработку ПД
+            </Link>
+          </div>
         </div>
       </div>
     </footer>
