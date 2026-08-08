@@ -24,9 +24,9 @@ export const metadata: Metadata = {
     locale: "ru_RU",
     url: "https://matveev-devs.ru/",
     siteName: `${profile.nameRu} — разработка сайтов под ключ`,
-    title: "Клиенты уходят к конкурентам?",
+    title: "Сайты, которые приносят клиентов",
     description:
-      "Сайт, который перехватывает их: заявки, оплаты и запись — 24/7, без вашего участия. Лендинг от 5 000 ₽, магазин от 15 000 ₽.",
+      "Прибыль увеличивается с первого месяца. Лендинг от 5 000 ₽, интернет-магазин от 15 000 ₽.",
     images: [
       {
         url: "https://vitaliy-portfolio-one.vercel.app/og-image.png",
@@ -38,9 +38,9 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Клиенты уходят к конкурентам?",
+    title: "Сайты, которые приносят клиентов",
     description:
-      "Сайт, который перехватывает их: заявки, оплаты и запись — 24/7, без вашего участия. Лендинг от 5 000 ₽, магазин от 15 000 ₽.",
+      "Прибыль увеличивается с первого месяца. Лендинг от 5 000 ₽, интернет-магазин от 15 000 ₽.",
     images: ["https://vitaliy-portfolio-one.vercel.app/og-image.png"],
   },
   icons: {
