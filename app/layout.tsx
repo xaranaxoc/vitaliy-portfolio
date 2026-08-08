@@ -24,24 +24,24 @@ export const metadata: Metadata = {
     locale: "ru_RU",
     url: "https://matveev-devs.ru/",
     siteName: `${profile.nameRu} — разработка сайтов под ключ`,
-    title: `${profile.nameRu} — сайты, которые приносят клиентов`,
+    title: "Клиенты уходят к конкурентам?",
     description:
-      "Лендинги, интернет-магазины и боты под ключ. От идеи до запуска — заявки и продажи 24/7.",
+      "Сайт, который перехватывает их: заявки, оплаты и запись — 24/7, без вашего участия. Лендинг от 5 000 ₽, магазин от 15 000 ₽.",
     images: [
       {
-        url: "/og-image.png",
+        url: "https://vitaliy-portfolio-one.vercel.app/og-image.png",
         width: 1200,
         height: 630,
-        alt: `${profile.nameRu} — сайты, которые приносят клиентов`,
+        alt: "Vitaliy.dev — сайты, которые приносят клиентов",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: `${profile.nameRu} — сайты, которые приносят клиентов`,
+    title: "Клиенты уходят к конкурентам?",
     description:
-      "Лендинги, интернет-магазины и боты под ключ. От идеи до запуска — заявки и продажи 24/7.",
-    images: ["/og-image.png"],
+      "Сайт, который перехватывает их: заявки, оплаты и запись — 24/7, без вашего участия. Лендинг от 5 000 ₽, магазин от 15 000 ₽.",
+    images: ["https://vitaliy-portfolio-one.vercel.app/og-image.png"],
   },
   icons: {
     icon: [
