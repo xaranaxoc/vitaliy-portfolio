@@ -247,7 +247,7 @@ function Nav({ theme, toggle }: { theme: Theme; toggle: () => void }) {
 
 const HERO_CARD_ROWS = [
   { icon: TrendingUp, label: "Заявки", value: "больше в 2-3 раза" },
-  { icon: Zap, label: "Конверсия", value: "выше с 1 визита" },
+  { icon: Zap, label: "Конверсия", value: "выше чем у конкурентов" },
   { icon: TrendingUp, label: "Прибыль", value: "растёт с первого месяца" },
   { icon: Clock, label: "Время", value: "вы — на бизнесе, не на рутине" },
 ];
@@ -370,8 +370,8 @@ function Hero() {
           <Reveal delay={200}>
             <p className="font-body mt-6 max-w-xl text-base leading-relaxed text-(--pf-text-3) sm:text-lg">
               Сайт, который окупается с первого месяца: больше заявок, выше
-              конверсия и новые клиенты из поиска — пока вы занимаетесь бизнесом,
-              а не руками обрабатываете каждый запрос.
+              конверсия и новые клиенты из поиска — вы занимаетесь бизнесом,
+              а сайт приносит клиентов.
             </p>
           </Reveal>
 
