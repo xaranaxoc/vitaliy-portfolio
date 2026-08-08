@@ -246,10 +246,10 @@ function Nav({ theme, toggle }: { theme: Theme; toggle: () => void }) {
 // ─────────────────────────────────────────────────────────────
 
 const HERO_CARD_ROWS = [
-  { icon: TrendingUp, label: "Заявки", value: "даже ночью" },
-  { icon: Zap, label: "Загрузка", value: "за 1 секунду" },
-  { icon: Bot, label: "Ответы", value: "без вас" },
-  { icon: Search, label: "Поиск", value: "видят в Google" },
+  { icon: TrendingUp, label: "Заявки", value: "больше в 2-3 раза" },
+  { icon: Zap, label: "Конверсия", value: "выше с 1 визита" },
+  { icon: TrendingUp, label: "Прибыль", value: "растёт с первого месяца" },
+  { icon: Clock, label: "Время", value: "вы — на бизнесе, не на рутине" },
 ];
 
 function HeroCard() {
@@ -369,9 +369,9 @@ function Hero() {
 
           <Reveal delay={200}>
             <p className="font-body mt-6 max-w-xl text-base leading-relaxed text-(--pf-text-3) sm:text-lg">
-              Пока у вас нет сайта — клиенты уходят к конкурентам, которые
-              находятся в поиске. Я делаю сайты, которые перехватывают этих
-              клиентов: заявки, оплаты и запись — 24/7, без вашего участия.
+              Сайт, который окупается с первого месяца: больше заявок, выше
+              конверсия и новые клиенты из поиска — пока вы занимаетесь бизнесом,
+              а не руками обрабатываете каждый запрос.
             </p>
           </Reveal>
 

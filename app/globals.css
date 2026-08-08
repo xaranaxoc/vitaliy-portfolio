@@ -43,10 +43,7 @@
   animation: pf-marquee 60s linear infinite;
   will-change: transform;
 }
-.pf-marquee-pause:hover .pf-marquee,
-.pf-marquee:hover {
-  animation-play-state: paused;
-}
+/* marquee крутится непрерывно, без паузы при наведении */
 
 /* slow float for background glows */
 @keyframes pf-float {
