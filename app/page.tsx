@@ -31,6 +31,7 @@ import {
   testimonials,
 } from "@/lib/data";
 import { type Theme, useReveal, useTheme } from "@/lib/hooks";
+import ContactModal from "@/app/page-components/ContactModal";
 
 // ─────────────────────────────────────────────────────────────
 // Primitives
@@ -196,14 +197,13 @@ function Nav({ theme, toggle }: { theme: Theme; toggle: () => void }) {
         </div>
         <div className="flex items-center gap-3">
           <ThemeToggle theme={theme} toggle={toggle} />
-          <a
-            href={profile.telegram}
-            target="_blank"
-            rel="noreferrer"
+          <button
+            type="button"
+            onClick={() => window.dispatchEvent(new Event("pf-open-contact"))}
             className="font-body hidden rounded-lg bg-(--pf-lime-solid) px-4 py-2 text-sm font-bold text-(--pf-on-accent) transition-transform hover:-translate-y-0.5 hover:bg-(--pf-lime-solid-hover) sm:inline"
           >
             Обсудить проект
-          </a>
+          </button>
           <button
             type="button"
             onClick={() => setOpen(o => !o)}
@@ -240,14 +240,16 @@ function Nav({ theme, toggle }: { theme: Theme; toggle: () => void }) {
                 {l.label}
               </a>
             ))}
-            <a
-              href={profile.telegram}
-              target="_blank"
-              rel="noreferrer"
+            <button
+              type="button"
+              onClick={() => {
+                setOpen(false);
+                window.dispatchEvent(new Event("pf-open-contact"));
+              }}
               className="font-body mt-1 rounded-lg border border-(--pf-lime)/40 bg-(--pf-lime)/10 px-2 py-2.5 text-center text-xs font-semibold text-(--pf-lime)"
             >
               Обсудить проект
-            </a>
+            </button>
           </div>
         </div>
       )}
@@ -303,15 +305,14 @@ function Hero() {
 
           <Reveal delay={300}>
             <div className="mt-8 flex flex-wrap items-center justify-center gap-4">
-              <a
-                href={profile.telegram}
-                target="_blank"
-                rel="noreferrer"
+              <button
+                type="button"
+                onClick={() => window.dispatchEvent(new Event("pf-open-contact"))}
                 className="font-body inline-flex items-center gap-2 rounded-lg bg-(--pf-lime-solid) px-6 py-3.5 text-sm font-bold text-(--pf-on-accent) transition-transform hover:-translate-y-0.5 hover:bg-(--pf-lime-solid-hover)"
               >
                 <Send className="size-4" />
                 Обсудить проект
-              </a>
+              </button>
               <a
                 href="#work"
                 className="font-body inline-flex items-center gap-2 rounded-lg border border-(--pf-border-mid) px-6 py-3.5 text-sm font-semibold text-(--pf-text-2) transition-colors hover:border-(--pf-border-strong) hover:bg-(--pf-chip)"
@@ -575,10 +576,9 @@ function Services() {
                       </span>
                     )}
                   </div>
-                  <a
-                    href={profile.telegram}
-                    target="_blank"
-                    rel="noreferrer"
+                  <button
+                    type="button"
+                    onClick={() => window.dispatchEvent(new Event("pf-open-contact"))}
                     className={`font-body mt-4 inline-flex items-center gap-2 rounded-lg px-5 py-3 text-sm font-bold transition-transform hover:-translate-y-0.5 ${
                       s.featured
                         ? "bg-(--pf-lime-solid) text-(--pf-on-accent) hover:bg-(--pf-lime-solid-hover)"
@@ -587,7 +587,7 @@ function Services() {
                   >
                     <Send className="size-4" />
                     Обсудить проект
-                  </a>
+                  </button>
                 </div>
               </article>
             </Reveal>
@@ -1250,6 +1250,7 @@ export default function PortfolioPage() {
   const { theme, toggle } = useTheme();
   return (
     <div className="font-body min-h-screen scroll-smooth bg-(--pf-bg) text-(--pf-text) antialiased transition-colors duration-300">
+      <ContactModal />
       <Nav theme={theme} toggle={toggle} />
       <main>
         <Hero />
