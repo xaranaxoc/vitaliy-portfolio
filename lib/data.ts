@@ -68,18 +68,17 @@ export type Project = {
 
 export const projects: Project[] = [
   {
-    id: "northpeak",
-    kind: "Сайт компании",
+    id: "belogorie",
+    kind: "Сайт курорта",
     category: "landing",
-    title: "NorthPeak Construction — строительная компания",
+    title: "БЕЛОГОРЬЕ — горнолыжный курорт",
     description:
-      "Премиальный лендинг строительной компании с ИИ-менеджером Алексом, который консультирует посетителей 24/7 и сам создаёт лиды. full-bleed фото, scroll-reveal анимации.",
-    result:
-      "Каждый посетитель получает квалифицированный ответ 24/7 — никто не уходит без внимания.",
-    tags: ["Next.js", "ИИ-менеджер", "Анимации", "Адаптив"],
-    image: "/projects/northpeak.jpg",
-    link: "https://northpeak-construction.vercel.app/",
-    accent: "amber",
+      "Имиджевый сайт горнолыжного курорта: full-bleed фото гор, атмосфера отдыха, прокат и услуги.",
+    result: "Курорт выглядит премиально — выше готовность бронировать.",
+    tags: ["HTML/CSS", "JavaScript", "Имиджевый", "Адаптив"],
+    image: "/projects/landing-belogorie.jpg",
+    link: "https://belogorie-ski-resort.vercel.app",
+    accent: "cyan",
   },
   {
     id: "nimbus",
@@ -108,17 +107,18 @@ export const projects: Project[] = [
     accent: "amber",
   },
   {
-    id: "belogorie",
-    kind: "Сайт курорта",
+    id: "northpeak",
+    kind: "Сайт компании",
     category: "landing",
-    title: "БЕЛОГОРЬЕ — горнолыжный курорт",
+    title: "NorthPeak Construction — строительная компания",
     description:
-      "Имиджевый сайт горнолыжного курорта: full-bleed фото гор, атмосфера отдыха, прокат и услуги.",
-    result: "Курорт выглядит премиально — выше готовность бронировать.",
-    tags: ["HTML/CSS", "JavaScript", "Имиджевый", "Адаптив"],
-    image: "/projects/landing-belogorie.jpg",
-    link: "https://belogorie-ski-resort.vercel.app",
-    accent: "cyan",
+      "Премиальный лендинг строительной компании с ИИ-менеджером Алексом, который консультирует посетителей 24/7 и сам создаёт лиды. full-bleed фото, scroll-reveal анимации.",
+    result:
+      "Каждый посетитель получает квалифицированный ответ 24/7 — никто не уходит без внимания.",
+    tags: ["Next.js", "ИИ-менеджер", "Анимации", "Адаптив"],
+    image: "/projects/northpeak.jpg",
+    link: "https://northpeak-construction.vercel.app/",
+    accent: "amber",
   },
   {
     id: "aivi",
