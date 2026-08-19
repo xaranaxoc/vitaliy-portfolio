@@ -80,10 +80,7 @@ export async function POST(request: Request) {
     (about ? `\n<b>Задача:</b> ${esc(about)}` : "");
 
   try {
-    // Примечание: на VPS в РФ api.telegram.org режется РКН, поэтому /api/lead
-    // там проксируется Nginx'ом на Python-микросервис (server/app.py),
-    // который обходит блокировку через рабочий IP Telegram. Этот route handler
-    // используется на Vercel и в dev-режиме, где api.telegram.org доступен.
+    // Отправка напрямую через Bot API (работает на Vercel, РКН не режет).
     const res = await fetch(`https://api.telegram.org/bot${TOKEN}/sendMessage`, {
       method: "POST",
       headers: { "content-type": "application/json" },
