@@ -10,7 +10,7 @@ function isValidEmail(value: string) {
 
 // GET — список договоров (только для админа; middleware уже проверил cookie).
 export async function GET() {
-  const contracts = listRecentContracts(100);
+  const contracts = await listRecentContracts(100);
   return NextResponse.json({ contracts });
 }
 
@@ -55,7 +55,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Сумма — от 100 до 5 000 000 ₽" }, { status: 400 });
   }
 
-  const contract = createContract({
+  const contract = await createContract({
     customerName,
     customerEmail,
     customerPhone,

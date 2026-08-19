@@ -19,7 +19,7 @@ export default async function ContractPage({
   const number = Number(numberStr);
   if (!Number.isFinite(number) || number < 1) notFound();
 
-  const row = getContractByNumber(number);
+  const row = await getContractByNumber(number);
   if (!row) notFound();
 
   const data = contractDataFromRow(row);

@@ -11,7 +11,7 @@ function rub(amount: number) {
 }
 
 export default async function AdminPage() {
-  const contracts = listRecentContracts(100);
+  const contracts = await listRecentContracts(100);
   const appUrl = process.env.APP_URL || "";
 
   return (
